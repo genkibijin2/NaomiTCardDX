@@ -1,4 +1,4 @@
-﻿# Naomi TCard DX
+﻿# NaomiTCardDX
 Work in progress T Card system...
 
 
