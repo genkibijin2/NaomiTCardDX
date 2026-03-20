@@ -12,7 +12,10 @@ contextBridge.exposeInMainWorld('versions', {
 
 
 document.addEventListener('DOMContentLoaded', function () {
-  //--Load Contents of Sawfiles//
+/*PUT EVERYTHING INSIDE THIS FUNCTION, AS IT RUNS WHEN EVERYTHING
+ON THE PAGE HAS FULLY LOADED, OTHERWISE ELEMENTS MIGHT BE NULL!
+*/
+
   console.log('Page fully loaded!');
   //----------------------------Definitions of elements-----------------//
   let information = document.getElementById('info');
@@ -32,8 +35,31 @@ maximizeButton.addEventListener("click", () =>{
   ipcRenderer.send("maximizeWindow");
 });
 helper.addEventListener("click", () =>{
-  ipcRenderer.send("helpButtonClicked");
+  ipcRenderer.send("SQLTEST");
 });
+//========================SQL INFORMATION RENDERING=========================//
+const middleScreenBox = document.getElementById('centerScreenBlockWrapper');
+ipcRenderer.on("SQLTESTRETURNED", (event, result, $query) => {
+    middleScreenBox.innerHTML = ("<span style='font-size: 30px;'>" +
+        "SQL QUERY: " + JSON.stringify($query) + "</span>" + "</br>" +
+        "<span style='font-size: 40px;'>" + "Result: </br>" + "");
+        
+    for (var i = 0; i < result.length; i++){
+      var currentRowObject = result[i];
+      console.log(currentRowObject.TOTALNETT);
+        middleScreenBox.innerHTML = (middleScreenBox.innerHTML +
+        "LOTID: " + currentRowObject.LOTID + ", SUPPLIER ID: "
+        + currentRowObject.SUPPLIERID + "</br>" +
+        "");
+  }
+  
+  middleScreenBox.innerHTML = (middleScreenBox.innerHTML +
+    "</span>"
+  );
+});
+//============================================================================//
+
+
 
 });//END OF DOMCONTENTLOAD
 

@@ -29,6 +29,7 @@
     "mysql": "^2.18.1",
     "nanobar": "^0.4.2",
     "node-drivelist": "^1.1.0",
+    "node-firebird": "^2.0.2",
     "tailwindcss": "^4.2.2",
     "usb": "^2.16.0"
   }

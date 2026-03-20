@@ -1,9 +1,11 @@
 
 //Helper Info Box
 //Add mouseover events to everything that change the innerText to a description of
+
+//const { ipcRenderer } = require("electron");
+
 //the moused over element...
 const helper = document.getElementById('helper');
-
 //loading box
 const loadingBox = document.getElementById('loadingBlock');
 
