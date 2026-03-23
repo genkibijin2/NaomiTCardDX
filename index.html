@@ -10,7 +10,7 @@
   
 <!---PAGE CSS STYLINGS--->
 <style>
-html, body, .glslCanvas, .theMainBit, .titlebar, .navbutton{
+html, body, .glslCanvas, .theMainBit, .titlebar, .navbutton, .titleBlock{
   cursor: url("cursor/hand1.ico"), pointer;
 }
 @font-face{
@@ -121,9 +121,11 @@ const sandbox = new GlslCanvas(canvas);
 <!---Main Square in center of screen for holding days and titlebar-->
   <div id="topBarInformation" class="insideWrapperTopBar">
   <!--information bar at top of middle square-->
-  <span style="font-size:40px">
-    Hi, I'm the information bar...
+  <span style="font-size:22px">
+    Job Information:</br>
+    Test</br>Test</br>Test
   </span>
+  <hr class="gradientLine">
   </div><!--End of top Bar information-->
 
   
@@ -131,45 +133,108 @@ const sandbox = new GlslCanvas(canvas);
   <!---wrapper to hold the days of the week boxes-->  
   <!---Dayslices are essentially a wrapper for Job boxes and Day Logo-->
     <div id="MondaySlice" class="daySlice">
-      
+      <div id="MondayLogo" class="logos">
+        <!---Symbol for Monday-->
+        <img src="img/MondayTest.png" alt="Monday" width="80" height="80">
+      </div>
+      <div id="MondaysJobs" class="JobBoxWrapper">
+        <!---Container window for job objects-->
+      </div>
     </div>
+
+
     <div id="TuesdaySlice" class="daySlice">
-
+      <div id="TuesdayLogo" class="logos">
+        <img src="img/TuesdayTest.png" alt="Monday" width="80" height="80">
+      </div>
+      <div id="TuesdaysJobs" class="JobBoxWrapper">
+        <!---Container window for job objects-->
+      </div>
     </div>
+
+
     <div id="WednesdaySlice" class="daySlice">
-
+      <div id="WednesdayLogo" class="logos">
+        <img src="img/WednesdayTest.png" alt="Monday" width="80" height="80">
+      </div>
+      <div id="WednesdaysJobs" class="JobBoxWrapper">
+        <!---Container window for job objects-->
+      </div>
     </div>
+
+
+
     <div id="ThursdaySlice" class="daySlice">
-
+      <div id="ThursdayLogo" class="logos">
+        <img src="img/ThursdayTest.png" alt="Monday" width="80" height="80">
+      </div>
+      <div id="ThursdaysJobs" class="JobBoxWrapper">
+        <!---Container window for job objects-->
+      </div>
     </div>
-    <div id="FridaySlice" class="daySlice">
 
+
+    <div id="FridaySlice" class="daySlice">
+      <div id="FridayLogo" class="logos">
+        <img src="img/FridayTest.png" alt="Monday" width="80" height="80">
+      </div>
+      <div id="FridaysJobs" class="JobBoxWrapper">
+        <!---Container window for job objects-->
+      </div>
     </div>
   </div><!---End of days of the week wrapper-->
 </div><!--End of centerScreenBlockWrapper-->
 
 <!---STYLING FOR HELPER, BLOCKS AND WRAPPERS ETC!-->
 <style>
-
+.JobBoxWrapper{
+  border: 1px solid rgb(218, 218, 218);
+  border-radius: 10px;
+  min-width: 94%;
+  margin: 3px;
+  background: #e4e4e4;
+}
+hr.gradientLine {
+  height: 4px;
+  border: none;
+  border-radius: 6px;
+  background: linear-gradient(
+    90deg,
+    rgb(255, 255, 255) 0%,
+    rgb(190, 190, 255) 21%,
+    #b5b0ff 51%,
+    rgb(113, 64, 170) 100%
+  );
+}
+.logos{
+  border: none;
+  border-radius: 10px;
+  max-width: 90px;
+  margin-left: 1%;
+}
 .daySlice{
+  display: flex;
   align-content: left;
   text-align: left;
   border: 2px ridge rgba(186, 109, 238, 0.6);
   border-radius: 10px;
-  min-height: 30px;
+  min-height: 80px;
   max-height: 200px;
   background-color: #EEEEEE;
   box-shadow: 0 0 10px #00000033;
   overflow: hidden;
 }
 .insideWrapperTopBar{
-  border: 1px solid purple;
+  border: 1px solid rgb(255, 255, 255);
   border-radius: 10px;
+  text-align: left;
+  background-color: #EEEEEE;
+  box-shadow: 0 0 10px #00000033;
 }
 .daysOfWeekWrapper{
   padding: 1%;
   font-size: 20px;
-  border: 1px solid purple;
+  border: 1px solid white;
   border-radius: 10px;
   max-height: 80vh;
   overflow: scroll;
@@ -214,7 +279,7 @@ const sandbox = new GlslCanvas(canvas);
 </style>
 <div id="helper" class="helperDaemon" style="font-size: 20px;text-align: left;border:
            1px solid black;border-radius: 20px;padding:4px;position: absolute;top: 93%;left:10px;word-wrap: no;">
-          V0.1
+          Debug
 </div>
 
 <!---//////////////////////////////////////////////-->

@@ -38,14 +38,15 @@ helper.addEventListener("click", () =>{
   ipcRenderer.send("SQLTEST");
 });
 //========================SQL INFORMATION RENDERING=========================//
-const middleScreenBox = document.getElementById('MondaySlice');
+const middleScreenBox = document.getElementById('MondaysJobs');
 ipcRenderer.on("SQLTESTRETURNED", (event, result, $query) => {
     
     for (var i = 0; i < result.length; i++){
       var currentRowObject = result[i];
         middleScreenBox.innerHTML = (middleScreenBox.innerHTML +
-        "LOTID: " + currentRowObject.LOTID + ", SUPPLIER ID: "
-        + currentRowObject.SUPPLIERID + "</br>" +
+        "FILENAME: " + currentRowObject.FILENAME + ", JOBNO: "
+        + currentRowObject.JOBNO +
+        ", CONTACT: " + currentRowObject.CONTACT + "</br>" +
         "");
   }
 });
