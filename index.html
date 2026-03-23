@@ -10,6 +10,9 @@
   
 <!---PAGE CSS STYLINGS--->
 <style>
+html, body, .glslCanvas, .theMainBit, .titlebar, .navbutton{
+  cursor: url("cursor/hand1.ico"), pointer;
+}
 @font-face{
 	font-family: 'Inter';
 	src: url(fonts/InterThin24.ttf);
@@ -110,33 +113,81 @@ const sandbox = new GlslCanvas(canvas);
 
 
 </div><!---END TITLE BAR-->
-<div id="programTitle" class="titleBlock" style="font-size: 24pt;text-align:center;">T Card System</div>
+<div id="programTitle" class="titleBlock" style="font-size: 24pt;text-align:center;">Despatch Job Viewer</div>
 <!---------------------------------------------------------------------------------------------------->
 <div id="mainContentWrapper" style="display:grid;margin-top: 10px;padding: 20px;">
 
 <div id="centerScreenBlockWrapper">
-  <span style="font-size: 40px;">
-The Dead Sea Scrolls, in the narrow sense identical with the Qumran Caves Scrolls, are a set of ancient Jewish manuscripts from the Second Temple period. They were discovered over a period of ten years, between 1946 and 1956, at the Qumran Caves near Ein Feshkha in the West Bank, on the northern shore of the Dead Sea. Dating from the 3rd century BCE to the 1st century CE, the Dead Sea Scrolls include the oldest surviving manuscripts of entire books later included in the biblical canons, including deuterocanonical manuscripts from late Second Temple Judaism and extrabiblical books. At the same time, they cast new light on the emergence of Christianity and of Rabbinic Judaism. In the wider sense, the Dead Sea Scrolls also include similar findings from elsewhere in the Judaean Desert, of which some are from later centuries. Almost all of the 15,000 scrolls and scroll fragments are held in the Shrine of the Book at the Israel Museum located in Jerusalem. 
-Many thousands of written fragments have been discovered in the Dead Sea area – most have been published, together with the details of their discovery, in the 40-volume Discoveries in the Judaean Desert. They represent the remnants of larger manuscripts damaged by natural causes or through human interference, with the vast majority holding only small scraps of text. However, a small number of well-preserved and nearly intact manuscripts have survived—fewer than a dozen among those from the Qumran Caves.  
-</span>
-  <p>
-    
-  </p>
-</div>
+<!---Main Square in center of screen for holding days and titlebar-->
+  <div id="topBarInformation" class="insideWrapperTopBar">
+  <!--information bar at top of middle square-->
+  <span style="font-size:40px">
+    Hi, I'm the information bar...
+  </span>
+  </div><!--End of top Bar information-->
+
+  
+  <div id="daysandJobsContainer" class="daysOfWeekWrapper">
+  <!---wrapper to hold the days of the week boxes-->  
+  <!---Dayslices are essentially a wrapper for Job boxes and Day Logo-->
+    <div id="MondaySlice" class="daySlice">
+      
+    </div>
+    <div id="TuesdaySlice" class="daySlice">
+
+    </div>
+    <div id="WednesdaySlice" class="daySlice">
+
+    </div>
+    <div id="ThursdaySlice" class="daySlice">
+
+    </div>
+    <div id="FridaySlice" class="daySlice">
+
+    </div>
+  </div><!---End of days of the week wrapper-->
+</div><!--End of centerScreenBlockWrapper-->
 
 <!---STYLING FOR HELPER, BLOCKS AND WRAPPERS ETC!-->
 <style>
+
+.daySlice{
+  align-content: left;
+  text-align: left;
+  border: 2px ridge rgba(186, 109, 238, 0.6);
+  border-radius: 10px;
+  min-height: 30px;
+  max-height: 200px;
+  background-color: #EEEEEE;
+  box-shadow: 0 0 10px #00000033;
+  overflow: hidden;
+}
+.insideWrapperTopBar{
+  border: 1px solid purple;
+  border-radius: 10px;
+}
+.daysOfWeekWrapper{
+  padding: 1%;
+  font-size: 20px;
+  border: 1px solid purple;
+  border-radius: 10px;
+  max-height: 80vh;
+  overflow: scroll;
+}
 ::-webkit-scrollbar {
     display: none;
 }
 #centerScreenBlockWrapper{
+  align-content: center;
+  text-align: center;
+  display: grid;
   word-wrap: break-word;
-  padding: 3%;
+  padding: 1%;
   border: 2px solid #FFFFFF;
   border-radius: 20px;
   background-color: #EEEEEE;
-  box-shadow: 0 0 10px #00000033;
-  max-height: 70vh;
+  box-shadow: 0 0 3px #00000033;
+  max-height: 77vh;
   overflow-y: scroll;
 } 
 .helperDaemon{
@@ -144,6 +195,9 @@ Many thousands of written fragments have been discovered in the Dead Sea area �
   background: black;
   color: white;
   box-shadow: 1px 1px white;
+}
+.helperDaemon::before{
+  content: "ⓘ ";
 }
 .helperDaemon:hover{
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 2.2);

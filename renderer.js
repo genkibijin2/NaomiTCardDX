@@ -38,5 +38,25 @@ const maximizeHelper = document.getElementById('maximize');
 maximizeHelper.addEventListener("mouseenter", () => {
     helper.innerText = "Maximize the program";
 });
+const mondayJobSlice = document.getElementById('MondaySlice');
+mondayJobSlice.addEventListener("mouseenter", () => {
+    helper.innerText = "Monday's Jobs";
+});
+const tuesdayJobSlice = document.getElementById('TuesdaySlice');
+tuesdayJobSlice.addEventListener("mouseenter", () => {
+    helper.innerText = "Tuesday's Jobs";
+});
+const wednesdayJobSlice = document.getElementById('WednesdaySlice');
+wednesdayJobSlice.addEventListener("mouseenter", () => {
+    helper.innerText = "Wednesday's Jobs";
+});
+const thursdayJobSlice = document.getElementById('ThursdaySlice');
+thursdayJobSlice.addEventListener("mouseenter", () => {
+    helper.innerText = "Thursday's Jobs";
+});
+const fridayJobSlice = document.getElementById('FridaySlice');
+fridayJobSlice.addEventListener("mouseenter", () => {
+    helper.innerText = "Friday's Jobs";
+});
 //--------------------------HELPER DESCRIPTIONS------------------------------//
 

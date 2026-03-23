@@ -38,24 +38,16 @@ helper.addEventListener("click", () =>{
   ipcRenderer.send("SQLTEST");
 });
 //========================SQL INFORMATION RENDERING=========================//
-const middleScreenBox = document.getElementById('centerScreenBlockWrapper');
+const middleScreenBox = document.getElementById('MondaySlice');
 ipcRenderer.on("SQLTESTRETURNED", (event, result, $query) => {
-    middleScreenBox.innerHTML = ("<span style='font-size: 30px;'>" +
-        "SQL QUERY: " + JSON.stringify($query) + "</span>" + "</br>" +
-        "<span style='font-size: 40px;'>" + "Result: </br>" + "");
-        
+    
     for (var i = 0; i < result.length; i++){
       var currentRowObject = result[i];
-      console.log(currentRowObject.TOTALNETT);
         middleScreenBox.innerHTML = (middleScreenBox.innerHTML +
         "LOTID: " + currentRowObject.LOTID + ", SUPPLIER ID: "
         + currentRowObject.SUPPLIERID + "</br>" +
         "");
   }
-  
-  middleScreenBox.innerHTML = (middleScreenBox.innerHTML +
-    "</span>"
-  );
 });
 //============================================================================//
 
