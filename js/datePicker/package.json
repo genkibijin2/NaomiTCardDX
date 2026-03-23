@@ -1,0 +1,42 @@
+{
+  "name": "thedatepicker",
+  "version": "2.4.2",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/thedatepicker/thedatepicker.git"
+  },
+  "main": "dist/the-datepicker.min.js",
+  "types": "dist/the-datepicker.d.ts",
+  "browser": "dist/the-datepicker.min.js",
+  "devDependencies": {
+    "stylus": "^0.64.0",
+    "ts-loader": "^9.5.2",
+    "typescript": "^5.8.3",
+    "uglify-js": "^3.19.3",
+    "webpack": "^5.100.2",
+    "webpack-cli": "^6.0.1"
+  },
+  "scripts": {
+    "port": "php port.php",
+    "js": "tsc --project tsconfig.plain.json",
+    "css": "stylus src/assets -o dist",
+    "minify": "uglifyjs -c -m  --mangle-props regex=\"/_$/\" -o dist/the-datepicker.min.js dist/the-datepicker.js",
+    "webpack": "webpack --config webpack.config.js",
+    "minify-amd": "uglifyjs -c -m  --mangle-props regex=\"/_$/\" -o amd/index.min.js amd/index.js",
+    "build": "npm run port && npm run js && npm run css && npm run minify && npm run webpack && npm run minify-amd"
+  },
+  "bugs": {
+    "url": "https://github.com/thedatepicker/thedatepicker/issues"
+  },
+  "homepage": "https://github.com/thedatepicker/thedatepicker#readme",
+  "description": "TheDatepicker - Pure JavaScript Datepicker by Slevomat.cz",
+  "keywords": [
+    "date",
+    "datepicker"
+  ],
+  "author": {
+    "name": "Slevomat.cz",
+    "url": "https://www.slevomat.cz"
+  }
+}

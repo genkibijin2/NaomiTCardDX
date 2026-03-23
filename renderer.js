@@ -58,5 +58,9 @@ const fridayJobSlice = document.getElementById('FridaySlice');
 fridayJobSlice.addEventListener("mouseenter", () => {
     helper.innerText = "Friday's Jobs";
 });
+const jobInformationBox = document.getElementById('topBarInformation');
+jobInformationBox.addEventListener("mouseenter", () => {
+    helper.innerText = "Detailed information about job";
+});
 //--------------------------HELPER DESCRIPTIONS------------------------------//
 

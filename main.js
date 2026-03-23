@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain } = require('electron/main');
 const path = require('node:path');
 const fs = require("fs");
+const airDatePicker = require("air-datepicker")
 //DATABASE OPTIONS======================================================//
 const mysql = require("mysql");
 const firebird = require("node-firebird");
@@ -27,7 +28,7 @@ const Nanobar = require('nanobar');
 
 const createWindow = () => {
   const win = new BrowserWindow({
-    titleBarStyle: 'hidden',
+    //titleBarStyle: 'hidden',
     width: 1024,
     height: 768, 
     resizable: true,
@@ -88,7 +89,6 @@ ipcMain.on("SQLTEST", (event) => {
   const timeWeekAgoForSQL = (
   new Date(oneWeekAgo).toISOString().slice(0, -5).replace('T', ' ')  );
   console.log("For SQL Statement filter: " + timeWeekAgoForSQL);
-  
   firebird.attach(firebirdOptions, function(err, db){
     if(err){
       throw err;

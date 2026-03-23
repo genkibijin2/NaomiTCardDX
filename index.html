@@ -4,7 +4,9 @@
         <script type="text/javascript" src="js/GlslCanvas.js"></script>
         <script type="text/javascript" src="js/nanobar.js"></script>
         <title>NaomiTCard</title>
-	      <link rel="icon" type"image/x-icon" href="/Favicon.ico">      
+	      <link rel="icon" type"image/x-icon" href="/Favicon.ico">
+        <script src="js/datePicker/dist/the-datepicker.js"></script>
+        <link rel="stylesheet" href="js/datePicker/dist/the-datepicker.css">
 </head>
 
   
@@ -16,6 +18,10 @@ html, body, .glslCanvas, .theMainBit, .titlebar, .navbutton, .titleBlock{
 @font-face{
 	font-family: 'Inter';
 	src: url(fonts/InterThin24.ttf);
+}
+@font-face{
+	font-family: 'Chikare';
+	src: url(fonts/ChiKareGo.ttf);
 }
 .theMainBit{
   background-color: #f3d7fa;
@@ -113,7 +119,9 @@ const sandbox = new GlslCanvas(canvas);
 
 
 </div><!---END TITLE BAR-->
-<div id="programTitle" class="titleBlock" style="font-size: 24pt;text-align:center;">Despatch Job Viewer</div>
+<div id="programTitle" class="titleBlock" style="font-size: 24pt;text-align:center;">Despatch Job Viewer 
+  
+</div>
 <!---------------------------------------------------------------------------------------------------->
 <div id="mainContentWrapper" style="display:grid;margin-top: 10px;padding: 20px;">
 
@@ -123,9 +131,16 @@ const sandbox = new GlslCanvas(canvas);
   <!--information bar at top of middle square-->
   <span style="font-size:22px">
     Job Information:</br>
-    Test</br>Test</br>Test
+    
   </span>
   <hr class="gradientLine">
+  <input type="text" id="date-input">
+  <script>
+      const input = document.getElementById('date-input');
+      const datepicker = new TheDatepicker.Datepicker(input);
+      datepicker.render();
+      
+    </script>
   </div><!--End of top Bar information-->
 
   
@@ -139,6 +154,38 @@ const sandbox = new GlslCanvas(canvas);
       </div>
       <div id="MondaysJobs" class="JobBoxWrapper">
         <!---Container window for job objects-->
+        <div id="TestJob" class="JobObject">
+          88213PY</br>
+          Blackpool Tower Commission</br>
+          35 Frames
+        </div>
+        <div class="JobObject">
+          2112542-PYR</br>
+          Nandos Official</br>
+          1 Frame
+        </div>
+        <div class="JobObject">
+          88213PY
+        </div>
+        <div class="JobObject">
+          88213PY
+        </div>
+        <div class="JobObject">
+          88213PY
+        </div>
+        <div class="JobObject">
+          88213PY
+        </div>
+        <div class="JobObject">
+          88213PY
+        </div>
+        <div class="JobObject">
+          88213PY
+        </div>
+        <div class="JobObject">
+          88213PY
+        </div>
+
       </div>
     </div>
 
@@ -149,6 +196,8 @@ const sandbox = new GlslCanvas(canvas);
       </div>
       <div id="TuesdaysJobs" class="JobBoxWrapper">
         <!---Container window for job objects-->
+
+
       </div>
     </div>
 
@@ -159,6 +208,8 @@ const sandbox = new GlslCanvas(canvas);
       </div>
       <div id="WednesdaysJobs" class="JobBoxWrapper">
         <!---Container window for job objects-->
+
+
       </div>
     </div>
 
@@ -170,6 +221,8 @@ const sandbox = new GlslCanvas(canvas);
       </div>
       <div id="ThursdaysJobs" class="JobBoxWrapper">
         <!---Container window for job objects-->
+
+
       </div>
     </div>
 
@@ -180,6 +233,8 @@ const sandbox = new GlslCanvas(canvas);
       </div>
       <div id="FridaysJobs" class="JobBoxWrapper">
         <!---Container window for job objects-->
+
+
       </div>
     </div>
   </div><!---End of days of the week wrapper-->
@@ -187,12 +242,42 @@ const sandbox = new GlslCanvas(canvas);
 
 <!---STYLING FOR HELPER, BLOCKS AND WRAPPERS ETC!-->
 <style>
+.JobObject{
+  display: inline-block;
+  font-family: Chikare;
+  padding: 3px;
+  text-align: center;
+  font-size: 16px;
+  border: 1px solid white;
+  border-radius: 10px;
+  max-width: 80px;
+  min-width: 80px;
+  min-height: 70px;
+  max-height: 70px;
+  background-color: #EEEEEE;
+  box-shadow: 0 0 2px #00000033;
+  animation: 0.6s;
+  transition: all 0.2s;
+  overflow: scroll;
+}
+.JobObject:hover{
+  box-shadow: 0 0 10px #00000033;
+  color: white;
+  background-color: black;
+  border: 1px solid grey;
+}
 .JobBoxWrapper{
+
+  transition: all 0.4s;
+ 
+  padding: 3px;
   border: 1px solid rgb(218, 218, 218);
   border-radius: 10px;
-  min-width: 94%;
+  max-width: 86vw;
+  min-width: 86vw;
   margin: 3px;
   background: #e4e4e4;
+  overflow-y:scroll;
 }
 hr.gradientLine {
   height: 4px;
@@ -281,6 +366,7 @@ hr.gradientLine {
            1px solid black;border-radius: 20px;padding:4px;position: absolute;top: 93%;left:10px;word-wrap: no;">
           Debug
 </div>
+
 
 <!---//////////////////////////////////////////////-->
 
