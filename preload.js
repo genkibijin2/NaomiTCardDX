@@ -54,22 +54,70 @@ ipcRenderer.on("SQLTESTRETURNED", (event, result, $query) => {
 //============================================================================//
 
 //==============================DATE PICKER==================================//
+function setToLastSunday(d){
+  return d.setDate(d.getDate() - d.getDay());
+}
+
 const searchButtonVar = document.getElementById('searchButton');
 const datePickerVar = document.getElementById('date-input');
 searchButtonVar.addEventListener("click", () => {
   //First convert values from datepicker into useable date vars
   var datePickerValue = datePickerVar.value.toString();
-  console.log(datePickerValue);
-  var dateInBoxConverted = Date.parse(datePickerValue);
-  console.log("Raw: " + dateInBoxConverted);
-  var boxAsRealDate = new Date(dateInBoxConverted);
-  var dayOfTheWeek = boxAsRealDate.getDay();
-  console.log("Day of the week: " + dayOfTheWeek);
+  var datePickerDate = new Date(datePickerValue);
+  console.log("Date Chosen: " + datePickerDate);
+  setToLastSunday(datePickerDate);
+  console.log("Previous sunday was: " + datePickerDate);
+  //DATEPICKERDATE is NOW SUNDAY OF THAT WEEK!!!
 
-  //NEXT=> Figure out this weeks days based on the current day of the week...
+  //NOW=>Generate Dates of this current week as dates
+  var sundayOfWeek = datePickerDate; 
+
+  var mondayOfWeek = new Date(datePickerDate);
+  var tuesdayOfWeek = new Date(datePickerDate);
+  var wednesdayOfWeek = new Date(datePickerDate);
+  var thursdayOfWeek = new Date(datePickerDate);
+  var fridayOfWeek = new Date(datePickerDate);
+
+  mondayOfWeek.setDate(mondayOfWeek.getDate() + 1); 
+  tuesdayOfWeek.setDate(tuesdayOfWeek.getDate() + 2);
+  wednesdayOfWeek.setDate(wednesdayOfWeek.getDate() + 3);
+  thursdayOfWeek.setDate(thursdayOfWeek.getDate() + 4);
+  fridayOfWeek.setDate(fridayOfWeek.getDate() + 5);
+  //=====>Print Help
+  console.log("Sunday: " + sundayOfWeek);
+  console.log("Monday: " + mondayOfWeek);
+  console.log("Tuesday: " + tuesdayOfWeek);
+  console.log("Wednesday: " + wednesdayOfWeek);
+  console.log("Thursday: " + thursdayOfWeek);
+  console.log("Friday: " + fridayOfWeek);
+  //STERILIZE=> TO SQL SAFE
+  var mondayAsSQL = (new Date(mondayOfWeek).toISOString().slice(0, -5).replace('T', ' '));
+  var tuesdayAsSQL = (new Date(tuesdayOfWeek).toISOString().slice(0, -5).replace('T', ' '));
+  var wednesdayAsSQL = (new Date(wednesdayOfWeek).toISOString().slice(0, -5).replace('T', ' '));
+  var thursdayAsSQL = (new Date(thursdayOfWeek).toISOString().slice(0, -5).replace('T', ' '));
+  var fridayAsSQL = (new Date(fridayOfWeek).toISOString().slice(0, -5).replace('T', ' '));
+  console.log("As SQL:\n" + mondayAsSQL + " " + tuesdayAsSQL + " " + wednesdayAsSQL
+     + " " + thursdayAsSQL + " " + fridayAsSQL);
+  //var sundayAsSQLDate = (
+ // new Date(sundayAsDate).toISOString().slice(0, -5).replace('T', ' ')  );
+ // console.log("Sunday in SQL Statement Form: " + sundayAsSQLDate);
 });
 //=============================================================================//
 
+
+//================================JOBOBJECT HANDLING==========================//
+document.querySelectorAll(".JobObject").forEach(function(elem) {
+		elem.addEventListener("click", function() {
+			console.log("Job Object Selected: " + this.innerHTML + "\n");
+        if(this.classList.contains("selectedJob")){
+          this.classList.remove("selectedJob");
+        }
+        else{
+          this.classList.add("selectedJob");
+        }
+		});
+	});
+//=============================================================================//
 });//END OF DOMCONTENTLOAD
 
 

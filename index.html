@@ -144,14 +144,15 @@ const sandbox = new GlslCanvas(canvas);
       const datepicker = new TheDatepicker.Datepicker(input);
       datepicker.options.setTitle("Which week to look at?");
       const todaysDate = new Date();
+      //getMonth is indexed at 0 so add 1 for formatting...
       const dateFormatToday = (todaysDate.getFullYear() + "-" +
-        todaysDate.getMonth() + "-" + todaysDate.getDate()
+        (todaysDate.getMonth() + 1) + "-" + todaysDate.getDate()
       ).toString();
       datepicker.options.setInitialDate(dateFormatToday);
       datepicker.options.onSelect(function (event, day, previousDay) {
         console.log(day);
       });
-      datepicker.options.setInputFormat("Y-n-j");
+      datepicker.options.setInputFormat("Y-m-j");
       datepicker.render(); 
       
     </script></br>
@@ -286,6 +287,10 @@ const sandbox = new GlslCanvas(canvas);
   border: 1px solid rgb(191, 215, 252);
   transform: scale(1.01);
   translate: -2px -2px;
+}
+.selectedJob{
+  background-color:rgb(199, 161, 241) !important;
+  border: 1px solid rgb(160, 121, 202) !important;
 }
 .JobObject{
   display: inline-block;

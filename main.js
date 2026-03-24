@@ -27,7 +27,7 @@ const Nanobar = require('nanobar');
 
 const createWindow = () => {
   const win = new BrowserWindow({
-    titleBarStyle: 'hidden',
+    //titleBarStyle: 'hidden',
     width: 1024,
     height: 768, 
     resizable: true,
@@ -53,10 +53,11 @@ ipcMain.on("maximizeWindow", (event) => {
 ipcMain.on("helpButtonClicked", (event) => {
   //Custom Functions for testing
   console.log(win.getBounds());
+  console.log(win.getBounds());
 });
 //LAUNCH
 win.setFullScreen(false);
-win.setMinimumSize(600, 560);
+win.setMinimumSize(600, 638);
 win.setMaximumSize(2222, 1440);
 win.loadFile('index.html'); 
 }
