@@ -108,12 +108,13 @@ searchButtonVar.addEventListener("click", () => {
 //================================JOBOBJECT HANDLING==========================//
 document.querySelectorAll(".JobObject").forEach(function(elem) {
 		elem.addEventListener("click", function() {
-			console.log("Job Object Selected: " + this.innerHTML + "\n");
         if(this.classList.contains("selectedJob")){
           this.classList.remove("selectedJob");
+          console.log("Job Object Deselected: " + this.innerHTML + "\n");
         }
         else{
           this.classList.add("selectedJob");
+          console.log("Job Object Selected: " + this.innerHTML + "\n");
         }
 		});
 	});
