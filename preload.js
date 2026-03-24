@@ -37,6 +37,7 @@ maximizeButton.addEventListener("click", () =>{
 helper.addEventListener("click", () =>{
   ipcRenderer.send("SQLTEST");
 });
+
 //========================SQL INFORMATION RENDERING=========================//
 const middleScreenBox = document.getElementById('MondaysJobs');
 ipcRenderer.on("SQLTESTRETURNED", (event, result, $query) => {
@@ -52,7 +53,22 @@ ipcRenderer.on("SQLTESTRETURNED", (event, result, $query) => {
 });
 //============================================================================//
 
+//==============================DATE PICKER==================================//
+const searchButtonVar = document.getElementById('searchButton');
+const datePickerVar = document.getElementById('date-input');
+searchButtonVar.addEventListener("click", () => {
+  //First convert values from datepicker into useable date vars
+  var datePickerValue = datePickerVar.value.toString();
+  console.log(datePickerValue);
+  var dateInBoxConverted = Date.parse(datePickerValue);
+  console.log("Raw: " + dateInBoxConverted);
+  var boxAsRealDate = new Date(dateInBoxConverted);
+  var dayOfTheWeek = boxAsRealDate.getDay();
+  console.log("Day of the week: " + dayOfTheWeek);
 
+  //NEXT=> Figure out this weeks days based on the current day of the week...
+});
+//=============================================================================//
 
 });//END OF DOMCONTENTLOAD
 

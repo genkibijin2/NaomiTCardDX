@@ -1,7 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require('electron/main');
 const path = require('node:path');
 const fs = require("fs");
-const airDatePicker = require("air-datepicker")
 //DATABASE OPTIONS======================================================//
 const mysql = require("mysql");
 const firebird = require("node-firebird");

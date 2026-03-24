@@ -62,5 +62,17 @@ const jobInformationBox = document.getElementById('topBarInformation');
 jobInformationBox.addEventListener("mouseenter", () => {
     helper.innerText = "Detailed information about job";
 });
+const searchButton = document.getElementById('searchButton');
+searchButton.addEventListener("mouseenter", () => {
+    helper.innerText = "Search this date range";
+});
+searchButton.addEventListener("click", () => {
+    helper.innerText = "Searching dates...";
+});
+const datePickerBox = document.getElementById('date-input');
+datePickerBox.addEventListener("mouseenter", () => {
+    helper.innerText = "Choose dates to look at";
+});
+
 //--------------------------HELPER DESCRIPTIONS------------------------------//
 

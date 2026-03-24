@@ -7,12 +7,13 @@
 	      <link rel="icon" type"image/x-icon" href="/Favicon.ico">
         <script src="js/datePicker/dist/the-datepicker.js"></script>
         <link rel="stylesheet" href="js/datePicker/dist/the-datepicker.css">
+        
 </head>
 
   
 <!---PAGE CSS STYLINGS--->
 <style>
-html, body, .glslCanvas, .theMainBit, .titlebar, .navbutton, .titleBlock{
+html, body, .glslCanvas, .theMainBit, .titlebar, .navbutton, .titleBlock #searchButton{
   cursor: url("cursor/hand1.ico"), pointer;
 }
 @font-face{
@@ -22,6 +23,10 @@ html, body, .glslCanvas, .theMainBit, .titlebar, .navbutton, .titleBlock{
 @font-face{
 	font-family: 'Chikare';
 	src: url(fonts/ChiKareGo.ttf);
+}
+@font-face{
+  font-family: 'Mochiy';
+  src: url(fonts/Mochiy.ttf);
 }
 .theMainBit{
   background-color: #f3d7fa;
@@ -130,17 +135,29 @@ const sandbox = new GlslCanvas(canvas);
   <div id="topBarInformation" class="insideWrapperTopBar">
   <!--information bar at top of middle square-->
   <span style="font-size:22px">
-    Job Information:</br>
-    
-  </span>
-  <hr class="gradientLine">
-  <input type="text" id="date-input">
-  <script>
+    Job Information: 
+    <!---DATE PICKER AND FUNCTIONS FOR WEEK-->
+    <input type="text" id="date-input">
+    <button id="searchButton">🔎︎ Search</button>
+    <script>
       const input = document.getElementById('date-input');
       const datepicker = new TheDatepicker.Datepicker(input);
-      datepicker.render();
+      datepicker.options.setTitle("Which week to look at?");
+      const todaysDate = new Date();
+      const dateFormatToday = (todaysDate.getFullYear() + "-" +
+        todaysDate.getMonth() + "-" + todaysDate.getDate()
+      ).toString();
+      datepicker.options.setInitialDate(dateFormatToday);
+      datepicker.options.onSelect(function (event, day, previousDay) {
+        console.log(day);
+      });
+      datepicker.options.setInputFormat("Y-n-j");
+      datepicker.render(); 
       
-    </script>
+    </script></br>
+  </span>
+  <hr class="gradientLine">
+  
   </div><!--End of top Bar information-->
 
   
@@ -242,6 +259,34 @@ const sandbox = new GlslCanvas(canvas);
 
 <!---STYLING FOR HELPER, BLOCKS AND WRAPPERS ETC!-->
 <style>
+#searchButton{
+  border: 1px solid black;
+  border-radius: 10px;
+  background-color: rgb(255, 255, 255);
+  box-shadow: 0 0 3px #00000033;
+  transition: 0.4s;
+}
+#searchButton:hover{
+  box-shadow: 0 0 10px #5b9b5b;
+  background-color: #bdf1bd;
+  translate: -1px -1px;
+}
+#date-input{
+  border: 1px solid rgb(191, 215, 252);
+  background-color: white;
+  color: black;
+  border-radius: 10px;
+  box-shadow: 0 0 3px #00000033;
+  transition: 0.4s;
+}
+#date-input:hover{
+  box-shadow: 0 0 10px #00000033;
+  color: black;
+  background-color: rgb(224, 224, 224);
+  border: 1px solid rgb(191, 215, 252);
+  transform: scale(1.01);
+  translate: -2px -2px;
+}
 .JobObject{
   display: inline-block;
   font-family: Chikare;
@@ -383,6 +428,10 @@ hr.gradientLine {
       };
       var nanobar = new Nanobar(options);
       nanobar.go(100);
+      const searchButtonForLoadingBar = document.getElementById('searchButton');
+      searchButtonForLoadingBar.addEventListener("click", () => {
+        nanobar.go(100);
+      });
     </script>
     <style>
       .nanobar{
@@ -395,4 +444,5 @@ hr.gradientLine {
       }
     </style>
     <div id="testBarLocation"></div>
+    
 </html>
