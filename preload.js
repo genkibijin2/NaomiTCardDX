@@ -35,21 +35,7 @@ maximizeButton.addEventListener("click", () =>{
   ipcRenderer.send("maximizeWindow");
 });
 helper.addEventListener("click", () =>{
-  ipcRenderer.send("SQLTEST");
-});
-
-//========================SQL INFORMATION RENDERING=========================//
-const middleScreenBox = document.getElementById('MondaysJobs');
-ipcRenderer.on("SQLTESTRETURNED", (event, result, $query) => {
-    
-    for (var i = 0; i < result.length; i++){
-      var currentRowObject = result[i];
-        middleScreenBox.innerHTML = (middleScreenBox.innerHTML +
-        "FILENAME: " + currentRowObject.FILENAME + ", JOBNO: "
-        + currentRowObject.JOBNO +
-        ", CONTACT: " + currentRowObject.CONTACT + "</br>" +
-        "");
-  }
+  //
 });
 //============================================================================//
 
@@ -60,10 +46,12 @@ function setToLastSunday(d){
 
 const searchButtonVar = document.getElementById('searchButton');
 const datePickerVar = document.getElementById('date-input');
-searchButtonVar.addEventListener("click", () => {
+function getThisWeeksJobs(){
   //First convert values from datepicker into useable date vars
   var datePickerValue = datePickerVar.value.toString();
-  var datePickerDate = new Date(datePickerValue);
+  try{
+    var datePickerDate = new Date(datePickerValue);
+  
   console.log("Date Chosen: " + datePickerDate);
   setToLastSunday(datePickerDate);
   console.log("Previous sunday was: " + datePickerDate);
@@ -96,17 +84,77 @@ searchButtonVar.addEventListener("click", () => {
   var wednesdayAsSQL = (new Date(wednesdayOfWeek).toISOString().slice(0, -5).replace('T', ' '));
   var thursdayAsSQL = (new Date(thursdayOfWeek).toISOString().slice(0, -5).replace('T', ' '));
   var fridayAsSQL = (new Date(fridayOfWeek).toISOString().slice(0, -5).replace('T', ' '));
+  //Trim and remove H/M/S to disable any timezone potential issues
+  mondayAsSQL = mondayAsSQL.substring(0, mondayAsSQL.length - 8);
+  tuesdayAsSQL = tuesdayAsSQL.substring(0, tuesdayAsSQL.length - 8);
+  wednesdayAsSQL = wednesdayAsSQL.substring(0, wednesdayAsSQL.length - 8);
+  thursdayAsSQL = thursdayAsSQL.substring(0, thursdayAsSQL.length - 8);
+  fridayAsSQL = fridayAsSQL.substring(0, fridayAsSQL.length - 8);
   console.log("As SQL:\n" + mondayAsSQL + " " + tuesdayAsSQL + " " + wednesdayAsSQL
      + " " + thursdayAsSQL + " " + fridayAsSQL);
-  //var sundayAsSQLDate = (
- // new Date(sundayAsDate).toISOString().slice(0, -5).replace('T', ' ')  );
- // console.log("Sunday in SQL Statement Form: " + sundayAsSQLDate);
+  
+  //FINALLY=> pass all these dates into date search SQL in main.js
+  ipcRenderer.send("SendDatesToDatabase", mondayAsSQL, tuesdayAsSQL,
+    wednesdayAsSQL, thursdayAsSQL, fridayAsSQL
+   );
+  }
+  catch(error){
+    console.log("Likely no input in date picker... So error: ");
+    console.log(error);
+    datePickerVar.value = "Pick a date!";
+    
+  }
+}
+searchButtonVar.addEventListener("click", () => {
+  getThisWeeksJobs();
+});
+//==>And when the objects are sent back...:
+//========================SQL INFORMATION RENDERING=========================//
+
+const mondayJobBox = document.getElementById('MondaysJobs');
+const tuesdayJobBox = document.getElementById('TuesdaysJobs');
+const wednesdayJobBox = document.getElementById('WednesdaysJobs');
+const thursdayJobBox = document.getElementById('ThursdaysJobs');
+const fridayJobBox = document.getElementById('FridaysJobs');
+ipcRenderer.on("mondayObjectsReturned", (event, mondaysJobObjects) =>{
+  mondayJobBox.innerHTML = "";
+    for (var i = 0; i < mondaysJobObjects.length; i++){
+      var currentRowObject = mondaysJobObjects[i];
+        mondayJobBox.innerHTML = (
+        mondayJobBox.innerHTML +
+        "<div class='JobObject'>" + currentRowObject.JOBNO + "</br>" +
+        currentRowObject.DELIVERYNAME + "</br><p></p><p></p><p></p><p></p></br>" +
+        "Extra: </br>" + currentRowObject.TOTALFRAMES + 
+        "");
+  }
+  addListeners2AllJobs();
+});
+ipcRenderer.on("tuesdayObjectsReturned", (event, tuesdaysJobObjects) =>{
+  //
+});
+ipcRenderer.on("wednesdaysObjectsReturned", (event, wednesdaysJobObjects) =>{
+  //
+});
+ipcRenderer.on("thursdayObjectsReturned", (event, thursdaysJobObjects) =>{
+  //
+});
+ipcRenderer.on("fridayObjectsReturned", (event, fridaysJobObjects) =>{
+  //
+});
+
+
+ipcRenderer.on("SQLTESTRETURNED", (event, result, $query) => {
+    
 });
 //=============================================================================//
 
 
 //================================JOBOBJECT HANDLING==========================//
+function addListeners2AllJobs(){
+const detailedInformationAboutJob = document.getElementById('leftDetailsBox');
 document.querySelectorAll(".JobObject").forEach(function(elem) {
+
+    //When you click a job object...
 		elem.addEventListener("click", function() {
         if(this.classList.contains("selectedJob")){
           this.classList.remove("selectedJob");
@@ -117,8 +165,26 @@ document.querySelectorAll(".JobObject").forEach(function(elem) {
           console.log("Job Object Selected: " + this.innerHTML + "\n");
         }
 		});
+
+    //When you hover over a job object...
+    elem.addEventListener("mouseenter", function() {
+      var JobStringSplit = this.innerHTML.split("<br>");
+      var jobNumber = JobStringSplit[0];
+      var deliveryName = JobStringSplit[1];
+      var jobFrames = JobStringSplit[4];
+      detailedInformationAboutJob.innerHTML = (
+        "Job Number: " + jobNumber + "</br>" +
+        "Delivery Name: " + deliveryName + "</br>" +
+        "Frame Total: " + jobFrames + 
+        "");
+    
+    });
 	});
+}
 //=============================================================================//
+
+//STARTUP RUN of Job Search (Based on current week):
+getThisWeeksJobs();
 });//END OF DOMCONTENTLOAD
 
 

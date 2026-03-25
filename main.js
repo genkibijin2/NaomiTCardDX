@@ -79,25 +79,18 @@ app.on('window-all-closed', () => {
 });
 
 //DATABASE/MYSQL FUNCTIONS
-ipcMain.on("SQLTEST", (event) => {
-  const timeRightNow = new Date();
-  const timeAsUTCMilliseconds = timeRightNow.getTime();
-  const oneWeekAgo = (timeAsUTCMilliseconds - 604800000);
-  const oneWeekAgoAsDate = new Date(oneWeekAgo).toISOString();
-  console.log("Date right now: " + timeRightNow)
-  console.log("One Week Ago:" + oneWeekAgoAsDate);
-  const timeWeekAgoForSQL = (
-  new Date(oneWeekAgo).toISOString().slice(0, -5).replace('T', ' ')  );
-  console.log("For SQL Statement filter: " + timeWeekAgoForSQL);
+ipcMain.on("SQLTEST", (event, dateinPut) => {
+  console.log("Date input to SQL: " + dateinPut);
   firebird.attach(firebirdOptions, function(err, db){
     if(err){
       throw err;
     }
-    $query = ("SELECT FIRST 20 j.FILENAME, " + 
+    $query = ("SELECT FIRST 1000 j.FILENAME, " + 
           "iif(j.JOBNO = '', 'N/A', j.JOBNO) AS \"JOBNO\", " +
           "iif(j.CONTACT = '', 'N/A', j.CONTACT) AS \"CONTACT\" " +
           "FROM JOBQUOTEHEADER j " + 
-          "WHERE j.TIME_STAMP > '" + timeWeekAgoForSQL + "'");
+          "WHERE j.TIME_STAMP > '" + dateinPut + "' ORDER BY j.TIME_STAMP");
+    console.log("Sending query...:\n" + $query);
     db.query($query, function(err, result){
     if(err){
       console.log("ERROR");
@@ -112,5 +105,44 @@ ipcMain.on("SQLTEST", (event) => {
     
     });
   });
-
 });
+
+
+ipcMain.on("SendDatesToDatabase", (event, monday, tuesday, wednesday,
+  thursday, friday) => {
+
+    //Monday Search//
+    firebird.attach(firebirdOptions, function(err, db){
+    if(err){
+      throw err;
+    }
+    const SQLQuery = ("SELECT j.JOBNO, j.DELIVERYNAME, j.TOTALFRAMES " +
+              "FROM JOBQUOTEHEADER j " +
+              "WHERE j.REQUIREDDATE = '" + monday + "'");
+    console.log("Sending query...:\n" + SQLQuery);
+    db.query(SQLQuery, function(err, result){
+    if(err){
+      console.log("ERROR");
+      console.log(err);
+    }
+    db.detach();
+    event.reply("mondayObjectsReturned", result);
+    
+    });
+    //===========================END MONDAY//
+  });
+});
+
+
+//Method for getting today's date as SQL Sterilized string:
+/*
+  const timeRightNow = new Date();
+  const timeAsUTCMilliseconds = timeRightNow.getTime();
+  const oneWeekAgo = (timeAsUTCMilliseconds - 604800000);
+  const oneWeekAgoAsDate = new Date(oneWeekAgo).toISOString();
+  console.log("Date right now: " + timeRightNow)
+  console.log("One Week Ago:" + oneWeekAgoAsDate);
+  const timeWeekAgoForSQL = (
+  new Date(oneWeekAgo).toISOString().slice(0, -5).replace('T', ' ')  );
+  console.log("For SQL Statement filter: " + timeWeekAgoForSQL);
+  */
