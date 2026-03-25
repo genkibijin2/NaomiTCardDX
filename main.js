@@ -118,7 +118,8 @@ ipcMain.on("SendDatesToDatabase", (event, monday, tuesday, wednesday,
     }
     const SQLQuery = ("SELECT j.JOBNO, j.DELIVERYNAME, j.TOTALFRAMES " +
               "FROM JOBQUOTEHEADER j " +
-              "WHERE j.REQUIREDDATE = '" + monday + "'");
+              "WHERE j.REQUIREDDATE = '" + monday + "' " + 
+              "AND j.QUOTE_JOB_TYPE = 'JOB'");
     console.log("Sending query...:\n" + SQLQuery);
     db.query(SQLQuery, function(err, result){
     if(err){
@@ -130,6 +131,9 @@ ipcMain.on("SendDatesToDatabase", (event, monday, tuesday, wednesday,
     
     });
     //===========================END MONDAY//
+
+    //Tuesday Search//
+    //...
   });
 });
 

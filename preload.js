@@ -173,9 +173,10 @@ document.querySelectorAll(".JobObject").forEach(function(elem) {
       var deliveryName = JobStringSplit[1];
       var jobFrames = JobStringSplit[4];
       detailedInformationAboutJob.innerHTML = (
-        "Job Number: " + jobNumber + "</br>" +
-        "Delivery Name: " + deliveryName + "</br>" +
-        "Frame Total: " + jobFrames + 
+        "<span style='font-weight:2000;color:#FF006A;text-shadow: 1px 1px 1px black;'>"
+         + jobNumber + "</span></br>" +
+        "<span style='color:#C40BF7;'>" + deliveryName + "</span></br>" +
+        "<span style='color:#EF458C;'>Frame Total: " + jobFrames + "</span>" +
         "");
     
     });
