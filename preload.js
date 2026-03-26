@@ -107,6 +107,7 @@ function getThisWeeksJobs(){
 }
 searchButtonVar.addEventListener("click", () => {
   getThisWeeksJobs();
+  clearTheJobBox();
 });
 //==>And when the objects are sent back...:
 //========================SQL INFORMATION RENDERING=========================//
@@ -119,13 +120,26 @@ const fridayJobBox = document.getElementById('FridaysJobs');
 ipcRenderer.on("mondayObjectsReturned", (event, mondaysJobObjects) =>{
   mondayJobBox.innerHTML = "";
     for (var i = 0; i < mondaysJobObjects.length; i++){
+      //For each object, first take HEADER_ID and reprocess into another
+      //SQL statement, which means sending out a message here for each item.
       var currentRowObject = mondaysJobObjects[i];
-        mondayJobBox.innerHTML = (
-        mondayJobBox.innerHTML +
-        "<div class='JobObject'>" + currentRowObject.JOBNO + "</br>" +
-        currentRowObject.DELIVERYNAME + "</br><p></p><p></p><p></p><p></p></br>" +
-        "Extra: </br>" + currentRowObject.TOTALFRAMES + 
-        "");
+      //const myJobStageResults = ipcRenderer.invoke("pleaseCheckMyJobStage", currentRowObject.HEADER_ID);
+      //console.log(myJobStageResults.bar_optimized);
+  
+      
+        
+      //Now build box      
+      mondayJobBox.innerHTML = (
+      mondayJobBox.innerHTML +
+      "<div class='JobObject'>" + currentRowObject.JOBNO + "</br>" +
+      currentRowObject.DELIVERYNAME + "</br></br>" +
+      "<span style='font-size: 0px;'>Extra: </br>" + currentRowObject.TOTALFRAMES + 
+      "</br>" + currentRowObject.DESPATCHOPTIMIZED +
+      "</br>" + currentRowObject.BAROPTIMIZED +
+      "</br>" + currentRowObject.AWAITINGSIG +
+      "</br>" + currentRowObject.SIGNATURERECEIVED +
+      "</br>" + currentRowObject.GLASS +
+      "</span>");
   }
   addListeners2AllJobs();
 });
@@ -148,7 +162,11 @@ ipcRenderer.on("SQLTESTRETURNED", (event, result, $query) => {
 });
 //=============================================================================//
 
+function clearTheJobBox(){
+  const leftInfoForClear = document.getElementById('leftDetailsBox');
+  leftInfoForClear.innerHTML = '<img src="img/waitingForJobInfo.png" alt="waiting for job info" width="102" height="77">';
 
+}
 //================================JOBOBJECT HANDLING==========================//
 function addListeners2AllJobs(){
 const detailedInformationAboutJob = document.getElementById('leftDetailsBox');
@@ -172,11 +190,22 @@ document.querySelectorAll(".JobObject").forEach(function(elem) {
       var jobNumber = JobStringSplit[0];
       var deliveryName = JobStringSplit[1];
       var jobFrames = JobStringSplit[4];
+      var despatchOptimized = JobStringSplit[5];
+      var barOptimized = JobStringSplit[6];
+      var awaitingSignature = JobStringSplit[7];
+      var signatureReceived = JobStringSplit[8];
+      var hasGlass = JobStringSplit[9];
+      
       detailedInformationAboutJob.innerHTML = (
         "<span style='font-weight:2000;color:#FF006A;text-shadow: 1px 1px 1px black;'>"
          + jobNumber + "</span></br>" +
         "<span style='color:#C40BF7;'>" + deliveryName + "</span></br>" +
-        "<span style='color:#EF458C;'>Frame Total: " + jobFrames + "</span>" +
+        "<span style='color:#EF458C;'>Frame Total: " + jobFrames + " </span>" +
+        "<span style='color:#EF458C;'>DB Opt: " + despatchOptimized + " </span>" +
+        "<span style='color:#EF458C;'>Bar Opt: " + barOptimized + " </span>" +
+        "<span style='color:#EF458C;'>Awaiting Sig: " + awaitingSignature + " </span>" +
+        "<span style='color:#EF458C;'>Signature Received: " + signatureReceived + " </span>" +
+        "<span style='color:#EF458C;'>Has Glass?: " + hasGlass + " </span>" +
         "");
     
     });

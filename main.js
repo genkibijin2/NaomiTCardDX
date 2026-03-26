@@ -78,8 +78,82 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit()
 });
 
+
+
+
+ipcMain.on("SendDatesToDatabase", (event, monday, tuesday, wednesday,
+  thursday, friday) => {
+    //Monday Search//
+    firebird.attach(firebirdOptions, function(err, db){
+    if(err){
+      throw err;
+    }
+    const SQLQuery = ("SELECT DISTINCT j.JOBNO, j.DELIVERYNAME, j.TOTALFRAMES, " +
+              "IIF(jp.STAGE_NAME='Despatch Optimised',1,0) AS DESPATCHOPTIMIZED, " +
+              "IIF(jb.STAGE_NAME='Bar Optimized',1,0) AS BAROPTIMIZED, " +
+              "IIF(ja.STAGE_NAME='Awaiting Signature',1,0) AS AWAITINGSIG, " +
+              "IIF(js.STAGE_NAME='Signature Received',1,0) AS SIGNATURERECEIVED, " +
+              "IIF (f.GLASSCOSTPRICE>0,1,0) AS GLASS " +
+              "FROM JOBQUOTEHEADER j " +
+              "LEFT JOIN FRAMES f  ON (j.HEADER_ID=f.HEADER_ID) AND WINDOWBAD <>1 AND WINDOWSTYLEPRESENT <>0 " +
+              "LEFT JOIN JOBSTAGES js ON (j.HEADER_ID=js.HEADER_ID  AND js.STAGE_NAME = 'Signature Received') " +
+              "LEFT JOIN JOBSTAGES jp ON (j.HEADER_ID=jp.HEADER_ID  AND jp.STAGE_NAME = 'Despatch Optimised') " + 
+              "LEFT JOIN JOBSTAGES jb ON (j.HEADER_ID=jb.HEADER_ID  AND jb.STAGE_NAME = 'Bar Optimized') " +
+              "LEFT JOIN JOBSTAGES ja ON (j.HEADER_ID=ja.HEADER_ID  AND ja.STAGE_NAME = 'Awaiting Signature') " +
+              "WHERE j.REQUIREDDATE = '" + monday + "' " + 
+              "AND j.QUOTE_JOB_TYPE = 'JOB'");
+    console.log("Sending query...:\n" + SQLQuery);
+    db.query(SQLQuery, function(err, result){
+    if(err){
+      console.log("ERROR");
+      console.log(err);
+    }
+    db.detach();
+    var jobQuoteHeaderResults = result;
+    event.reply("mondayObjectsReturned", jobQuoteHeaderResults);
+    });
+    //===========================END MONDAY//
+
+    //Tuesday Search//
+    //...
+  });
+});
+
+ipcMain.on("pleaseCheckMyJobStage", (event, headerId2Check) => {
+    /*var jobStagesResult = {
+      bar_optimized: 'false',
+      order_confirmed: 'false',
+      awaiting_signature: 'false',
+      signature_received: 'false',
+      despatch_optimized: 'false'
+    };
+    for (var p = 0; p < result.length; p++){
+      if (result[p].STAGE_NAME == 'Bar Optimized'){
+        jobStagesResult.bar_optimized = true; console.log("Found Bar Optimization" + 
+          " for HEADER_ID " + headerId2Check
+        );
+      }
+    }
+    
+    event.returnValue = jobStagesResult;*/
+    });
+
+//Method for getting today's date as SQL Sterilized string:
+/*
+  const timeRightNow = new Date();
+  const timeAsUTCMilliseconds = timeRightNow.getTime();
+  const oneWeekAgo = (timeAsUTCMilliseconds - 604800000);
+  const oneWeekAgoAsDate = new Date(oneWeekAgo).toISOString();
+  console.log("Date right now: " + timeRightNow)
+  console.log("One Week Ago:" + oneWeekAgoAsDate);
+  const timeWeekAgoForSQL = (
+  new Date(oneWeekAgo).toISOString().slice(0, -5).replace('T', ' ')  );
+  console.log("For SQL Statement filter: " + timeWeekAgoForSQL);
+  */
+
+  
 //DATABASE/MYSQL FUNCTIONS
-ipcMain.on("SQLTEST", (event, dateinPut) => {
+/*ipcMain.on("SQLTEST", (event, dateinPut) => {
   console.log("Date input to SQL: " + dateinPut);
   firebird.attach(firebirdOptions, function(err, db){
     if(err){
@@ -96,57 +170,8 @@ ipcMain.on("SQLTEST", (event, dateinPut) => {
       console.log("ERROR");
       console.log(err);
     }
-    //console.log("Result of SQL Query: ");
-    //console.log(result);
-
     db.detach();
     event.reply("SQLTESTRETURNED", result, $query);
-    //iterate through rows
-    
     });
   });
-});
-
-
-ipcMain.on("SendDatesToDatabase", (event, monday, tuesday, wednesday,
-  thursday, friday) => {
-
-    //Monday Search//
-    firebird.attach(firebirdOptions, function(err, db){
-    if(err){
-      throw err;
-    }
-    const SQLQuery = ("SELECT j.JOBNO, j.DELIVERYNAME, j.TOTALFRAMES " +
-              "FROM JOBQUOTEHEADER j " +
-              "WHERE j.REQUIREDDATE = '" + monday + "' " + 
-              "AND j.QUOTE_JOB_TYPE = 'JOB'");
-    console.log("Sending query...:\n" + SQLQuery);
-    db.query(SQLQuery, function(err, result){
-    if(err){
-      console.log("ERROR");
-      console.log(err);
-    }
-    db.detach();
-    event.reply("mondayObjectsReturned", result);
-    
-    });
-    //===========================END MONDAY//
-
-    //Tuesday Search//
-    //...
-  });
-});
-
-
-//Method for getting today's date as SQL Sterilized string:
-/*
-  const timeRightNow = new Date();
-  const timeAsUTCMilliseconds = timeRightNow.getTime();
-  const oneWeekAgo = (timeAsUTCMilliseconds - 604800000);
-  const oneWeekAgoAsDate = new Date(oneWeekAgo).toISOString();
-  console.log("Date right now: " + timeRightNow)
-  console.log("One Week Ago:" + oneWeekAgoAsDate);
-  const timeWeekAgoForSQL = (
-  new Date(oneWeekAgo).toISOString().slice(0, -5).replace('T', ' ')  );
-  console.log("For SQL Statement filter: " + timeWeekAgoForSQL);
-  */
+});*/
