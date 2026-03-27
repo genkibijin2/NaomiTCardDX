@@ -187,8 +187,9 @@ ipcRenderer.on("SQLTESTRETURNED", (event, result, $query) => {
 
 function clearTheJobBox(){
   const leftInfoForClear = document.getElementById('leftDetailsBox');
+  const infoBoxOnTheRight = document.getElementById('rightContainsBox');
   leftInfoForClear.innerHTML = '<img src="img/waitingForJobInfo.png" alt="waiting for job info" width="102" height="77">';
-
+  infoBoxOnTheRight.innerHTML = '<img src="img/envelope.png" alt="waiting for job info" width="102" height="77">';
 }
 //================================JOBOBJECT HANDLING==========================//
 function addListeners2AllJobs(){
