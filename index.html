@@ -155,7 +155,8 @@ const sandbox = new GlslCanvas(canvas);
       datepicker.options.setInputFormat("Y-m-j");
       datepicker.render(); 
       
-    </script></br>
+    </script>
+    <img id="loadingIcon" src="img/smallr.gif" alt="loading" style="float:right;">
   </span>
   <hr class="gradientLine"><!----------------------->
   <div id="detailedJobInformationBox">
@@ -244,6 +245,19 @@ const sandbox = new GlslCanvas(canvas);
 
 <!---STYLING FOR HELPER, BLOCKS AND WRAPPERS ETC!-->
 <style>
+
+.glassIcon{
+  font-size: 30px;
+}
+.glassIcon::before{
+  content: url("img/SKIcon.png");
+}
+.optimizedIcon{
+  font-size: 30px;
+}
+.optimizedIcon::before{
+  content: url("img/optIcon.png");
+}
 #rightContainsBox{
   float: right;
   flex-flow: column;

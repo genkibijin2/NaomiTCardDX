@@ -12,6 +12,7 @@ contextBridge.exposeInMainWorld('versions', {
 
 
 document.addEventListener('DOMContentLoaded', function () {
+nowLoading();
 /*PUT EVERYTHING INSIDE THIS FUNCTION, AS IT RUNS WHEN EVERYTHING
 ON THE PAGE HAS FULLY LOADED, OTHERWISE ELEMENTS MIGHT BE NULL!
 */
@@ -47,6 +48,7 @@ function setToLastSunday(d){
 const searchButtonVar = document.getElementById('searchButton');
 const datePickerVar = document.getElementById('date-input');
 function getThisWeeksJobs(){
+  nowLoading();
   //First convert values from datepicker into useable date vars
   var datePickerValue = datePickerVar.value.toString();
   try{
@@ -123,16 +125,27 @@ ipcRenderer.on("mondayObjectsReturned", (event, mondaysJobObjects) =>{
       //For each object, first take HEADER_ID and reprocess into another
       //SQL statement, which means sending out a message here for each item.
       var currentRowObject = mondaysJobObjects[i];
-      //const myJobStageResults = ipcRenderer.invoke("pleaseCheckMyJobStage", currentRowObject.HEADER_ID);
-      //console.log(myJobStageResults.bar_optimized);
-  
-      
+      var glassImg = "img/nothing.png";
+      var barOptImg = "img/nothing.png";
+      var signatureOKImg = "img/nothing.png";
+      var waitSigImg = "img/nothing.png";
+      var despatchOptimisedImg = "img/nothing.png";
+      //Add Icons to HTML for status
+      if(currentRowObject.GLASS == '1'){
+        glassImg = "img/SKIconMini.png";
+      }
+      if ((currentRowObject.BAROPTIMIZED == '1') || (currentRowObject.DESPATCHOPTIMIZED == '1')){
+        barOptImg = "img/optIconMini.png";
+      }
         
       //Now build box      
       mondayJobBox.innerHTML = (
       mondayJobBox.innerHTML +
       "<div class='JobObject'>" + currentRowObject.JOBNO + "</br>" +
-      currentRowObject.DELIVERYNAME + "</br></br>" +
+      currentRowObject.DELIVERYNAME + 
+      "<img src='" + glassImg + "'>" +
+      "<img src='" + barOptImg + "'>" +
+      "</br></br>" +
       "<span style='font-size: 0px;'>Extra: </br>" + currentRowObject.TOTALFRAMES + 
       "</br>" + currentRowObject.DESPATCHOPTIMIZED +
       "</br>" + currentRowObject.BAROPTIMIZED +
@@ -142,18 +155,19 @@ ipcRenderer.on("mondayObjectsReturned", (event, mondaysJobObjects) =>{
       "</span>");
   }
   addListeners2AllJobs();
+  doneLoading(); //move to end of friday when complete
 });
 ipcRenderer.on("tuesdayObjectsReturned", (event, tuesdaysJobObjects) =>{
-  //
+  
 });
 ipcRenderer.on("wednesdaysObjectsReturned", (event, wednesdaysJobObjects) =>{
-  //
+  
 });
 ipcRenderer.on("thursdayObjectsReturned", (event, thursdaysJobObjects) =>{
-  //
+  
 });
 ipcRenderer.on("fridayObjectsReturned", (event, fridaysJobObjects) =>{
-  //
+  
 });
 
 
@@ -169,9 +183,11 @@ function clearTheJobBox(){
 }
 //================================JOBOBJECT HANDLING==========================//
 function addListeners2AllJobs(){
+nowLoading();
 const detailedInformationAboutJob = document.getElementById('leftDetailsBox');
+const iconsOnRight = document.getElementById('rightContainsBox');
 document.querySelectorAll(".JobObject").forEach(function(elem) {
-
+    
     //When you click a job object...
 		elem.addEventListener("click", function() {
         if(this.classList.contains("selectedJob")){
@@ -184,17 +200,19 @@ document.querySelectorAll(".JobObject").forEach(function(elem) {
         }
 		});
 
+
     //When you hover over a job object...
     elem.addEventListener("mouseenter", function() {
       var JobStringSplit = this.innerHTML.split("<br>");
-      var jobNumber = JobStringSplit[0];
-      var deliveryName = JobStringSplit[1];
-      var jobFrames = JobStringSplit[4];
-      var despatchOptimized = JobStringSplit[5];
-      var barOptimized = JobStringSplit[6];
-      var awaitingSignature = JobStringSplit[7];
-      var signatureReceived = JobStringSplit[8];
-      var hasGlass = JobStringSplit[9];
+      var jobNumber = JobStringSplit[0].trim();
+      var deliveryName = JobStringSplit[1].trim();
+      var jobFrames = JobStringSplit[4].trim();
+      var despatchOptimized = JobStringSplit[5].trim();
+      var barOptimized = JobStringSplit[6].trim();
+      var awaitingSignature = JobStringSplit[7].trim();
+      var signatureReceived = JobStringSplit[8].trim();
+      var hasGlass = JobStringSplit[9].trim();
+      
       
       detailedInformationAboutJob.innerHTML = (
         "<span style='font-weight:2000;color:#FF006A;text-shadow: 1px 1px 1px black;'>"
@@ -202,19 +220,43 @@ document.querySelectorAll(".JobObject").forEach(function(elem) {
         "<span style='color:#C40BF7;'>" + deliveryName + "</span></br>" +
         "<span style='color:#EF458C;'>Frame Total: " + jobFrames + " </span>" +
         "<span style='color:#EF458C;'>DB Opt: " + despatchOptimized + " </span>" +
-        "<span style='color:#EF458C;'>Bar Opt: " + barOptimized + " </span>" +
         "<span style='color:#EF458C;'>Awaiting Sig: " + awaitingSignature + " </span>" +
         "<span style='color:#EF458C;'>Signature Received: " + signatureReceived + " </span>" +
-        "<span style='color:#EF458C;'>Has Glass?: " + hasGlass + " </span>" +
         "");
+      
+      //ICONS
+      iconsOnRight.innerHTML = '';
+      if (hasGlass == '1</span>'){
+        iconsOnRight.innerHTML = (
+          iconsOnRight.innerHTML + 
+          "<span class='glassIcon'>Glass</span></br>"
+        );
+      }
+      if ((barOptimized == '1') || (despatchOptimized == '1')){
+        iconsOnRight.innerHTML = (
+          iconsOnRight.innerHTML + 
+          "<span class='optimizedIcon'>Optimised</span>"
+        );
+      }
     
     });
 	});
+  
 }
 //=============================================================================//
 
+//Loading Box//
+function nowLoading(){
+  const loadingIcon = document.getElementById('loadingIcon');
+  loadingIcon.style.opacity = "100";
+}
+function doneLoading(){
+  const loadingIcon = document.getElementById('loadingIcon');
+  loadingIcon.style.opacity = "0";
+}
 //STARTUP RUN of Job Search (Based on current week):
 getThisWeeksJobs();
+
 });//END OF DOMCONTENTLOAD
 
 
