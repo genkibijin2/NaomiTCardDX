@@ -27,7 +27,7 @@ const Nanobar = require('nanobar');
 
 const createWindow = () => {
   const win = new BrowserWindow({
-    titleBarStyle: 'hidden',
+    //titleBarStyle: 'hidden',
     width: 1024,
     height: 768, 
     resizable: true,
@@ -109,14 +109,132 @@ ipcMain.on("SendDatesToDatabase", (event, monday, tuesday, wednesday,
       console.log(err);
     }
     db.detach();
-    var jobQuoteHeaderResults = result;
-    event.reply("mondayObjectsReturned", jobQuoteHeaderResults);
+    event.reply("mondayObjectsReturned", result);
+      });
     });
     //===========================END MONDAY//
-
-    //Tuesday Search//
-    //...
+  
+    firebird.attach(firebirdOptions, function(err, db){
+    if(err){
+      throw err;
+    }
+    const SQLQuery = ("SELECT DISTINCT j.JOBNO, j.DELIVERYNAME, j.TOTALFRAMES, " +
+              "IIF(jp.STAGE_NAME='Despatch Optimised',1,0) AS DESPATCHOPTIMIZED, " +
+              "IIF(jb.STAGE_NAME='Bar Optimized',1,0) AS BAROPTIMIZED, " +
+              "IIF(ja.STAGE_NAME='Awaiting Signature',1,0) AS AWAITINGSIG, " +
+              "IIF(js.STAGE_NAME='Signature Received',1,0) AS SIGNATURERECEIVED, " +
+              "IIF (f.GLASSCOSTPRICE>0,1,0) AS GLASS " +
+              "FROM JOBQUOTEHEADER j " +
+              "LEFT JOIN FRAMES f  ON (j.HEADER_ID=f.HEADER_ID) AND WINDOWBAD <>1 AND WINDOWSTYLEPRESENT <>0 " +
+              "LEFT JOIN JOBSTAGES js ON (j.HEADER_ID=js.HEADER_ID  AND js.STAGE_NAME = 'Signature Received') " +
+              "LEFT JOIN JOBSTAGES jp ON (j.HEADER_ID=jp.HEADER_ID  AND jp.STAGE_NAME = 'Despatch Optimised') " + 
+              "LEFT JOIN JOBSTAGES jb ON (j.HEADER_ID=jb.HEADER_ID  AND jb.STAGE_NAME = 'Bar Optimized') " +
+              "LEFT JOIN JOBSTAGES ja ON (j.HEADER_ID=ja.HEADER_ID  AND ja.STAGE_NAME = 'Awaiting Signature') " +
+              "WHERE j.REQUIREDDATE = '" + tuesday + "' " + 
+              "AND j.QUOTE_JOB_TYPE = 'JOB'");
+    console.log("Sending query...:\n" + SQLQuery);
+    db.query(SQLQuery, function(err, result){
+    if(err){
+      console.log("ERROR");
+      console.log(err);
+    }
+    db.detach();
+    event.reply("tuesdayObjectsReturned", result);
+    });
   });
+  //===========================END TUESDAY//
+
+  firebird.attach(firebirdOptions, function(err, db){
+    if(err){
+      throw err;
+    }
+    const SQLQuery = ("SELECT DISTINCT j.JOBNO, j.DELIVERYNAME, j.TOTALFRAMES, " +
+              "IIF(jp.STAGE_NAME='Despatch Optimised',1,0) AS DESPATCHOPTIMIZED, " +
+              "IIF(jb.STAGE_NAME='Bar Optimized',1,0) AS BAROPTIMIZED, " +
+              "IIF(ja.STAGE_NAME='Awaiting Signature',1,0) AS AWAITINGSIG, " +
+              "IIF(js.STAGE_NAME='Signature Received',1,0) AS SIGNATURERECEIVED, " +
+              "IIF (f.GLASSCOSTPRICE>0,1,0) AS GLASS " +
+              "FROM JOBQUOTEHEADER j " +
+              "LEFT JOIN FRAMES f  ON (j.HEADER_ID=f.HEADER_ID) AND WINDOWBAD <>1 AND WINDOWSTYLEPRESENT <>0 " +
+              "LEFT JOIN JOBSTAGES js ON (j.HEADER_ID=js.HEADER_ID  AND js.STAGE_NAME = 'Signature Received') " +
+              "LEFT JOIN JOBSTAGES jp ON (j.HEADER_ID=jp.HEADER_ID  AND jp.STAGE_NAME = 'Despatch Optimised') " + 
+              "LEFT JOIN JOBSTAGES jb ON (j.HEADER_ID=jb.HEADER_ID  AND jb.STAGE_NAME = 'Bar Optimized') " +
+              "LEFT JOIN JOBSTAGES ja ON (j.HEADER_ID=ja.HEADER_ID  AND ja.STAGE_NAME = 'Awaiting Signature') " +
+              "WHERE j.REQUIREDDATE = '" + wednesday + "' " + 
+              "AND j.QUOTE_JOB_TYPE = 'JOB'");
+    console.log("Sending query...:\n" + SQLQuery);
+    db.query(SQLQuery, function(err, result){
+    if(err){
+      console.log("ERROR");
+      console.log(err);
+    }
+    db.detach();
+    event.reply("wednesdaysObjectsReturned", result);
+    });
+  });
+  //===========================END WEDNESDAY//
+
+  firebird.attach(firebirdOptions, function(err, db){
+    if(err){
+      throw err;
+    }
+    const SQLQuery = ("SELECT DISTINCT j.JOBNO, j.DELIVERYNAME, j.TOTALFRAMES, " +
+              "IIF(jp.STAGE_NAME='Despatch Optimised',1,0) AS DESPATCHOPTIMIZED, " +
+              "IIF(jb.STAGE_NAME='Bar Optimized',1,0) AS BAROPTIMIZED, " +
+              "IIF(ja.STAGE_NAME='Awaiting Signature',1,0) AS AWAITINGSIG, " +
+              "IIF(js.STAGE_NAME='Signature Received',1,0) AS SIGNATURERECEIVED, " +
+              "IIF (f.GLASSCOSTPRICE>0,1,0) AS GLASS " +
+              "FROM JOBQUOTEHEADER j " +
+              "LEFT JOIN FRAMES f  ON (j.HEADER_ID=f.HEADER_ID) AND WINDOWBAD <>1 AND WINDOWSTYLEPRESENT <>0 " +
+              "LEFT JOIN JOBSTAGES js ON (j.HEADER_ID=js.HEADER_ID  AND js.STAGE_NAME = 'Signature Received') " +
+              "LEFT JOIN JOBSTAGES jp ON (j.HEADER_ID=jp.HEADER_ID  AND jp.STAGE_NAME = 'Despatch Optimised') " + 
+              "LEFT JOIN JOBSTAGES jb ON (j.HEADER_ID=jb.HEADER_ID  AND jb.STAGE_NAME = 'Bar Optimized') " +
+              "LEFT JOIN JOBSTAGES ja ON (j.HEADER_ID=ja.HEADER_ID  AND ja.STAGE_NAME = 'Awaiting Signature') " +
+              "WHERE j.REQUIREDDATE = '" + thursday + "' " + 
+              "AND j.QUOTE_JOB_TYPE = 'JOB'");
+    console.log("Sending query...:\n" + SQLQuery);
+    db.query(SQLQuery, function(err, result){
+    if(err){
+      console.log("ERROR");
+      console.log(err);
+    }
+    db.detach();
+    event.reply("thursdayObjectsReturned", result);
+    });
+  });
+  //===========================END THURSDAY//
+
+  firebird.attach(firebirdOptions, function(err, db){
+    if(err){
+      throw err;
+    }
+    const SQLQuery = ("SELECT DISTINCT j.JOBNO, j.DELIVERYNAME, j.TOTALFRAMES, " +
+              "IIF(jp.STAGE_NAME='Despatch Optimised',1,0) AS DESPATCHOPTIMIZED, " +
+              "IIF(jb.STAGE_NAME='Bar Optimized',1,0) AS BAROPTIMIZED, " +
+              "IIF(ja.STAGE_NAME='Awaiting Signature',1,0) AS AWAITINGSIG, " +
+              "IIF(js.STAGE_NAME='Signature Received',1,0) AS SIGNATURERECEIVED, " +
+              "IIF (f.GLASSCOSTPRICE>0,1,0) AS GLASS " +
+              "FROM JOBQUOTEHEADER j " +
+              "LEFT JOIN FRAMES f  ON (j.HEADER_ID=f.HEADER_ID) AND WINDOWBAD <>1 AND WINDOWSTYLEPRESENT <>0 " +
+              "LEFT JOIN JOBSTAGES js ON (j.HEADER_ID=js.HEADER_ID  AND js.STAGE_NAME = 'Signature Received') " +
+              "LEFT JOIN JOBSTAGES jp ON (j.HEADER_ID=jp.HEADER_ID  AND jp.STAGE_NAME = 'Despatch Optimised') " + 
+              "LEFT JOIN JOBSTAGES jb ON (j.HEADER_ID=jb.HEADER_ID  AND jb.STAGE_NAME = 'Bar Optimized') " +
+              "LEFT JOIN JOBSTAGES ja ON (j.HEADER_ID=ja.HEADER_ID  AND ja.STAGE_NAME = 'Awaiting Signature') " +
+              "WHERE j.REQUIREDDATE = '" + friday + "' " + 
+              "AND j.QUOTE_JOB_TYPE = 'JOB'");
+    console.log("Sending query...:\n" + SQLQuery);
+    db.query(SQLQuery, function(err, result){
+    if(err){
+      console.log("ERROR");
+      console.log(err);
+    }
+    db.detach();
+    event.reply("fridayObjectsReturned", result);
+    });
+  });
+  var returnCode = 1;
+  event.reply("allDoneLoadingSQL", returnCode);
+  //===========================END FRIDAY//
 });
 
 ipcMain.on("pleaseCheckMyJobStage", (event, headerId2Check) => {

@@ -17,7 +17,7 @@ nowLoading();
 ON THE PAGE HAS FULLY LOADED, OTHERWISE ELEMENTS MIGHT BE NULL!
 */
 
-  console.log('Page fully loaded!');
+  
   //----------------------------Definitions of elements-----------------//
   let information = document.getElementById('info');
   const minimizeButton = document.getElementById('minimize');
@@ -54,9 +54,9 @@ function getThisWeeksJobs(){
   try{
     var datePickerDate = new Date(datePickerValue);
   
-  console.log("Date Chosen: " + datePickerDate);
+  
   setToLastSunday(datePickerDate);
-  console.log("Previous sunday was: " + datePickerDate);
+  
   //DATEPICKERDATE is NOW SUNDAY OF THAT WEEK!!!
 
   //NOW=>Generate Dates of this current week as dates
@@ -74,12 +74,12 @@ function getThisWeeksJobs(){
   thursdayOfWeek.setDate(thursdayOfWeek.getDate() + 4);
   fridayOfWeek.setDate(fridayOfWeek.getDate() + 5);
   //=====>Print Help
-  console.log("Sunday: " + sundayOfWeek);
-  console.log("Monday: " + mondayOfWeek);
-  console.log("Tuesday: " + tuesdayOfWeek);
-  console.log("Wednesday: " + wednesdayOfWeek);
-  console.log("Thursday: " + thursdayOfWeek);
-  console.log("Friday: " + fridayOfWeek);
+  //console.log("Sunday: " + sundayOfWeek);
+  //console.log("Monday: " + mondayOfWeek);
+  //console.log("Tuesday: " + tuesdayOfWeek);
+  //console.log("Wednesday: " + wednesdayOfWeek);
+  //console.log("Thursday: " + thursdayOfWeek);
+  //console.log("Friday: " + fridayOfWeek);
   //STERILIZE=> TO SQL SAFE
   var mondayAsSQL = (new Date(mondayOfWeek).toISOString().slice(0, -5).replace('T', ' '));
   var tuesdayAsSQL = (new Date(tuesdayOfWeek).toISOString().slice(0, -5).replace('T', ' '));
@@ -92,8 +92,7 @@ function getThisWeeksJobs(){
   wednesdayAsSQL = wednesdayAsSQL.substring(0, wednesdayAsSQL.length - 8);
   thursdayAsSQL = thursdayAsSQL.substring(0, thursdayAsSQL.length - 8);
   fridayAsSQL = fridayAsSQL.substring(0, fridayAsSQL.length - 8);
-  console.log("As SQL:\n" + mondayAsSQL + " " + tuesdayAsSQL + " " + wednesdayAsSQL
-     + " " + thursdayAsSQL + " " + fridayAsSQL);
+  
   
   //FINALLY=> pass all these dates into date search SQL in main.js
   ipcRenderer.send("SendDatesToDatabase", mondayAsSQL, tuesdayAsSQL,
@@ -120,6 +119,7 @@ const wednesdayJobBox = document.getElementById('WednesdaysJobs');
 const thursdayJobBox = document.getElementById('ThursdaysJobs');
 const fridayJobBox = document.getElementById('FridaysJobs');
 ipcRenderer.on("mondayObjectsReturned", (event, mondaysJobObjects) =>{
+  console.log("MONDAY OBJECTS RETURNED!");
   mondayJobBox.innerHTML = "";
     for (var i = 0; i < mondaysJobObjects.length; i++){
       //var variable = ipcRenderer.Invoke("HasThisJobBeenBatchedAlready?");
@@ -164,24 +164,204 @@ ipcRenderer.on("mondayObjectsReturned", (event, mondaysJobObjects) =>{
       "</span>");
   }
   addListeners2AllJobs();
-  doneLoading(); //move to end of friday when complete
+  doneLoading();
 });
 ipcRenderer.on("tuesdayObjectsReturned", (event, tuesdaysJobObjects) =>{
+  console.log("TUESDAY OBJECTS RETURNED!");
+   tuesdayJobBox.innerHTML = "";
+    for (var i = 0; i < tuesdaysJobObjects.length; i++){
+      //var variable = ipcRenderer.Invoke("HasThisJobBeenBatchedAlready?");
   
+      var currentRowObject = tuesdaysJobObjects[i];
+      var glassImg = "img/nothing.png";
+      var barOptImg = "img/nothing.png";
+      var signatureOKImg = "img/nothing.png";
+      var waitSigImg = "img/nothing.png";
+      var despatchOptimisedImg = "img/nothing.png";
+      //Add Icons to HTML for status
+      if(currentRowObject.GLASS == '1'){
+        glassImg = "img/SKIconMini.png";
+      }
+      if ((currentRowObject.BAROPTIMIZED == '1') || (currentRowObject.DESPATCHOPTIMIZED == '1')){
+        barOptImg = "img/optIconMini.png";
+      }
+      if((currentRowObject.AWAITINGSIG == '1') && (currentRowObject.SIGNATURERECEIVED == '0')){
+        waitSigImg = 'img/awaitIconMini.png';
+      }
+      if(currentRowObject.SIGNATURERECEIVED == '1'){
+        waitSigImg = "img/nothing.png";
+        signatureOKImg = "img/recIconMini.png";
+      }
+        
+      //Now build box      
+      tuesdayJobBox.innerHTML = (
+      tuesdayJobBox.innerHTML +
+      "<div class='JobObject'>" + currentRowObject.JOBNO + "</br>" +
+      currentRowObject.DELIVERYNAME + 
+      "<img src='" + glassImg + "'>" +
+      "<img src='" + barOptImg + "'>" +
+      "<img src='" + waitSigImg + "'>" +
+      "<img src='" + signatureOKImg + "'>" +
+      "</br></br>" +
+      "<span style='font-size: 0px;'>Extra: </br>" + currentRowObject.TOTALFRAMES + 
+      "</br>" + currentRowObject.DESPATCHOPTIMIZED +
+      "</br>" + currentRowObject.BAROPTIMIZED +
+      "</br>" + currentRowObject.AWAITINGSIG +
+      "</br>" + currentRowObject.SIGNATURERECEIVED +
+      "</br>" + currentRowObject.GLASS +
+      "</span>");
+  }
+  addListeners2AllJobs();
+  doneLoading();
 });
 ipcRenderer.on("wednesdaysObjectsReturned", (event, wednesdaysJobObjects) =>{
+  console.log("WEDNESDAY OBJECTS RETURNED!");
+   wednesdayJobBox.innerHTML = "";
+    for (var i = 0; i < wednesdaysJobObjects.length; i++){
+      //var variable = ipcRenderer.Invoke("HasThisJobBeenBatchedAlready?");
   
+      var currentRowObject = wednesdaysJobObjects[i];
+      var glassImg = "img/nothing.png";
+      var barOptImg = "img/nothing.png";
+      var signatureOKImg = "img/nothing.png";
+      var waitSigImg = "img/nothing.png";
+      var despatchOptimisedImg = "img/nothing.png";
+      //Add Icons to HTML for status
+      if(currentRowObject.GLASS == '1'){
+        glassImg = "img/SKIconMini.png";
+      }
+      if ((currentRowObject.BAROPTIMIZED == '1') || (currentRowObject.DESPATCHOPTIMIZED == '1')){
+        barOptImg = "img/optIconMini.png";
+      }
+      if((currentRowObject.AWAITINGSIG == '1') && (currentRowObject.SIGNATURERECEIVED == '0')){
+        waitSigImg = 'img/awaitIconMini.png';
+      }
+      if(currentRowObject.SIGNATURERECEIVED == '1'){
+        waitSigImg = "img/nothing.png";
+        signatureOKImg = "img/recIconMini.png";
+      }
+        
+      //Now build box      
+      wednesdayJobBox.innerHTML = (
+      wednesdayJobBox.innerHTML +
+      "<div class='JobObject'>" + currentRowObject.JOBNO + "</br>" +
+      currentRowObject.DELIVERYNAME + 
+      "<img src='" + glassImg + "'>" +
+      "<img src='" + barOptImg + "'>" +
+      "<img src='" + waitSigImg + "'>" +
+      "<img src='" + signatureOKImg + "'>" +
+      "</br></br>" +
+      "<span style='font-size: 0px;'>Extra: </br>" + currentRowObject.TOTALFRAMES + 
+      "</br>" + currentRowObject.DESPATCHOPTIMIZED +
+      "</br>" + currentRowObject.BAROPTIMIZED +
+      "</br>" + currentRowObject.AWAITINGSIG +
+      "</br>" + currentRowObject.SIGNATURERECEIVED +
+      "</br>" + currentRowObject.GLASS +
+      "</span>");
+  }
+  addListeners2AllJobs();
+  doneLoading();
 });
 ipcRenderer.on("thursdayObjectsReturned", (event, thursdaysJobObjects) =>{
+  console.log("THURSDAY OBJECTS RETURNED!");
+   thursdayJobBox.innerHTML = "";
+    for (var i = 0; i < thursdaysJobObjects.length; i++){
+      //var variable = ipcRenderer.Invoke("HasThisJobBeenBatchedAlready?");
   
+      var currentRowObject = thursdaysJobObjects[i];
+      var glassImg = "img/nothing.png";
+      var barOptImg = "img/nothing.png";
+      var signatureOKImg = "img/nothing.png";
+      var waitSigImg = "img/nothing.png";
+      var despatchOptimisedImg = "img/nothing.png";
+      //Add Icons to HTML for status
+      if(currentRowObject.GLASS == '1'){
+        glassImg = "img/SKIconMini.png";
+      }
+      if ((currentRowObject.BAROPTIMIZED == '1') || (currentRowObject.DESPATCHOPTIMIZED == '1')){
+        barOptImg = "img/optIconMini.png";
+      }
+      if((currentRowObject.AWAITINGSIG == '1') && (currentRowObject.SIGNATURERECEIVED == '0')){
+        waitSigImg = 'img/awaitIconMini.png';
+      }
+      if(currentRowObject.SIGNATURERECEIVED == '1'){
+        waitSigImg = "img/nothing.png";
+        signatureOKImg = "img/recIconMini.png";
+      }
+        
+      //Now build box      
+      thursdayJobBox.innerHTML = (
+      thursdayJobBox.innerHTML +
+      "<div class='JobObject'>" + currentRowObject.JOBNO + "</br>" +
+      currentRowObject.DELIVERYNAME + 
+      "<img src='" + glassImg + "'>" +
+      "<img src='" + barOptImg + "'>" +
+      "<img src='" + waitSigImg + "'>" +
+      "<img src='" + signatureOKImg + "'>" +
+      "</br></br>" +
+      "<span style='font-size: 0px;'>Extra: </br>" + currentRowObject.TOTALFRAMES + 
+      "</br>" + currentRowObject.DESPATCHOPTIMIZED +
+      "</br>" + currentRowObject.BAROPTIMIZED +
+      "</br>" + currentRowObject.AWAITINGSIG +
+      "</br>" + currentRowObject.SIGNATURERECEIVED +
+      "</br>" + currentRowObject.GLASS +
+      "</span>");
+  }
+  addListeners2AllJobs();
+  doneLoading();
 });
 ipcRenderer.on("fridayObjectsReturned", (event, fridaysJobObjects) =>{
+  console.log("FRIDAYS OBJECTS RETURNED!");
+   fridayJobBox.innerHTML = "";
+    for (var i = 0; i < fridaysJobObjects.length; i++){
+      //var variable = ipcRenderer.Invoke("HasThisJobBeenBatchedAlready?");
   
+      var currentRowObject = fridaysJobObjects[i];
+      var glassImg = "img/nothing.png";
+      var barOptImg = "img/nothing.png";
+      var signatureOKImg = "img/nothing.png";
+      var waitSigImg = "img/nothing.png";
+      var despatchOptimisedImg = "img/nothing.png";
+      //Add Icons to HTML for status
+      if(currentRowObject.GLASS == '1'){
+        glassImg = "img/SKIconMini.png";
+      }
+      if ((currentRowObject.BAROPTIMIZED == '1') || (currentRowObject.DESPATCHOPTIMIZED == '1')){
+        barOptImg = "img/optIconMini.png";
+      }
+      if((currentRowObject.AWAITINGSIG == '1') && (currentRowObject.SIGNATURERECEIVED == '0')){
+        waitSigImg = 'img/awaitIconMini.png';
+      }
+      if(currentRowObject.SIGNATURERECEIVED == '1'){
+        waitSigImg = "img/nothing.png";
+        signatureOKImg = "img/recIconMini.png";
+      }
+        
+      //Now build box      
+      fridayJobBox.innerHTML = (
+      fridayJobBox.innerHTML +
+      "<div class='JobObject'>" + currentRowObject.JOBNO + "</br>" +
+      currentRowObject.DELIVERYNAME + 
+      "<img src='" + glassImg + "'>" +
+      "<img src='" + barOptImg + "'>" +
+      "<img src='" + waitSigImg + "'>" +
+      "<img src='" + signatureOKImg + "'>" +
+      "</br></br>" +
+      "<span style='font-size: 0px;'>Extra: </br>" + currentRowObject.TOTALFRAMES + 
+      "</br>" + currentRowObject.DESPATCHOPTIMIZED +
+      "</br>" + currentRowObject.BAROPTIMIZED +
+      "</br>" + currentRowObject.AWAITINGSIG +
+      "</br>" + currentRowObject.SIGNATURERECEIVED +
+      "</br>" + currentRowObject.GLASS +
+      "</span>");
+  }
+  addListeners2AllJobs();
+  doneLoading();
 });
 
 
-ipcRenderer.on("SQLTESTRETURNED", (event, result, $query) => {
-    
+ipcRenderer.on("allDoneLoadingSQL", (event, returnCode) => {
+    console.log("all done SQL");
 });
 //=============================================================================//
 
@@ -202,11 +382,11 @@ document.querySelectorAll(".JobObject").forEach(function(elem) {
 		elem.addEventListener("click", function() {
         if(this.classList.contains("selectedJob")){
           this.classList.remove("selectedJob");
-          console.log("Job Object Deselected: " + this.innerHTML + "\n");
+         
         }
         else{
           this.classList.add("selectedJob");
-          console.log("Job Object Selected: " + this.innerHTML + "\n");
+         
         }
 		});
 
@@ -231,7 +411,7 @@ document.querySelectorAll(".JobObject").forEach(function(elem) {
         "<span style='color:#EF458C;'>Frame Total: " + jobFrames + " </span>" +
         "</br><hr class='gradientLine2'>" +
         "");
-      console.log(awaitingSignature);
+      
       //ICONS
       iconsOnRight.innerHTML = '';
       if (hasGlass == '1</span>'){
