@@ -122,8 +122,8 @@ const fridayJobBox = document.getElementById('FridaysJobs');
 ipcRenderer.on("mondayObjectsReturned", (event, mondaysJobObjects) =>{
   mondayJobBox.innerHTML = "";
     for (var i = 0; i < mondaysJobObjects.length; i++){
-      //For each object, first take HEADER_ID and reprocess into another
-      //SQL statement, which means sending out a message here for each item.
+      //var variable = ipcRenderer.Invoke("HasThisJobBeenBatchedAlready?");
+  
       var currentRowObject = mondaysJobObjects[i];
       var glassImg = "img/nothing.png";
       var barOptImg = "img/nothing.png";
@@ -137,6 +137,13 @@ ipcRenderer.on("mondayObjectsReturned", (event, mondaysJobObjects) =>{
       if ((currentRowObject.BAROPTIMIZED == '1') || (currentRowObject.DESPATCHOPTIMIZED == '1')){
         barOptImg = "img/optIconMini.png";
       }
+      if((currentRowObject.AWAITINGSIG == '1') && (currentRowObject.SIGNATURERECEIVED == '0')){
+        waitSigImg = 'img/awaitIconMini.png';
+      }
+      if(currentRowObject.SIGNATURERECEIVED == '1'){
+        waitSigImg = "img/nothing.png";
+        signatureOKImg = "img/recIconMini.png";
+      }
         
       //Now build box      
       mondayJobBox.innerHTML = (
@@ -145,6 +152,8 @@ ipcRenderer.on("mondayObjectsReturned", (event, mondaysJobObjects) =>{
       currentRowObject.DELIVERYNAME + 
       "<img src='" + glassImg + "'>" +
       "<img src='" + barOptImg + "'>" +
+      "<img src='" + waitSigImg + "'>" +
+      "<img src='" + signatureOKImg + "'>" +
       "</br></br>" +
       "<span style='font-size: 0px;'>Extra: </br>" + currentRowObject.TOTALFRAMES + 
       "</br>" + currentRowObject.DESPATCHOPTIMIZED +
@@ -219,11 +228,9 @@ document.querySelectorAll(".JobObject").forEach(function(elem) {
          + jobNumber + "</span></br>" +
         "<span style='color:#C40BF7;'>" + deliveryName + "</span></br>" +
         "<span style='color:#EF458C;'>Frame Total: " + jobFrames + " </span>" +
-        "<span style='color:#EF458C;'>DB Opt: " + despatchOptimized + " </span>" +
-        "<span style='color:#EF458C;'>Awaiting Sig: " + awaitingSignature + " </span>" +
-        "<span style='color:#EF458C;'>Signature Received: " + signatureReceived + " </span>" +
+        "</br><hr class='gradientLine2'>" +
         "");
-      
+      console.log(awaitingSignature);
       //ICONS
       iconsOnRight.innerHTML = '';
       if (hasGlass == '1</span>'){
@@ -235,10 +242,21 @@ document.querySelectorAll(".JobObject").forEach(function(elem) {
       if ((barOptimized == '1') || (despatchOptimized == '1')){
         iconsOnRight.innerHTML = (
           iconsOnRight.innerHTML + 
-          "<span class='optimizedIcon'>Optimised</span>"
+          "<span class='optimizedIcon'>Optimised</span></br>"
         );
       }
-    
+      if ((awaitingSignature == '1') && (signatureReceived == '0')){
+        iconsOnRight.innerHTML = (
+          iconsOnRight.innerHTML + 
+          "<span class='awaitingIcon'>Signature Waiting</span></br>"
+        );
+      }
+      if(signatureReceived == '1'){
+        iconsOnRight.innerHTML = (
+          iconsOnRight.innerHTML + 
+          "<span class='sigReceivedIcon'>Signed</span></br>"
+        );
+      }
     });
 	});
   

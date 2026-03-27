@@ -245,7 +245,18 @@ const sandbox = new GlslCanvas(canvas);
 
 <!---STYLING FOR HELPER, BLOCKS AND WRAPPERS ETC!-->
 <style>
-
+.sigReceivedIcon{
+  font-size: 30px;
+}
+.sigReceivedIcon::before{
+  content: url("img/recIcon.png");
+}
+.awaitingIcon{
+  font-size: 30px;
+}
+.awaitingIcon::before{
+  content: url("img/awaitIcon.png");
+}
 .glassIcon{
   font-size: 30px;
 }
@@ -372,7 +383,7 @@ hr.gradientLine {
   );
 }
 hr.gradientLine2{
-  height: 6px;
+  height: 20px;
   border: none;
   border-radius: 6px;
   background: linear-gradient(90deg,rgba(255, 255, 255, 1) 0%, rgba(166, 77, 255, 1) 100%);
