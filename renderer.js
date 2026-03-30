@@ -13,7 +13,8 @@ const loadingBox = document.getElementById('loadingBlock');
 document.getElementById('shaderCanvas').setAttribute("width","1280");
 document.getElementById('shaderCanvas').setAttribute("height","900");
 document.getElementById('shaderCanvas').style.imageRendering = "pixelated";
-
+var currentFile = location.href.split("/").slice(-1); 
+var nameOfPage = currentFile[0];
 //quit button
 
 
@@ -38,6 +39,8 @@ const maximizeHelper = document.getElementById('maximize');
 maximizeHelper.addEventListener("mouseenter", () => {
     helper.innerText = "Maximize the program";
 });
+
+if(nameOfPage == 'index.html'){
 const mondayJobSlice = document.getElementById('MondaySlice');
 mondayJobSlice.addEventListener("mouseenter", () => {
     helper.innerText = "Monday's Jobs";
@@ -73,6 +76,6 @@ const datePickerBox = document.getElementById('date-input');
 datePickerBox.addEventListener("mouseenter", () => {
     helper.innerText = "Choose dates to look at";
 });
-
+}
 //--------------------------HELPER DESCRIPTIONS------------------------------//
 

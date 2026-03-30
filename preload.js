@@ -12,19 +12,22 @@ contextBridge.exposeInMainWorld('versions', {
 
 
 document.addEventListener('DOMContentLoaded', function () {
+var currentFile = location.href.split("/").slice(-1); 
+var nameOfPage = currentFile[0];
+console.log(currentFile[0]);
 nowLoading();
 /*PUT EVERYTHING INSIDE THIS FUNCTION, AS IT RUNS WHEN EVERYTHING
 ON THE PAGE HAS FULLY LOADED, OTHERWISE ELEMENTS MIGHT BE NULL!
 */
 
   
-  //----------------------------Definitions of elements-----------------//
-  let information = document.getElementById('info');
-  const minimizeButton = document.getElementById('minimize');
-  const quitButton = document.getElementById('quit');
-  const maximizeButton = document.getElementById('maximize');
-  const helper = document.getElementById('helper');
-  //----------------------------------------------------------------------//
+//----------------------------Definitions of elements-----------------//
+let information = document.getElementById('info');
+const minimizeButton = document.getElementById('minimize');
+const quitButton = document.getElementById('quit');
+const maximizeButton = document.getElementById('maximize');
+const helper = document.getElementById('helper');
+//----------------------------------------------------------------------//
 
 minimizeButton.addEventListener("click", () => {
   ipcRenderer.send("minimizeWindow");
@@ -40,79 +43,81 @@ helper.addEventListener("click", () =>{
 });
 //============================================================================//
 
+//==============================EVENTS FOR MAIN SCREEN, INDEX.HTML==============================//
 //==============================DATE PICKER==================================//
 function setToLastSunday(d){
   return d.setDate(d.getDate() - d.getDay());
 }
-
-const searchButtonVar = document.getElementById('searchButton');
-const datePickerVar = document.getElementById('date-input');
-function getThisWeeksJobs(){
-  nowLoading();
-  //First convert values from datepicker into useable date vars
-  var datePickerValue = datePickerVar.value.toString();
-  try{
-    var datePickerDate = new Date(datePickerValue);
-  
-  
-  setToLastSunday(datePickerDate);
-  
-  //DATEPICKERDATE is NOW SUNDAY OF THAT WEEK!!!
-
-  //NOW=>Generate Dates of this current week as dates
-  var sundayOfWeek = datePickerDate; 
-
-  var mondayOfWeek = new Date(datePickerDate);
-  var tuesdayOfWeek = new Date(datePickerDate);
-  var wednesdayOfWeek = new Date(datePickerDate);
-  var thursdayOfWeek = new Date(datePickerDate);
-  var fridayOfWeek = new Date(datePickerDate);
-
-  mondayOfWeek.setDate(mondayOfWeek.getDate() + 1); 
-  tuesdayOfWeek.setDate(tuesdayOfWeek.getDate() + 2);
-  wednesdayOfWeek.setDate(wednesdayOfWeek.getDate() + 3);
-  thursdayOfWeek.setDate(thursdayOfWeek.getDate() + 4);
-  fridayOfWeek.setDate(fridayOfWeek.getDate() + 5);
-  //=====>Print Help
-  //console.log("Sunday: " + sundayOfWeek);
-  //console.log("Monday: " + mondayOfWeek);
-  //console.log("Tuesday: " + tuesdayOfWeek);
-  //console.log("Wednesday: " + wednesdayOfWeek);
-  //console.log("Thursday: " + thursdayOfWeek);
-  //console.log("Friday: " + fridayOfWeek);
-  //STERILIZE=> TO SQL SAFE
-  var mondayAsSQL = (new Date(mondayOfWeek).toISOString().slice(0, -5).replace('T', ' '));
-  var tuesdayAsSQL = (new Date(tuesdayOfWeek).toISOString().slice(0, -5).replace('T', ' '));
-  var wednesdayAsSQL = (new Date(wednesdayOfWeek).toISOString().slice(0, -5).replace('T', ' '));
-  var thursdayAsSQL = (new Date(thursdayOfWeek).toISOString().slice(0, -5).replace('T', ' '));
-  var fridayAsSQL = (new Date(fridayOfWeek).toISOString().slice(0, -5).replace('T', ' '));
-  //Trim and remove H/M/S to disable any timezone potential issues
-  mondayAsSQL = mondayAsSQL.substring(0, mondayAsSQL.length - 8);
-  tuesdayAsSQL = tuesdayAsSQL.substring(0, tuesdayAsSQL.length - 8);
-  wednesdayAsSQL = wednesdayAsSQL.substring(0, wednesdayAsSQL.length - 8);
-  thursdayAsSQL = thursdayAsSQL.substring(0, thursdayAsSQL.length - 8);
-  fridayAsSQL = fridayAsSQL.substring(0, fridayAsSQL.length - 8);
-  
-  
-  //FINALLY=> pass all these dates into date search SQL in main.js
-  ipcRenderer.send("SendDatesToDatabase", mondayAsSQL, tuesdayAsSQL,
-    wednesdayAsSQL, thursdayAsSQL, fridayAsSQL
-   );
-  }
-  catch(error){
-    console.log("Likely no input in date picker... So error: ");
-    console.log(error);
-    datePickerVar.value = "Pick a date!";
+if(nameOfPage == 'index.html'){
+  const searchButtonVar = document.getElementById('searchButton');
+  const datePickerVar = document.getElementById('date-input');
+  function getThisWeeksJobs(){
+    nowLoading();
+    //First convert values from datepicker into useable date vars
+    var datePickerValue = datePickerVar.value.toString();
+    try{
+      var datePickerDate = new Date(datePickerValue);
     
+    
+    setToLastSunday(datePickerDate);
+    
+    //DATEPICKERDATE is NOW SUNDAY OF THAT WEEK!!!
+
+    //NOW=>Generate Dates of this current week as dates
+    var sundayOfWeek = datePickerDate; 
+
+    var mondayOfWeek = new Date(datePickerDate);
+    var tuesdayOfWeek = new Date(datePickerDate);
+    var wednesdayOfWeek = new Date(datePickerDate);
+    var thursdayOfWeek = new Date(datePickerDate);
+    var fridayOfWeek = new Date(datePickerDate);
+
+    mondayOfWeek.setDate(mondayOfWeek.getDate() + 1); 
+    tuesdayOfWeek.setDate(tuesdayOfWeek.getDate() + 2);
+    wednesdayOfWeek.setDate(wednesdayOfWeek.getDate() + 3);
+    thursdayOfWeek.setDate(thursdayOfWeek.getDate() + 4);
+    fridayOfWeek.setDate(fridayOfWeek.getDate() + 5);
+    //=====>Print Help
+    //console.log("Sunday: " + sundayOfWeek);
+    //console.log("Monday: " + mondayOfWeek);
+    //console.log("Tuesday: " + tuesdayOfWeek);
+    //console.log("Wednesday: " + wednesdayOfWeek);
+    //console.log("Thursday: " + thursdayOfWeek);
+    //console.log("Friday: " + fridayOfWeek);
+    //STERILIZE=> TO SQL SAFE
+    var mondayAsSQL = (new Date(mondayOfWeek).toISOString().slice(0, -5).replace('T', ' '));
+    var tuesdayAsSQL = (new Date(tuesdayOfWeek).toISOString().slice(0, -5).replace('T', ' '));
+    var wednesdayAsSQL = (new Date(wednesdayOfWeek).toISOString().slice(0, -5).replace('T', ' '));
+    var thursdayAsSQL = (new Date(thursdayOfWeek).toISOString().slice(0, -5).replace('T', ' '));
+    var fridayAsSQL = (new Date(fridayOfWeek).toISOString().slice(0, -5).replace('T', ' '));
+    //Trim and remove H/M/S to disable any timezone potential issues
+    mondayAsSQL = mondayAsSQL.substring(0, mondayAsSQL.length - 8);
+    tuesdayAsSQL = tuesdayAsSQL.substring(0, tuesdayAsSQL.length - 8);
+    wednesdayAsSQL = wednesdayAsSQL.substring(0, wednesdayAsSQL.length - 8);
+    thursdayAsSQL = thursdayAsSQL.substring(0, thursdayAsSQL.length - 8);
+    fridayAsSQL = fridayAsSQL.substring(0, fridayAsSQL.length - 8);
+    
+    
+    //FINALLY=> pass all these dates into date search SQL in main.js
+    ipcRenderer.send("SendDatesToDatabase", mondayAsSQL, tuesdayAsSQL,
+      wednesdayAsSQL, thursdayAsSQL, fridayAsSQL
+    );
+    }
+    catch(error){
+      console.log("Likely no input in date picker... So error: ");
+      console.log(error);
+      datePickerVar.value = "Pick a date!";
+      
+    }
   }
+  searchButtonVar.addEventListener("click", () => {
+    getThisWeeksJobs();
+    clearTheJobBox();
+  });
 }
-searchButtonVar.addEventListener("click", () => {
-  getThisWeeksJobs();
-  clearTheJobBox();
-});
 //==>And when the objects are sent back...:
 //========================SQL INFORMATION RENDERING=========================//
-
+if(nameOfPage == 'index.html'){
 const mondayJobBox = document.getElementById('MondaysJobs');
 const tuesdayJobBox = document.getElementById('TuesdaysJobs');
 const wednesdayJobBox = document.getElementById('WednesdaysJobs');
@@ -442,6 +447,7 @@ document.querySelectorAll(".JobObject").forEach(function(elem) {
 	});
   
 }
+}// If Index.html handler
 //=============================================================================//
 
 //Loading Box//
@@ -454,7 +460,9 @@ function doneLoading(){
   loadingIcon.style.opacity = "0";
 }
 //STARTUP RUN of Job Search (Based on current week):
+if(nameOfPage == 'index.html'){
 getThisWeeksJobs();
+}// if index wrapper
 
 });//END OF DOMCONTENTLOAD
 

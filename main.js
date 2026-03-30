@@ -27,7 +27,7 @@ const Nanobar = require('nanobar');
 
 const createWindow = () => {
   const win = new BrowserWindow({
-    titleBarStyle: 'hidden',
+    //titleBarStyle: 'hidden',
     width: 1024,
     height: 768, 
     resizable: true,
