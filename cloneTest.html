@@ -3,11 +3,9 @@
 <head>
         <script type="text/javascript" src="js/GlslCanvas.js"></script>
         <script type="text/javascript" src="js/nanobar.js"></script>
+        <script type="text/javascript" src="js/kendallWonderfulScripts.js"></script>
         <title>NaomiTCard</title>
 	      <link rel="icon" type"image/x-icon" href="/Favicon.ico">
-        <script src="js/datePicker/dist/the-datepicker.js"></script>
-        <link rel="stylesheet" href="js/datePicker/dist/the-datepicker.css">
-        
 </head>
 
   
@@ -117,9 +115,7 @@ const sandbox = new GlslCanvas(canvas);
 </style>
 <div class="titlebar">
 <div id="buttonsholder">
-  <button id="quit" class="navbutton" style="background-image:url(img/quitbutton.png);max-height: 24px;max-width: 24px;min-height: 24px;min-width: 24px;z-index: 7;"></button>
-  <button id="minimize" class="navbutton" style="background-image:url(img/minbutton.png);max-height: 24px;max-width: 24px;min-height: 24px;min-width: 24px;z-index: 7;"></button>
-  <button id="maximize" class="navbutton" style="background-image:url(img/maxbutton.png);max-height: 24px;max-width: 24px;min-height: 24px;min-width: 24px;z-index: 7;"></button>     
+      
 </div>  
 <!---TITLEBAR JAVASCRIPT-->
 
@@ -138,27 +134,10 @@ const sandbox = new GlslCanvas(canvas);
   <div id="topBarInformation" class="insideWrapperTopBar">
   <!--information bar at top of middle square-->
   <span style="font-size:22px">
-    &nbsp;Date Range: 
     <!---DATE PICKER AND FUNCTIONS FOR WEEK-->
-    <input type="text" id="date-input">
-    <button id="searchButton">🔎︎ Search</button>
-    <script>
-      const input = document.getElementById('date-input');
-      const datepicker = new TheDatepicker.Datepicker(input);
-      datepicker.options.setTitle("Which week to look at?");
-      const todaysDate = new Date();
-      //getMonth is indexed at 0 so add 1 for formatting...
-      const dateFormatToday = (todaysDate.getFullYear() + "-" +
-        (todaysDate.getMonth() + 1) + "-" + todaysDate.getDate()
-      ).toString();
-      datepicker.options.setInitialDate(dateFormatToday);
-      datepicker.options.onSelect(function (event, day, previousDay) {
-        console.log(day);
-      });
-      datepicker.options.setInputFormat("Y-m-j");
-      datepicker.render(); 
-      
-    </script>
+    &nbsp;
+    <button id="searchButton">🔎︎</button>
+    
     <img id="loadingIcon" src="img/smallr.gif" alt="loading" style="float:right;">
   </span>
   <hr class="gradientLine"><!----------------------->
@@ -175,6 +154,78 @@ const sandbox = new GlslCanvas(canvas);
 
   
   <div id="daysandJobsContainer" class="daysOfWeekWrapper">
+    <div id="MondaySlice" class="daySlice">
+      <div id="MondayLogo" class="logos">
+        <!---Symbol for Monday-->
+        <img src="img/MondayTest.png" alt="Monday" width="80" height="80">
+      </div>
+      <div id="MondaysJobs" class="JobBoxWrapper">
+        <!---Container window for job objects-->
+        <!---Example Div for future reference
+          <div class='JobObject'>
+            JOBNO</br>
+            DELIVERY NAME</br>
+            x Frames
+          </div>
+        --->
+        <div class="JobObject">
+          2026/30/03</br>
+          Hello!</br>
+          <img src="img/SKIconMini.png">
+          <img src="img/optIconMini.png">
+          <img src="img/awaitIconMini.png">
+          <img src="img/recIconMini.png">
+        </div>
+      </div>
+    </div>
+
+
+    <div id="TuesdaySlice" class="daySlice">
+      <div id="TuesdayLogo" class="logos">
+        <img src="img/TuesdayTest.png" alt="Monday" width="80" height="80">
+      </div>
+      <div id="TuesdaysJobs" class="JobBoxWrapper">
+        <!---Container window for job objects-->
+
+
+      </div>
+    </div>
+
+
+    <div id="WednesdaySlice" class="daySlice">
+      <div id="WednesdayLogo" class="logos">
+        <img src="img/WednesdayTest.png" alt="Monday" width="80" height="80">
+      </div>
+      <div id="WednesdaysJobs" class="JobBoxWrapper">
+        <!---Container window for job objects-->
+
+
+      </div>
+    </div>
+
+
+
+    <div id="ThursdaySlice" class="daySlice">
+      <div id="ThursdayLogo" class="logos">
+        <img src="img/ThursdayTest.png" alt="Monday" width="80" height="80">
+      </div>
+      <div id="ThursdaysJobs" class="JobBoxWrapper">
+        <!---Container window for job objects-->
+
+
+      </div>
+    </div>
+
+
+    <div id="FridaySlice" class="daySlice">
+      <div id="FridayLogo" class="logos">
+        <img src="img/FridayTest.png" alt="Monday" width="80" height="80">
+      </div>
+      <div id="FridaysJobs" class="JobBoxWrapper">
+        <!---Container window for job objects-->
+
+
+      </div>
     </div>
   </div><!---End of days of the week wrapper-->
 </div><!--End of centerScreenBlockWrapper-->
@@ -288,9 +339,9 @@ const sandbox = new GlslCanvas(canvas);
 }
 .JobObject:hover{
   box-shadow: 0 0 10px #00000033;
-  color: white;
-  background-color: black;
-  border: 1px solid grey;
+  color: rgb(29, 25, 25);
+  background-color:rgb(199, 161, 241) ;
+  border: 1px solid rgb(160, 121, 202) ;
   font-size: 17px;
 }
 .JobBoxWrapper{
@@ -397,7 +448,7 @@ hr.gradientLine2{
 </style>
 <div id="helper" class="helperDaemon" style="font-size: 20px;text-align: left;border:
            1px solid black;border-radius: 20px;padding:4px;position: absolute;top: 93%;left:10px;word-wrap: no;">
-          Debug
+          Hello...
 </div>
 
 
@@ -407,7 +458,7 @@ hr.gradientLine2{
 </body>
 
 <!---SCRIPTS-->
-<script src="./renderer.js" ></script> 
+
 <script>
       var options = {
         classname: 'loadingbar',
