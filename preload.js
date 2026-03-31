@@ -15,12 +15,9 @@ document.addEventListener('DOMContentLoaded', function () {
 var currentFile = location.href.split("/").slice(-1); 
 var nameOfPage = currentFile[0];
 console.log(currentFile[0]);
-nowLoading();
 /*PUT EVERYTHING INSIDE THIS FUNCTION, AS IT RUNS WHEN EVERYTHING
 ON THE PAGE HAS FULLY LOADED, OTHERWISE ELEMENTS MIGHT BE NULL!
 */
-
-  
 //----------------------------Definitions of elements-----------------//
 let information = document.getElementById('info');
 const minimizeButton = document.getElementById('minimize');
@@ -42,13 +39,22 @@ helper.addEventListener("click", () =>{
   //
 });
 //============================================================================//
-
-//==============================EVENTS FOR MAIN SCREEN, INDEX.HTML==============================//
-//==============================DATE PICKER==================================//
 function setToLastSunday(d){
   return d.setDate(d.getDate() - d.getDay());
 }
+//Loading Box//
+function nowLoading(){
+  const loadingIcon = document.getElementById('loadingIcon');
+  loadingIcon.style.opacity = "100";
+}
+function doneLoading(){
+  const loadingIcon = document.getElementById('loadingIcon');
+  loadingIcon.style.opacity = "0";
+}
+//==================================================EVENTS FOR MAIN SCREEN, INDEX.HTML=====================================================================//
+//==============================DATE PICKER==================================//
 if(nameOfPage == 'index.html'){
+  nowLoading();
   const searchButtonVar = document.getElementById('searchButton');
   const datePickerVar = document.getElementById('date-input');
   function getThisWeeksJobs(){
@@ -447,56 +453,14 @@ document.querySelectorAll(".JobObject").forEach(function(elem) {
 	});
   
 }
+  getThisWeeksJobs();
 }// If Index.html handler
 //=============================================================================//
+//======================================================================MAIN PAGE FUNCTIONS AKA INDEX.HTML==================================================//
 
-//Loading Box//
-function nowLoading(){
-  const loadingIcon = document.getElementById('loadingIcon');
-  loadingIcon.style.opacity = "100";
-}
-function doneLoading(){
-  const loadingIcon = document.getElementById('loadingIcon');
-  loadingIcon.style.opacity = "0";
-}
-//STARTUP RUN of Job Search (Based on current week):
-if(nameOfPage == 'index.html'){
-getThisWeeksJobs();
-}// if index wrapper
+
 
 });//END OF DOMCONTENTLOAD
-
-
-
-
-//Example Snippets to reuse on future functions
-//ipcRenderer.send("readSawFilesFolder", "c:\\sawfiles_two\\");
-  
-//xxx.addEventListener("mouseenter", () => {
-   // helper.innerText = "";
- // });
-//ipcRenderer.on("USBdevicesSentBack", (event, USBDrive) => { 
-//USB Parse
-/* DrivesInfo = USBDrive;
-let DriveIDIndexes = Object.keys(DrivesInfo); 
-DriveIDIndexes.forEach(DriveNumber => {
-  let currentSelectedDrive = DriveNumber;
-  
-  let drivePATH = (DrivesInfo[currentSelectedDrive].mountpoint + "\\");
-  let nameOfDrive = (DrivesInfo[currentSelectedDrive].name);
-  let freespaceInGB = parseFloat(DrivesInfo[currentSelectedDrive].available);
-  freespaceInGB = Number(((freespaceInGB/1000000000).toFixed(2)));
-  
-});
-*/
-
-//add listeners to all inaccessible drives
-
-//FileAppendButton.addEventListener("click", () => {
-  //What happens whe minimize is clicked, sent to main.
-//  let text2beSaved = "Test example to append to file";
-//  ipcRenderer.send("saveText", text2beSaved);
-//});
 
   
 

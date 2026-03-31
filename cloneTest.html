@@ -115,7 +115,9 @@ const sandbox = new GlslCanvas(canvas);
 </style>
 <div class="titlebar">
 <div id="buttonsholder">
-      
+  <button id="quit" class="navbutton" style="background-image:url(img/quitbutton.png);max-height: 24px;max-width: 24px;min-height: 24px;min-width: 24px;z-index: 7;"></button>
+  <button id="minimize" class="navbutton" style="background-image:url(img/minbutton.png);max-height: 24px;max-width: 24px;min-height: 24px;min-width: 24px;z-index: 7;"></button>
+  <button id="maximize" class="navbutton" style="background-image:url(img/maxbutton.png);max-height: 24px;max-width: 24px;min-height: 24px;min-width: 24px;z-index: 7;"></button>     
 </div>  
 <!---TITLEBAR JAVASCRIPT-->
 
@@ -138,7 +140,7 @@ const sandbox = new GlslCanvas(canvas);
     &nbsp;
     <button id="searchButton">🔎︎</button>
     
-    <img id="loadingIcon" src="img/smallr.gif" alt="loading" style="float:right;">
+    
   </span>
   <hr class="gradientLine"><!----------------------->
   <div id="detailedJobInformationBox">
@@ -154,79 +156,7 @@ const sandbox = new GlslCanvas(canvas);
 
   
   <div id="daysandJobsContainer" class="daysOfWeekWrapper">
-    <div id="MondaySlice" class="daySlice">
-      <div id="MondayLogo" class="logos">
-        <!---Symbol for Monday-->
-        <img src="img/MondayTest.png" alt="Monday" width="80" height="80">
-      </div>
-      <div id="MondaysJobs" class="JobBoxWrapper">
-        <!---Container window for job objects-->
-        <!---Example Div for future reference
-          <div class='JobObject'>
-            JOBNO</br>
-            DELIVERY NAME</br>
-            x Frames
-          </div>
-        --->
-        <div class="JobObject">
-          2026/30/03</br>
-          Hello!</br>
-          <img src="img/SKIconMini.png">
-          <img src="img/optIconMini.png">
-          <img src="img/awaitIconMini.png">
-          <img src="img/recIconMini.png">
-        </div>
-      </div>
-    </div>
-
-
-    <div id="TuesdaySlice" class="daySlice">
-      <div id="TuesdayLogo" class="logos">
-        <img src="img/TuesdayTest.png" alt="Monday" width="80" height="80">
-      </div>
-      <div id="TuesdaysJobs" class="JobBoxWrapper">
-        <!---Container window for job objects-->
-
-
-      </div>
-    </div>
-
-
-    <div id="WednesdaySlice" class="daySlice">
-      <div id="WednesdayLogo" class="logos">
-        <img src="img/WednesdayTest.png" alt="Monday" width="80" height="80">
-      </div>
-      <div id="WednesdaysJobs" class="JobBoxWrapper">
-        <!---Container window for job objects-->
-
-
-      </div>
-    </div>
-
-
-
-    <div id="ThursdaySlice" class="daySlice">
-      <div id="ThursdayLogo" class="logos">
-        <img src="img/ThursdayTest.png" alt="Monday" width="80" height="80">
-      </div>
-      <div id="ThursdaysJobs" class="JobBoxWrapper">
-        <!---Container window for job objects-->
-
-
-      </div>
-    </div>
-
-
-    <div id="FridaySlice" class="daySlice">
-      <div id="FridayLogo" class="logos">
-        <img src="img/FridayTest.png" alt="Monday" width="80" height="80">
-      </div>
-      <div id="FridaysJobs" class="JobBoxWrapper">
-        <!---Container window for job objects-->
-
-
-      </div>
-    </div>
+  Page 2 of the app...Anything is possible here!
   </div><!---End of days of the week wrapper-->
 </div><!--End of centerScreenBlockWrapper-->
 
