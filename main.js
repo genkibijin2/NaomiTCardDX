@@ -4,6 +4,10 @@ const fs = require("fs");
 //DATABASE OPTIONS======================================================//
 const mysql = require("mysql");
 const firebird = require("node-firebird");
+//csv template
+const createCsvWriter = require('csv-writer').createObjectCsvWriter;
+
+    //================================//
 var connection = mysql.createConnection({
    //Empty
 });
@@ -60,6 +64,7 @@ win.setFullScreen(false);
 win.setMinimumSize(600, 638);
 win.setMaximumSize(2222, 1440);
 win.loadFile('index.html'); 
+checkUserHomeDirectory();
 }
 app.whenReady().then(() => {
   createWindow() 
@@ -78,8 +83,56 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit()
 });
 
-
-
+function checkUserHomeDirectory(){
+  const homePath = process.env.HOME.toString();
+  console.log(homePath);
+  const programFiles = (homePath + "\\Documents\\DespatchBatches");
+  if (!fs.existsSync(programFiles)){
+    console.log(programFiles + " Not found, creating...");
+    try{
+      fs.mkdirSync(programFiles);
+    }
+    catch{
+      console.log("failed");
+    }
+    console.log("Created " + programFiles);
+  }
+  else{
+    console.log(programFiles + " Found");
+  }
+}
+ipcMain.on("createCsvBatch", (event, jobRecords) => {
+  const nameOfFile = 'DespatchJobs.csv';
+  const homePath = 
+  (process.env.HOME.toString() + "\\Documents\\DespatchBatches\\" 
+  + nameOfFile);
+  const defaultPath = ('\\\\euro-dc01\\WDesign2022\\BarOpt\\' + nameOfFile);
+  const testingPath = (homePath);
+  //Set Location
+  //===>
+    const pathToWriteTo = testingPath;
+  console.log("Writing " + homePath) + "...";
+  const csvWriter = createCsvWriter({
+  path: pathToWriteTo,
+  header: [
+    {id: 'JobNumber', title: 'Job Number'},
+    {id: 'QuoteNumber', title: 'Quote Number'},
+    {id: 'CustOrderNo', title: 'Cust Order No.'},
+    {id: 'Reference', title: 'Reference'}
+  ]
+  });
+  const records = jobRecords;
+  try{
+  csvWriter.writeRecords(records)       // returns a promise    
+  .then(() => {
+          console.log('...Done');
+          event.reply("generatedCSV", pathToWriteTo);
+      });
+    }
+  catch (error){
+    console.log(error);
+  }
+});
 
 ipcMain.on("SendDatesToDatabase", (event, monday, tuesday, wednesday,
   thursday, friday) => {
@@ -102,7 +155,7 @@ ipcMain.on("SendDatesToDatabase", (event, monday, tuesday, wednesday,
               "LEFT JOIN JOBSTAGES ja ON (j.HEADER_ID=ja.HEADER_ID  AND ja.STAGE_NAME = 'Awaiting Signature') " +
               "WHERE j.REQUIREDDATE = '" + monday + "' " + 
               "AND j.QUOTE_JOB_TYPE = 'JOB'");
-    console.log("Sending query...:\n" + SQLQuery);
+    //console.log("Sending query...:\n" + SQLQuery);
     db.query(SQLQuery, function(err, result){
     if(err){
       console.log("ERROR");
@@ -132,7 +185,7 @@ ipcMain.on("SendDatesToDatabase", (event, monday, tuesday, wednesday,
               "LEFT JOIN JOBSTAGES ja ON (j.HEADER_ID=ja.HEADER_ID  AND ja.STAGE_NAME = 'Awaiting Signature') " +
               "WHERE j.REQUIREDDATE = '" + tuesday + "' " + 
               "AND j.QUOTE_JOB_TYPE = 'JOB'");
-    console.log("Sending query...:\n" + SQLQuery);
+    //console.log("Sending query...:\n" + SQLQuery);
     db.query(SQLQuery, function(err, result){
     if(err){
       console.log("ERROR");
@@ -162,7 +215,7 @@ ipcMain.on("SendDatesToDatabase", (event, monday, tuesday, wednesday,
               "LEFT JOIN JOBSTAGES ja ON (j.HEADER_ID=ja.HEADER_ID  AND ja.STAGE_NAME = 'Awaiting Signature') " +
               "WHERE j.REQUIREDDATE = '" + wednesday + "' " + 
               "AND j.QUOTE_JOB_TYPE = 'JOB'");
-    console.log("Sending query...:\n" + SQLQuery);
+    //console.log("Sending query...:\n" + SQLQuery);
     db.query(SQLQuery, function(err, result){
     if(err){
       console.log("ERROR");
@@ -192,7 +245,7 @@ ipcMain.on("SendDatesToDatabase", (event, monday, tuesday, wednesday,
               "LEFT JOIN JOBSTAGES ja ON (j.HEADER_ID=ja.HEADER_ID  AND ja.STAGE_NAME = 'Awaiting Signature') " +
               "WHERE j.REQUIREDDATE = '" + thursday + "' " + 
               "AND j.QUOTE_JOB_TYPE = 'JOB'");
-    console.log("Sending query...:\n" + SQLQuery);
+    //console.log("Sending query...:\n" + SQLQuery);
     db.query(SQLQuery, function(err, result){
     if(err){
       console.log("ERROR");
@@ -222,7 +275,7 @@ ipcMain.on("SendDatesToDatabase", (event, monday, tuesday, wednesday,
               "LEFT JOIN JOBSTAGES ja ON (j.HEADER_ID=ja.HEADER_ID  AND ja.STAGE_NAME = 'Awaiting Signature') " +
               "WHERE j.REQUIREDDATE = '" + friday + "' " + 
               "AND j.QUOTE_JOB_TYPE = 'JOB'");
-    console.log("Sending query...:\n" + SQLQuery);
+    //console.log("Sending query...:\n" + SQLQuery);
     db.query(SQLQuery, function(err, result){
     if(err){
       console.log("ERROR");

@@ -54,6 +54,39 @@ function doneLoading(){
 //==================================================EVENTS FOR MAIN SCREEN, INDEX.HTML=====================================================================//
 //==============================DATE PICKER==================================//
 if(nameOfPage == 'index.html'){
+  const batchButton = document.getElementById('batchButton');
+  batchButton.addEventListener("click", () => {
+    var listOfJobNumbers = [];
+    document.querySelectorAll(".selectedJob").forEach(function(elem) {
+      var currentSelectedJob = elem.innerHTML;
+      splitUpJobInfo = currentSelectedJob.split("<br>");
+      const thisJobNumberObject = {
+        JobNumber: splitUpJobInfo[0]
+      };
+
+      listOfJobNumbers.push(thisJobNumberObject);
+      console.log(thisJobNumberObject)
+		  //elem.addEventListener("click", function() {});
+    });
+    console.log(listOfJobNumbers);
+    ipcRenderer.send("createCsvBatch", listOfJobNumbers);
+  });
+
+  ipcRenderer.on("generatedCSV", (event, pathWrittenTo) => {
+    const rightContainsBox = document.getElementById('rightContainsBox');
+    rightContainsBox.innerHTML = ("" +
+      "<div id='flashingbox'></div>"
+    );
+    function getRidOfTheFlashing(){
+     rightContainsBox.innerHTML = (""
+      + "<img src='img/smiler.png'> " + 
+      "File Written: </br>" +
+      pathWrittenTo
+     ); 
+     helper.innerText = ("File Written: " + pathWrittenTo);
+    }
+    setTimeout(getRidOfTheFlashing, 1000);
+  });
   var numberOfDaysLoaded = 0;
   function resetDayCounter(){
     numberOfDaysLoaded = 0;
@@ -450,7 +483,8 @@ document.querySelectorAll(".JobObject").forEach(function(elem) {
       
       //ICONS
       iconsOnRight.innerHTML = '';
-      if (hasGlass == '1</span>'){
+      if (hasGlass == '1'){
+        
         iconsOnRight.innerHTML = (
           iconsOnRight.innerHTML + 
           "<span class='glassIcon'>Glass</span></br>"
