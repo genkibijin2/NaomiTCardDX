@@ -141,7 +141,7 @@ const sandbox = new GlslCanvas(canvas);
     &nbsp;Date Range: 
     <!---DATE PICKER AND FUNCTIONS FOR WEEK-->
     <input type="text" id="date-input">
-    <button id="searchButton">🔎︎ Search</button>
+    <button id="searchButton">Search</button>
     <script>
       const input = document.getElementById('date-input');
       const datepicker = new TheDatepicker.Datepicker(input);
@@ -159,6 +159,9 @@ const sandbox = new GlslCanvas(canvas);
       datepicker.render(); 
       
     </script>
+    <a href="cloneTest.html"><button id="page2button">App page 2</button></a>
+    <button id="batchButton">Batch Selected Jobs</button>
+
     <img id="loadingIcon" src="img/smallr.gif" alt="loading" style="float:right;">
   </span>
   <hr class="gradientLine"><!----------------------->
@@ -168,7 +171,7 @@ const sandbox = new GlslCanvas(canvas);
       
     </div>
     <div id="rightContainsBox" class="jobInfoFloaterBox">
-     <a href="cloneTest.html"> <img src="img/envelope.png" alt="waiting for job info" width="102" height="77"></a>
+      <img src="img/envelope.png" alt="waiting for job info" width="102" height="77">
     </div>
   </div>
   </div><!--End of top Bar information-->
@@ -247,6 +250,38 @@ const sandbox = new GlslCanvas(canvas);
 
 <!---STYLING FOR HELPER, BLOCKS AND WRAPPERS ETC!-->
 <style>
+#batchButton{
+  border: none;
+  border-radius:10px;
+  background-color:#a2e4a2;
+  min-width: none;
+}
+#batchButton:hover{
+  transition: 0.2s all;
+  animation-name: extendButton;
+  animation-timing-function: ease-in;
+  animation-fill-mode: forwards;
+  animation-duration: 0.4s;
+  border: 1px solid #5b9b5b;
+  box-shadow: 0 0 10px #00000033;
+}
+@keyframes extendButton{
+  0%   {
+    background-color:#a2e4a2;
+    min-width: 10vw;
+    }
+ 
+  100% {
+    background-color: #92e992;
+    min-width: 30vw;
+  }
+}
+.invalidJob:hover{
+  background-color: rgb(235, 45, 108) !important;
+  transition: 0.4s all;
+  opacity: 50%;
+  transform: scale(0.9);
+}
 .sigReceivedIcon{
   font-size: 30px;
 }
@@ -301,6 +336,18 @@ const sandbox = new GlslCanvas(canvas);
   margin: 3px;
   background: #e4e4e4;
   overflow-y:scroll;
+}
+#page2button{
+  border: 1px solid black;
+  border-radius: 10px;
+  background-color: rgb(255, 255, 255);
+  box-shadow: 0 0 3px #00000033;
+  transition: 0.4s;
+}
+#page2button:hover{
+  box-shadow: 0 0 10px #5b9b5b;
+  background-color: #bdf1bd;
+  translate: -1px -1px;
 }
 #searchButton{
   border: 1px solid black;

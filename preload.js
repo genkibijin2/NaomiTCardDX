@@ -54,6 +54,26 @@ function doneLoading(){
 //==================================================EVENTS FOR MAIN SCREEN, INDEX.HTML=====================================================================//
 //==============================DATE PICKER==================================//
 if(nameOfPage == 'index.html'){
+  var numberOfDaysLoaded = 0;
+  function resetDayCounter(){
+    numberOfDaysLoaded = 0;
+  }
+  //Functions as the global counter for aysnc IPC functions.
+  //Will bounce between main to signal finished loading...
+  function addADay2TheCounter (){
+    numberOfDaysLoaded++;
+    console.log(numberOfDaysLoaded + " days loaded");
+    if(numberOfDaysLoaded >= 5){
+      ipcRenderer.send("allDaysFinishedLoadingFlag", numberOfDaysLoaded);
+    }
+  }
+
+  ipcRenderer.on("iUnderstandAllDays", (event) => {
+    console.log("Pong received back in preload...");
+    addListeners2AllJobs();
+    doneLoading();
+  });
+
   nowLoading();
   const searchButtonVar = document.getElementById('searchButton');
   const datePickerVar = document.getElementById('date-input');
@@ -117,6 +137,7 @@ if(nameOfPage == 'index.html'){
     }
   }
   searchButtonVar.addEventListener("click", () => {
+    resetDayCounter();
     getThisWeeksJobs();
     clearTheJobBox();
   });
@@ -172,10 +193,10 @@ ipcRenderer.on("mondayObjectsReturned", (event, mondaysJobObjects) =>{
       "</br>" + currentRowObject.AWAITINGSIG +
       "</br>" + currentRowObject.SIGNATURERECEIVED +
       "</br>" + currentRowObject.GLASS +
+      "</br>" + "Reserved for value that represents if this has been batched" +
       "</span>");
   }
-  addListeners2AllJobs();
-  doneLoading();
+  addADay2TheCounter();
 });
 ipcRenderer.on("tuesdayObjectsReturned", (event, tuesdaysJobObjects) =>{
   console.log("TUESDAY OBJECTS RETURNED!");
@@ -220,10 +241,10 @@ ipcRenderer.on("tuesdayObjectsReturned", (event, tuesdaysJobObjects) =>{
       "</br>" + currentRowObject.AWAITINGSIG +
       "</br>" + currentRowObject.SIGNATURERECEIVED +
       "</br>" + currentRowObject.GLASS +
+      "</br>" + "Reserved for value that represents if this has been batched" +
       "</span>");
   }
-  addListeners2AllJobs();
-  doneLoading();
+  addADay2TheCounter();
 });
 ipcRenderer.on("wednesdaysObjectsReturned", (event, wednesdaysJobObjects) =>{
   console.log("WEDNESDAY OBJECTS RETURNED!");
@@ -268,10 +289,10 @@ ipcRenderer.on("wednesdaysObjectsReturned", (event, wednesdaysJobObjects) =>{
       "</br>" + currentRowObject.AWAITINGSIG +
       "</br>" + currentRowObject.SIGNATURERECEIVED +
       "</br>" + currentRowObject.GLASS +
+      "</br>" + "Reserved for value that represents if this has been batched" +
       "</span>");
   }
-  addListeners2AllJobs();
-  doneLoading();
+  addADay2TheCounter();
 });
 ipcRenderer.on("thursdayObjectsReturned", (event, thursdaysJobObjects) =>{
   console.log("THURSDAY OBJECTS RETURNED!");
@@ -316,10 +337,10 @@ ipcRenderer.on("thursdayObjectsReturned", (event, thursdaysJobObjects) =>{
       "</br>" + currentRowObject.AWAITINGSIG +
       "</br>" + currentRowObject.SIGNATURERECEIVED +
       "</br>" + currentRowObject.GLASS +
+      "</br>" + "Reserved for value that represents if this has been batched" +
       "</span>");
   }
-  addListeners2AllJobs();
-  doneLoading();
+  addADay2TheCounter();
 });
 ipcRenderer.on("fridayObjectsReturned", (event, fridaysJobObjects) =>{
   console.log("FRIDAYS OBJECTS RETURNED!");
@@ -364,10 +385,10 @@ ipcRenderer.on("fridayObjectsReturned", (event, fridaysJobObjects) =>{
       "</br>" + currentRowObject.AWAITINGSIG +
       "</br>" + currentRowObject.SIGNATURERECEIVED +
       "</br>" + currentRowObject.GLASS +
+      "</br>" + "Reserved for value that represents if this has been batched" +
       "</span>");
   }
-  addListeners2AllJobs();
-  doneLoading();
+  addADay2TheCounter();
 });
 
 
@@ -399,6 +420,9 @@ document.querySelectorAll(".JobObject").forEach(function(elem) {
           this.classList.add("selectedJob");
          
         }
+        if (this.classList.contains("invalidJob")){
+          this.classList.remove("selectedJob");
+        }
 		});
 
 
@@ -413,6 +437,7 @@ document.querySelectorAll(".JobObject").forEach(function(elem) {
       var awaitingSignature = JobStringSplit[7].trim();
       var signatureReceived = JobStringSplit[8].trim();
       var hasGlass = JobStringSplit[9].trim();
+      var hasJobBeenBatchedByNaomi = JobStringSplit[10].trim();
       
       
       detailedInformationAboutJob.innerHTML = (
@@ -441,7 +466,9 @@ document.querySelectorAll(".JobObject").forEach(function(elem) {
         iconsOnRight.innerHTML = (
           iconsOnRight.innerHTML + 
           "<span class='awaitingIcon'>Signature Waiting</span></br>"
+          
         );
+        this.classList.add('invalidJob');
       }
       if(signatureReceived == '1'){
         iconsOnRight.innerHTML = (

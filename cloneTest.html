@@ -125,7 +125,7 @@ const sandbox = new GlslCanvas(canvas);
 
 
 </div><!---END TITLE BAR-->
-<div id="programTitle" class="titleBlock" style="font-size: 24pt;text-align:center;">Despatch Job Viewer 
+<div id="programTitle" class="titleBlock" style="font-size: 24pt;text-align:center;">App Page 2
   
 </div>
 <!---------------------------------------------------------------------------------------------------->
@@ -138,7 +138,7 @@ const sandbox = new GlslCanvas(canvas);
   <span style="font-size:22px">
     <!---DATE PICKER AND FUNCTIONS FOR WEEK-->
     &nbsp;
-    <button id="searchButton">🔎︎</button>
+    <a href="index.html"><button id="despatchButton">Despatch Job Viewer</button></a>
     
     
   </span>
@@ -149,7 +149,7 @@ const sandbox = new GlslCanvas(canvas);
       
     </div>
     <div id="rightContainsBox" class="jobInfoFloaterBox">
-     <a href="index.html"> <img src="img/envelope.png" alt="waiting for job info" width="102" height="77"></a>
+     <img src="img/envelope.png" alt="waiting for job info" width="102" height="77">
     </div>
   </div>
   </div><!--End of top Bar information-->
@@ -216,6 +216,18 @@ const sandbox = new GlslCanvas(canvas);
   margin: 3px;
   background: #e4e4e4;
   overflow-y:scroll;
+}
+#despatchButton{
+  border: 1px solid black;
+  border-radius: 10px;
+  background-color: rgb(255, 255, 255);
+  box-shadow: 0 0 3px #00000033;
+  transition: 0.4s;
+}
+#despatchButton:hover{
+  box-shadow: 0 0 10px #5b9b5b;
+  background-color: #bdf1bd;
+  translate: -1px -1px;
 }
 #searchButton{
   border: 1px solid black;

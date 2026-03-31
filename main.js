@@ -237,59 +237,8 @@ ipcMain.on("SendDatesToDatabase", (event, monday, tuesday, wednesday,
   //===========================END FRIDAY//
 });
 
-ipcMain.on("pleaseCheckMyJobStage", (event, headerId2Check) => {
-    /*var jobStagesResult = {
-      bar_optimized: 'false',
-      order_confirmed: 'false',
-      awaiting_signature: 'false',
-      signature_received: 'false',
-      despatch_optimized: 'false'
-    };
-    for (var p = 0; p < result.length; p++){
-      if (result[p].STAGE_NAME == 'Bar Optimized'){
-        jobStagesResult.bar_optimized = true; console.log("Found Bar Optimization" + 
-          " for HEADER_ID " + headerId2Check
-        );
-      }
-    }
-    
-    event.returnValue = jobStagesResult;*/
-    });
-
-//Method for getting today's date as SQL Sterilized string:
-/*
-  const timeRightNow = new Date();
-  const timeAsUTCMilliseconds = timeRightNow.getTime();
-  const oneWeekAgo = (timeAsUTCMilliseconds - 604800000);
-  const oneWeekAgoAsDate = new Date(oneWeekAgo).toISOString();
-  console.log("Date right now: " + timeRightNow)
-  console.log("One Week Ago:" + oneWeekAgoAsDate);
-  const timeWeekAgoForSQL = (
-  new Date(oneWeekAgo).toISOString().slice(0, -5).replace('T', ' ')  );
-  console.log("For SQL Statement filter: " + timeWeekAgoForSQL);
-  */
-
-  
-//DATABASE/MYSQL FUNCTIONS
-/*ipcMain.on("SQLTEST", (event, dateinPut) => {
-  console.log("Date input to SQL: " + dateinPut);
-  firebird.attach(firebirdOptions, function(err, db){
-    if(err){
-      throw err;
-    }
-    $query = ("SELECT FIRST 1000 j.FILENAME, " + 
-          "iif(j.JOBNO = '', 'N/A', j.JOBNO) AS \"JOBNO\", " +
-          "iif(j.CONTACT = '', 'N/A', j.CONTACT) AS \"CONTACT\" " +
-          "FROM JOBQUOTEHEADER j " + 
-          "WHERE j.TIME_STAMP > '" + dateinPut + "' ORDER BY j.TIME_STAMP");
-    console.log("Sending query...:\n" + $query);
-    db.query($query, function(err, result){
-    if(err){
-      console.log("ERROR");
-      console.log(err);
-    }
-    db.detach();
-    event.reply("SQLTESTRETURNED", result, $query);
-    });
-  });
-});*/
+ipcMain.on("allDaysFinishedLoadingFlag", (event, numberOfDaysLoaded) => {
+  console.log(numberOfDaysLoaded + " days loaded: main pinged =>");
+  console.log("Returning pong =>");
+  event.reply("iUnderstandAllDays");
+});
