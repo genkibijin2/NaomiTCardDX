@@ -16,10 +16,19 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
   },
   "devDependencies": {
     "@electron-forge/cli": "^7.11.1",
+    "@electron-forge/maker-deb": "^7.11.1",
+    "@electron-forge/maker-rpm": "^7.11.1",
+    "@electron-forge/maker-squirrel": "^7.11.1",
+    "@electron-forge/maker-zip": "^7.11.1",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.11.1",
+    "@electron-forge/plugin-fuses": "^7.11.1",
+    "@electron/fuses": "^1.8.0",
     "electron": "^39.2.6"
   },
   "dependencies": {
@@ -28,6 +37,7 @@
     "air-datepicker": "^3.6.0",
     "csv-writer": "^1.6.0",
     "drivelist": "^12.0.2",
+    "electron-squirrel-startup": "^1.0.1",
     "mysql": "^2.18.1",
     "nanobar": "^0.4.2",
     "node-drivelist": "^1.1.0",
@@ -36,4 +46,5 @@
     "thedatepicker": "^2.4.2",
     "usb": "^2.16.0"
   }
+  
 }

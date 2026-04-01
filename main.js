@@ -101,7 +101,8 @@ function checkUserHomeDirectory(){
     console.log(programFiles + " Found");
   }
 }
-ipcMain.on("createCsvBatch", (event, jobRecords) => {
+ipcMain.on("createCsvBatch", (event, jobRecords, jobsStringList) => {
+  
   const nameOfFile = 'DespatchJobs.csv';
   const homePath = 
   (process.env.HOME.toString() + "\\Documents\\DespatchBatches\\" 
@@ -125,10 +126,33 @@ ipcMain.on("createCsvBatch", (event, jobRecords) => {
   try{
   csvWriter.writeRecords(records)       // returns a promise    
   .then(() => {
-          console.log('...Done');
-          event.reply("generatedCSV", pathToWriteTo);
+    console.log('...Done');
+    event.reply("generatedCSV", pathToWriteTo);
+    //Now write to Table
+    var timeRightNow = (new Date().toISOString().slice(0, -5).replace('T', ' '));
+    for (var i = 0; i < jobsStringList.length; i++){
+      const job2send = jobsStringList[i];
+      console.log("Current Date: " + timeRightNow);
+      firebird.attach(firebirdOptions, function(err, db){
+      if(err){
+        throw err;
+      }
+      const SQLQuery = ("INSERT INTO YUUBINJOB" +
+                "(JOB_NUMBER,WHEN_ADDED)" +
+      "VALUES ('" + job2send + 
+      "','" + timeRightNow + "');");
+      console.log(job2send + " Added to LIVE.YUUBINJOBS");
+        db.query(SQLQuery, function(err, result){
+        if(err){
+          console.log("ERROR");
+          console.log(err);
+        }
+        db.detach();
+        });
       });
     }
+  });
+  }
   catch (error){
     console.log(error);
   }

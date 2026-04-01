@@ -54,22 +54,24 @@ function doneLoading(){
 //==================================================EVENTS FOR MAIN SCREEN, INDEX.HTML=====================================================================//
 //==============================DATE PICKER==================================//
 if(nameOfPage == 'index.html'){
+
+
   const batchButton = document.getElementById('batchButton');
   batchButton.addEventListener("click", () => {
     var listOfJobNumbers = [];
+    var jobsAsStrings = [];
     document.querySelectorAll(".selectedJob").forEach(function(elem) {
       var currentSelectedJob = elem.innerHTML;
       splitUpJobInfo = currentSelectedJob.split("<br>");
+      jobsAsStrings.push(splitUpJobInfo[0]);
+      console.log(jobsAsStrings);
       const thisJobNumberObject = {
         JobNumber: splitUpJobInfo[0]
       };
-
+      //Use same technique to destroy objects after loading...
       listOfJobNumbers.push(thisJobNumberObject);
-      console.log(thisJobNumberObject)
-		  //elem.addEventListener("click", function() {});
     });
-    console.log(listOfJobNumbers);
-    ipcRenderer.send("createCsvBatch", listOfJobNumbers);
+    ipcRenderer.send("createCsvBatch", listOfJobNumbers, jobsAsStrings);
   });
 
   ipcRenderer.on("generatedCSV", (event, pathWrittenTo) => {
@@ -81,7 +83,8 @@ if(nameOfPage == 'index.html'){
      rightContainsBox.innerHTML = (""
       + "<img src='img/smiler.png'> " + 
       "File Written: </br>" +
-      pathWrittenTo
+      pathWrittenTo + "</br>" +
+      "Jobs uploaded to database <img src='optIconMini.png>'"
      ); 
      helper.innerText = ("File Written: " + pathWrittenTo);
     }
