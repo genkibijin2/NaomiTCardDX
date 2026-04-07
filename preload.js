@@ -54,7 +54,12 @@ function doneLoading(){
 //==================================================EVENTS FOR MAIN SCREEN, INDEX.HTML=====================================================================//
 //==============================DATE PICKER==================================//
 if(nameOfPage == 'index.html'){
-
+  var numberOfDaysLoaded = 0;
+  function resetDayCounter(){
+    numberOfDaysLoaded = 0;
+  }
+  //Functions as the global counter for aysnc IPC functions.
+  //Will bounce between main to signal finished loading...
 
   const batchButton = document.getElementById('batchButton');
   batchButton.addEventListener("click", () => {
@@ -75,10 +80,13 @@ if(nameOfPage == 'index.html'){
   });
 
   ipcRenderer.on("generatedCSV", (event, pathWrittenTo) => {
+    var doneFlashing = false;
     const rightContainsBox = document.getElementById('rightContainsBox');
+    const titleBar = document.getElementById('programTitle');
     rightContainsBox.innerHTML = ("" +
       "<div id='flashingbox'></div>"
     );
+    titleBar.classList.add("meltings");
     function getRidOfTheFlashing(){
      rightContainsBox.innerHTML = (""
       + "<img src='img/smiler.png'> " + 
@@ -87,15 +95,13 @@ if(nameOfPage == 'index.html'){
       "Jobs uploaded to database <img src='optIconMini.png>'"
      ); 
      helper.innerText = ("File Written: " + pathWrittenTo);
+     setTimeout(function() {
+      this.location.reload();
+     }, 2000);
     }
     setTimeout(getRidOfTheFlashing, 1000);
   });
-  var numberOfDaysLoaded = 0;
-  function resetDayCounter(){
-    numberOfDaysLoaded = 0;
-  }
-  //Functions as the global counter for aysnc IPC functions.
-  //Will bounce between main to signal finished loading...
+  
   function addADay2TheCounter (){
     numberOfDaysLoaded++;
     console.log(numberOfDaysLoaded + " days loaded");
@@ -446,6 +452,12 @@ const detailedInformationAboutJob = document.getElementById('leftDetailsBox');
 const iconsOnRight = document.getElementById('rightContainsBox');
 document.querySelectorAll(".JobObject").forEach(function(elem) {
     
+    //Send off to compare against database for destruction
+    var objectHTML = elem.innerHTML.split("<br>");
+    var objectJobNumber = objectHTML[0].trim();
+    ipcRenderer.send("amIAlreadyBatched", objectJobNumber);
+
+    
     //When you click a job object...
 		elem.addEventListener("click", function() {
         if(this.classList.contains("selectedJob")){
@@ -515,9 +527,36 @@ document.querySelectorAll(".JobObject").forEach(function(elem) {
       }
     });
 	});
+
   
 }
-  getThisWeeksJobs();
+ipcRenderer.on("thisJobMustBeDestroyed", (event, jobThatsAlreadyInDatabase) => {
+  document.querySelectorAll(".JobObject").forEach(function(elem) {
+    const objectHTML = elem.innerHTML.split("<br>");
+    var objectJobNumber = objectHTML[0].trim();
+    var foundedJob
+    if(jobThatsAlreadyInDatabase.length > 0){
+      foundedJob = jobThatsAlreadyInDatabase[0].JOB_NUMBER;
+      console.log("foundedJob is " + foundedJob);
+    }
+    else{
+      foundedJob = '0';
+    }
+    if(objectJobNumber == foundedJob){
+      //==JQUERY
+          elem.classList.add("destroyMe");
+          setTimeout(function() {
+          elem.remove();
+          }, 10);
+      }
+      //========
+  });
+});
+//Search through objects find the one that matches the returned job,
+//then destroy it...
+
+
+getThisWeeksJobs();
 }// If Index.html handler
 //=============================================================================//
 //======================================================================MAIN PAGE FUNCTIONS AKA INDEX.HTML==================================================//

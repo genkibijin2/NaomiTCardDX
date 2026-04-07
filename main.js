@@ -31,7 +31,7 @@ const Nanobar = require('nanobar');
 
 const createWindow = () => {
   const win = new BrowserWindow({
-    //titleBarStyle: 'hidden',
+    titleBarStyle: 'hidden',
     width: 1024,
     height: 768, 
     resizable: true,
@@ -127,7 +127,6 @@ ipcMain.on("createCsvBatch", (event, jobRecords, jobsStringList) => {
   csvWriter.writeRecords(records)       // returns a promise    
   .then(() => {
     console.log('...Done');
-    event.reply("generatedCSV", pathToWriteTo);
     //Now write to Table
     var timeRightNow = (new Date().toISOString().slice(0, -5).replace('T', ' '));
     for (var i = 0; i < jobsStringList.length; i++){
@@ -149,6 +148,7 @@ ipcMain.on("createCsvBatch", (event, jobRecords, jobsStringList) => {
         }
         db.detach();
         });
+        event.reply("generatedCSV", pathToWriteTo);
       });
     }
   });
@@ -318,4 +318,25 @@ ipcMain.on("allDaysFinishedLoadingFlag", (event, numberOfDaysLoaded) => {
   console.log(numberOfDaysLoaded + " days loaded: main pinged =>");
   console.log("Returning pong =>");
   event.reply("iUnderstandAllDays");
+});
+
+ipcMain.on("amIAlreadyBatched", (event, jobNumber2Check) => {
+  console.log("Checking " + jobNumber2Check + " Against LIVE.YUUBINJOBS");
+    firebird.attach(firebirdOptions, function(err, db){
+    if(err){
+      throw err;
+    }
+    const SQLQuery = ("SELECT yj.JOB_NUMBER FROM YUUBINJOB yj "
+            + "WHERE yj.JOB_NUMBER = '" + jobNumber2Check + "'"
+    );
+    //console.log("Sending query...:\n" + SQLQuery);
+    db.query(SQLQuery, function(err, result){
+    if(err){
+      console.log("ERROR");
+      console.log(err);
+    }
+    event.reply("thisJobMustBeDestroyed", result);
+    db.detach();
+    });
+  });
 });
