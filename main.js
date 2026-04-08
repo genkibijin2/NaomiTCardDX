@@ -6,23 +6,32 @@ const mysql = require("mysql");
 const firebird = require("node-firebird");
 //csv template
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
-
+var criticalError = false;
     //================================//
 var connection = mysql.createConnection({
    //Empty
 });
 var firebirdOptions ={};
-  firebirdOptions.host = '192.168.30.161';
-  firebirdOptions.user = 'SYSDBA';
-  firebirdOptions.password = 'PZVKbN+d';
-  firebirdOptions.database = '/opt/hqbird/Databases/LiveWD.gdb';
-  firebirdOptions.port = 3050;
 var firebirdTracker ={};
-  firebirdTracker.host = '192.168.30.161';
-  firebirdTracker.user = 'SYSDBA';
-  firebirdTracker.password = 'PZVKbN+d';
-  firebirdTracker.database = '/opt/hqbird/Databases/TRACKER.gdb';
-  firebirdTracker.port = 3050;
+console.log("Reading Database Connection Details...");
+try{
+  let dbconnexion = require('./dbconnexion.json');
+  firebirdOptions.host = dbconnexion.firebirdOption.host;
+  firebirdOptions.user = dbconnexion.firebirdOption.user;
+  firebirdOptions.password = dbconnexion.firebirdOption.password;
+  firebirdOptions.database = dbconnexion.firebirdOption.database;
+  firebirdOptions.port = dbconnexion.firebirdOption.port;
+  firebirdTracker.host = dbconnexion.firebirdTracker.host;
+  firebirdTracker.user = dbconnexion.firebirdTracker.user;
+  firebirdTracker.password = dbconnexion.firebirdTracker.password;
+  firebirdTracker.database = dbconnexion.firebirdTracker.database;
+  firebirdTracker.port = dbconnexion.firebirdTracker.port;
+  console.log("dbconnexion loaded!");
+}
+catch(Error){
+  console.log("Failed: " + Error);
+  criticalError = true;
+}
 //=======================================================================//
 
 //const drivelist = require('drivelist');
@@ -60,14 +69,24 @@ ipcMain.on("helpButtonClicked", (event) => {
   console.log(win.getBounds());
 });
 //LAUNCH
-win.setFullScreen(false);
-win.setMinimumSize(600, 638);
-win.setMaximumSize(2222, 1440);
-win.loadFile('index.html'); 
+if(criticalError){
+    console.log("No database file! Place 'dbconnexion.json' in the root folder!");
+    win.loadFile('criticalError.html'); 
+    win.setMaximumSize(600, 638);
+    win.setMinimumSize(600, 638);
+    win.setSize(600, 638);
+  }
+else{
+  win.loadFile('index.html'); 
+  win.setMinimumSize(600, 638);
+  win.setMaximumSize(2222, 1440);
+  win.setFullScreen(false);
+}
 checkUserHomeDirectory();
 }
 app.whenReady().then(() => {
-  createWindow() 
+  createWindow();
+  
 });
 //QUIT
 ipcMain.on("quitWindow", () => {
