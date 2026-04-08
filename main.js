@@ -321,7 +321,6 @@ ipcMain.on("allDaysFinishedLoadingFlag", (event, numberOfDaysLoaded) => {
 });
 
 ipcMain.on("amIAlreadyBatched", (event, jobNumber2Check) => {
-  console.log("Checking " + jobNumber2Check + " Against LIVE.YUUBINJOBS");
     firebird.attach(firebirdOptions, function(err, db){
     if(err){
       throw err;
