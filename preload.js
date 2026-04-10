@@ -597,8 +597,7 @@ document.querySelectorAll(".chartDisplayButton").forEach(function(elem) {
 chartZone = document.getElementById('theCharts');
   const amazingChart = new Chart(chartZone, {
     type: 'bar',
-    maintainAspectRatio: false,
-    aspectRatio: 2,
+    barPercentage: 1,
     data: {
       labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
       datasets: [{
@@ -668,7 +667,9 @@ chartZone = document.getElementById('theCharts');
         y: {
           beginAtZero: true
         }
-      }
+      },
+      maintainAspectRatio: false,
+          responsive: true,
     }
   });
   helper.addEventListener("click", () =>{
@@ -676,7 +677,6 @@ chartZone = document.getElementById('theCharts');
   const chart2 = new Chart(chartZone, {
     type: 'line',
     maintainAspectRatio: false,
-    aspectRatio: 2,
     data: {
       labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
       datasets: [{
