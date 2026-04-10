@@ -3,6 +3,7 @@
 <head>
         <script type="text/javascript" src="js/GlslCanvas.js"></script>
         <script type="text/javascript" src="js/nanobar.js"></script>
+        <script src="js/chart.js"></script>
         <script type="text/javascript" src="js/kendallWonderfulScripts.js"></script>
         <title>NaomiTCard</title>
 	      <link rel="icon" type"image/x-icon" href="/Favicon.ico">
@@ -125,7 +126,7 @@ const sandbox = new GlslCanvas(canvas);
 
 
 </div><!---END TITLE BAR-->
-<div id="programTitle" class="titleBlock" style="font-size: 24pt;text-align:center;">App Page 2
+<div id="programTitle" class="titleBlock" style="font-size: 24pt;text-align:center;">Rolling Stock Charts
   
 </div>
 <!---------------------------------------------------------------------------------------------------->
@@ -139,7 +140,7 @@ const sandbox = new GlslCanvas(canvas);
     <!---DATE PICKER AND FUNCTIONS FOR WEEK-->
     &nbsp;
     <a href="index.html"><button id="despatchButton">Despatch Job Viewer</button></a>
-    
+  
     
   </span>
   <hr class="gradientLine"><!----------------------->
@@ -156,12 +157,23 @@ const sandbox = new GlslCanvas(canvas);
 
   
   <div id="daysandJobsContainer" class="daysOfWeekWrapper">
-  Page 2 of the app...Anything is possible here!
+
+  <canvas id="theCharts">
+    Try putting a chart here
+  </div>
+
   </div><!---End of days of the week wrapper-->
 </div><!--End of centerScreenBlockWrapper-->
 
 <!---STYLING FOR HELPER, BLOCKS AND WRAPPERS ETC!-->
 <style>
+.theCharts{
+  align-items: center;
+  align-content: center;
+  text-align: center;
+  min-width: 100%;
+  min-height: 100%;
+}
 .sigReceivedIcon{
   font-size: 30px;
 }
@@ -401,6 +413,9 @@ hr.gradientLine2{
 
 <!---SCRIPTS-->
 
+<script src="./renderer.js"></script> 
+<script src="js/chart.js"></script>
+
 <script>
       var options = {
         classname: 'loadingbar',
@@ -409,10 +424,10 @@ hr.gradientLine2{
       };
       var nanobar = new Nanobar(options);
       nanobar.go(100);
-      const searchButtonForLoadingBar = document.getElementById('searchButton');
+      /*const searchButtonForLoadingBar = document.getElementById('searchButton');
       searchButtonForLoadingBar.addEventListener("click", () => {
         nanobar.go(100);
-      });
+      });*/
     </script>
     <style>
       .nanobar{

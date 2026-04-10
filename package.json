@@ -35,6 +35,7 @@
     "@electron/remote": "^2.1.3",
     "@tailwindcss/cli": "^4.2.2",
     "air-datepicker": "^3.6.0",
+    "chart.js": "^4.5.1",
     "csv-writer": "^1.6.0",
     "drivelist": "^12.0.2",
     "electron-squirrel-startup": "^1.0.1",
@@ -46,5 +47,4 @@
     "thedatepicker": "^2.4.2",
     "usb": "^2.16.0"
   }
-  
 }

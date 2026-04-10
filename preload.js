@@ -1,6 +1,7 @@
 const { contextBridge } = require('electron');
 const { ipcRenderer } = require("electron");
 
+
 contextBridge.exposeInMainWorld('versions', {
   node: () => process.versions.node,
   chrome: () => process.versions.chrome,
@@ -561,6 +562,12 @@ getThisWeeksJobs();
 //=============================================================================//
 //======================================================================MAIN PAGE FUNCTIONS AKA INDEX.HTML==================================================//
 
+
+//==========================APP PAGE 2 FUNCTIONS============================//
+if(nameOfPage == 'rollingStock.html'){
+  
+}
+//=============================================================================//
 
 
 });//END OF DOMCONTENTLOAD
