@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+       
         <script type="text/javascript" src="js/GlslCanvas.js"></script>
         <script type="text/javascript" src="js/nanobar.js"></script>
-        <script src="js/chart.js"></script>
         <script type="text/javascript" src="js/kendallWonderfulScripts.js"></script>
         <title>NaomiTCard</title>
 	      <link rel="icon" type"image/x-icon" href="/Favicon.ico">
@@ -146,7 +146,12 @@ const sandbox = new GlslCanvas(canvas);
   <hr class="gradientLine"><!----------------------->
   <div id="detailedJobInformationBox">
     <div id="leftDetailsBox" class="jobInfoFloaterBox">
-      <img src="img/waitingForJobInfo.png" alt="waiting for job info" width="102" height="77">
+      <div class="chartDisplayButton" id="barChart">
+        Bar Chart
+      </div>
+      <div class="chartDisplayButton" id="lineChart">
+        Line Chart
+      </div>
       
     </div>
     <div id="rightContainsBox" class="jobInfoFloaterBox">
@@ -157,9 +162,12 @@ const sandbox = new GlslCanvas(canvas);
 
   
   <div id="daysandJobsContainer" class="daysOfWeekWrapper">
+    <div id="chartWrapper">
+      <canvas id="theCharts">
+      Chart-Area
+      </canvas>
+    </div>
 
-  <canvas id="theCharts">
-    Try putting a chart here
   </div>
 
   </div><!---End of days of the week wrapper-->
@@ -167,6 +175,30 @@ const sandbox = new GlslCanvas(canvas);
 
 <!---STYLING FOR HELPER, BLOCKS AND WRAPPERS ETC!-->
 <style>
+.selectedMode{
+  background-color: #b5b0ff !important;
+}
+#controlsWrapper{
+  border: 1px solid rgb(173, 30, 240);
+  border-radius: 10px;
+  background-color: #EEEEEE;
+}
+.chartDisplayButton{
+  text-align: center;
+  min-height: 3vh;
+  min-width: 10vw;
+  border: 1px solid white;
+  border-radius: 10px;
+  background-color: #EEEEEE;
+  box-shadow: 0 0 10px #00000033;
+  transition: all 0.6s;
+  
+}
+.chartDisplayButton:hover{
+  translate: -2px -2px;
+  box-shadow: 10px 10px 0px #00000033;
+  background-color: #8AF3C7;
+}
 .theCharts{
   align-items: center;
   align-content: center;
@@ -414,8 +446,10 @@ hr.gradientLine2{
 <!---SCRIPTS-->
 
 <script src="./renderer.js"></script> 
-<script src="js/chart.js"></script>
 
+<script>
+  
+</script>
 <script>
       var options = {
         classname: 'loadingbar',

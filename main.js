@@ -40,7 +40,7 @@ const Nanobar = require('nanobar');
 
 const createWindow = () => {
   const win = new BrowserWindow({
-    //titleBarStyle: 'hidden',
+    titleBarStyle: 'hidden',
     width: 1024,
     height: 768, 
     resizable: true,
@@ -357,4 +357,8 @@ ipcMain.on("amIAlreadyBatched", (event, jobNumber2Check) => {
     db.detach();
     });
   });
+});
+
+ipcMain.on("getChartData", (event, variable) => {
+ 
 });
