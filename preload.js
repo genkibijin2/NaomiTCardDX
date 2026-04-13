@@ -211,10 +211,14 @@ ipcRenderer.on("mondayObjectsReturned", (event, mondaysJobObjects) =>{
         glassImg = "img/SKIconMini.png";
       }
       if ((currentRowObject.BAROPTIMIZED == '1') || (currentRowObject.DESPATCHOPTIMIZED == '1')){
-        barOptImg = "img/optIconMini.png";
+        
       }
       if((currentRowObject.AWAITINGSIG == '1') && (currentRowObject.SIGNATURERECEIVED == '0')){
         waitSigImg = 'img/awaitIconMini.png';
+      }
+      if((currentRowObject.AWAITINGSIG == '0') && (currentRowObject.SIGNATURERECEIVED == '0')){
+        waitSigImg = 'img/awaitIconMini.png';
+        currentRowObject.AWAITINGSIG = 1;
       }
       if(currentRowObject.SIGNATURERECEIVED == '1'){
         waitSigImg = "img/nothing.png";
@@ -259,10 +263,14 @@ ipcRenderer.on("tuesdayObjectsReturned", (event, tuesdaysJobObjects) =>{
         glassImg = "img/SKIconMini.png";
       }
       if ((currentRowObject.BAROPTIMIZED == '1') || (currentRowObject.DESPATCHOPTIMIZED == '1')){
-        barOptImg = "img/optIconMini.png";
+        
       }
       if((currentRowObject.AWAITINGSIG == '1') && (currentRowObject.SIGNATURERECEIVED == '0')){
         waitSigImg = 'img/awaitIconMini.png';
+      }
+      if((currentRowObject.AWAITINGSIG == '0') && (currentRowObject.SIGNATURERECEIVED == '0')){
+        waitSigImg = 'img/awaitIconMini.png';
+        currentRowObject.AWAITINGSIG = 1;
       }
       if(currentRowObject.SIGNATURERECEIVED == '1'){
         waitSigImg = "img/nothing.png";
@@ -307,10 +315,14 @@ ipcRenderer.on("wednesdaysObjectsReturned", (event, wednesdaysJobObjects) =>{
         glassImg = "img/SKIconMini.png";
       }
       if ((currentRowObject.BAROPTIMIZED == '1') || (currentRowObject.DESPATCHOPTIMIZED == '1')){
-        barOptImg = "img/optIconMini.png";
+        
       }
       if((currentRowObject.AWAITINGSIG == '1') && (currentRowObject.SIGNATURERECEIVED == '0')){
         waitSigImg = 'img/awaitIconMini.png';
+      }
+      if((currentRowObject.AWAITINGSIG == '0') && (currentRowObject.SIGNATURERECEIVED == '0')){
+        waitSigImg = 'img/awaitIconMini.png';
+        currentRowObject.AWAITINGSIG = 1;
       }
       if(currentRowObject.SIGNATURERECEIVED == '1'){
         waitSigImg = "img/nothing.png";
@@ -355,10 +367,14 @@ ipcRenderer.on("thursdayObjectsReturned", (event, thursdaysJobObjects) =>{
         glassImg = "img/SKIconMini.png";
       }
       if ((currentRowObject.BAROPTIMIZED == '1') || (currentRowObject.DESPATCHOPTIMIZED == '1')){
-        barOptImg = "img/optIconMini.png";
+        //
       }
       if((currentRowObject.AWAITINGSIG == '1') && (currentRowObject.SIGNATURERECEIVED == '0')){
         waitSigImg = 'img/awaitIconMini.png';
+      }
+      if((currentRowObject.AWAITINGSIG == '0') && (currentRowObject.SIGNATURERECEIVED == '0')){
+        waitSigImg = 'img/awaitIconMini.png';
+        currentRowObject.AWAITINGSIG = 1;
       }
       if(currentRowObject.SIGNATURERECEIVED == '1'){
         waitSigImg = "img/nothing.png";
@@ -403,10 +419,14 @@ ipcRenderer.on("fridayObjectsReturned", (event, fridaysJobObjects) =>{
         glassImg = "img/SKIconMini.png";
       }
       if ((currentRowObject.BAROPTIMIZED == '1') || (currentRowObject.DESPATCHOPTIMIZED == '1')){
-        barOptImg = "img/optIconMini.png";
+        
       }
       if((currentRowObject.AWAITINGSIG == '1') && (currentRowObject.SIGNATURERECEIVED == '0')){
         waitSigImg = 'img/awaitIconMini.png';
+      }
+      if((currentRowObject.AWAITINGSIG == '0') && (currentRowObject.SIGNATURERECEIVED == '0')){
+        waitSigImg = 'img/awaitIconMini.png';
+        currentRowObject.AWAITINGSIG = 1;
       }
       if(currentRowObject.SIGNATURERECEIVED == '1'){
         waitSigImg = "img/nothing.png";
@@ -508,10 +528,10 @@ document.querySelectorAll(".JobObject").forEach(function(elem) {
         );
       }
       if ((barOptimized == '1') || (despatchOptimized == '1')){
-        iconsOnRight.innerHTML = (
+        /*iconsOnRight.innerHTML = (
           iconsOnRight.innerHTML + 
           "<span class='optimizedIcon'>Optimised</span></br>"
-        );
+        );*/
       }
       if ((awaitingSignature == '1') && (signatureReceived == '0')){
         iconsOnRight.innerHTML = (
@@ -594,7 +614,10 @@ document.querySelectorAll(".chartDisplayButton").forEach(function(elem) {
   });
 });
 
+//Default Bar Chart
 chartZone = document.getElementById('theCharts');
+createBarChart();
+function createBarChart(){
   const amazingChart = new Chart(chartZone, {
     type: 'bar',
     barPercentage: 1,
@@ -669,10 +692,12 @@ chartZone = document.getElementById('theCharts');
         }
       },
       maintainAspectRatio: false,
-          responsive: true,
+      responsive: true,
     }
   });
-  helper.addEventListener("click", () =>{
+}
+
+helper.addEventListener("click", () =>{
   amazingChart.destroy();
   const chart2 = new Chart(chartZone, {
     type: 'line',
@@ -746,7 +771,9 @@ chartZone = document.getElementById('theCharts');
         y: {
           beginAtZero: true
         }
-      }
+      },
+      maintainAspectRatio: false,
+      responsive: true,
     }
   });
 

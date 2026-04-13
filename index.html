@@ -162,6 +162,7 @@ const sandbox = new GlslCanvas(canvas);
     </script>
     <a href="rollingStock.html"><button id="page2button">Rolling Stock Charts</button></a>
     <button id="batchButton">Batch Selected Jobs</button>
+    
 
     <img id="loadingIcon" src="img/smallr.gif" alt="loading" style="float:right;">
   </span>
@@ -185,6 +186,18 @@ const sandbox = new GlslCanvas(canvas);
       <div id="MondayLogo" class="logos">
         <!---Symbol for Monday-->
         <img src="img/MondayTest.png" alt="Monday" width="80" height="80">
+        <div class="namePanelBox" style="min-height: 100px;">
+          <button id="selectAll2Day" class="dayPanelButton">Select All</button>
+          <button class="dayPanelButton">tester</button>
+    <button class="dayPanelButton">tester</button>
+    <button class="dayPanelButton">tester</button>
+    <button class="dayPanelButton">tester</button>
+    <button class="dayPanelButton">tester</button>
+    <button class="dayPanelButton">tester</button>
+    <button class="dayPanelButton">tester</button>
+    <button class="dayPanelButton">tester</button>
+        </br>
+        </div>
       </div>
       <div id="MondaysJobs" class="JobBoxWrapper">
         <!---Container window for job objects-->
@@ -251,6 +264,38 @@ const sandbox = new GlslCanvas(canvas);
 
 <!---STYLING FOR HELPER, BLOCKS AND WRAPPERS ETC!-->
 <style>
+.dayPanelButton:hover{
+  box-shadow: 2px 2px 5px #00000033;
+  background-color:#acffd1;
+ 
+  transform: scale(1.3);
+}
+.dayPanelButton{
+  animation-name: buttonidle;
+  animation-duration: 4s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  transition: 0.4s;
+  border: 0px solid black;
+  border-radius: 4px;
+  box-shadow: 1px 1px 2px #00000033;
+  }
+@keyframes buttonidle{
+ 
+}
+.namePanelBox{
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  word-wrap: break-word;
+  max-width: 80px;
+  background-color: #E1E1E1;
+  overflow-y: scroll;
+  border-top: 1px ridge #85f1b6;
+  border-left: 1px ridge #acffd1;
+  border-right: 1px ridge #85f1b6;
+  align-content: center;
+  text-align: center;
+}
 .destroyMe{
   animation-name: burn;
   animation-duration: 0.1s;
@@ -538,6 +583,7 @@ hr.gradientLine2{
   border-radius: 10px;
   max-width: 90px;
   margin-left: 1%;
+  display: grid;
 }
 .daySlice{
   display: flex;
