@@ -197,6 +197,9 @@ const fridayJobBox = document.getElementById('FridaysJobs');
 ipcRenderer.on("mondayObjectsReturned", (event, mondaysJobObjects) =>{
   console.log("MONDAY OBJECTS RETURNED!");
   mondayJobBox.innerHTML = "";
+  
+
+  let uniqueDeliveryNames = []; //list of customers
     for (var i = 0; i < mondaysJobObjects.length; i++){
       //var variable = ipcRenderer.Invoke("HasThisJobBeenBatchedAlready?");
   
@@ -228,7 +231,7 @@ ipcRenderer.on("mondayObjectsReturned", (event, mondaysJobObjects) =>{
       //Now build box      
       mondayJobBox.innerHTML = (
       mondayJobBox.innerHTML +
-      "<div class='JobObject'>" + currentRowObject.JOBNO + "</br>" +
+      "<div class='JobObject mondayItem'>" + currentRowObject.JOBNO + "</br>" +
       currentRowObject.DELIVERYNAME + 
       "<img src='" + glassImg + "'>" +
       "<img src='" + barOptImg + "'>" +
@@ -243,7 +246,32 @@ ipcRenderer.on("mondayObjectsReturned", (event, mondaysJobObjects) =>{
       "</br>" + currentRowObject.GLASS +
       "</br>" + "Reserved for value that represents if this has been batched" +
       "</span>");
+
+      //Check if delivery name unique, push to array if so.
+      if(!(uniqueDeliveryNames.includes(currentRowObject.DELIVERYNAME))){
+        uniqueDeliveryNames.push(currentRowObject.DELIVERYNAME);
+        console.log("Creating " + currentRowObject.DELIVERYNAME + " Button");
+      }
+      
   }
+  //==> CREATE BUTTONS LIST WITH UNIQUE NAMES!!
+  //Create Array of Buttons from unique DeliveryNames
+  const mondayNamePanel = document.getElementById('mondayNamePanel');
+  //reset Buttons
+  mondayNamePanel.innerHTML = ("<button id='selectAllMDay' class='dayPanelButton'" + 
+              ">SELECT ALL MONDAY JOBS</button>");
+  mondayNamePanel.innerHTML = mondayNamePanel.innerHTML + ("<button id='deselectAllMDay' class='dayPanelButton'" + 
+              ">DESELECT ALL MONDAY JOBS</button>");
+  console.log(mondayNamePanel.innerHTML);
+  for (var XY = 0; XY < uniqueDeliveryNames.length; XY++){
+        mondayNamePanel.innerHTML = (mondayNamePanel.innerHTML +
+        "<button class = 'dayPanelButton uniqueName'>" +
+        "" +
+        uniqueDeliveryNames[XY] +
+        "</button>" +
+       "");
+      }
+      
   addADay2TheCounter();
 });
 ipcRenderer.on("tuesdayObjectsReturned", (event, tuesdaysJobObjects) =>{
@@ -280,7 +308,7 @@ ipcRenderer.on("tuesdayObjectsReturned", (event, tuesdaysJobObjects) =>{
       //Now build box      
       tuesdayJobBox.innerHTML = (
       tuesdayJobBox.innerHTML +
-      "<div class='JobObject'>" + currentRowObject.JOBNO + "</br>" +
+      "<div class='JobObject tuesdayItem'>" + currentRowObject.JOBNO + "</br>" +
       currentRowObject.DELIVERYNAME + 
       "<img src='" + glassImg + "'>" +
       "<img src='" + barOptImg + "'>" +
@@ -332,7 +360,7 @@ ipcRenderer.on("wednesdaysObjectsReturned", (event, wednesdaysJobObjects) =>{
       //Now build box      
       wednesdayJobBox.innerHTML = (
       wednesdayJobBox.innerHTML +
-      "<div class='JobObject'>" + currentRowObject.JOBNO + "</br>" +
+      "<div class='JobObject wednesdayItem'>" + currentRowObject.JOBNO + "</br>" +
       currentRowObject.DELIVERYNAME + 
       "<img src='" + glassImg + "'>" +
       "<img src='" + barOptImg + "'>" +
@@ -384,7 +412,7 @@ ipcRenderer.on("thursdayObjectsReturned", (event, thursdaysJobObjects) =>{
       //Now build box      
       thursdayJobBox.innerHTML = (
       thursdayJobBox.innerHTML +
-      "<div class='JobObject'>" + currentRowObject.JOBNO + "</br>" +
+      "<div class='JobObject thursdayItem'>" + currentRowObject.JOBNO + "</br>" +
       currentRowObject.DELIVERYNAME + 
       "<img src='" + glassImg + "'>" +
       "<img src='" + barOptImg + "'>" +
@@ -436,7 +464,7 @@ ipcRenderer.on("fridayObjectsReturned", (event, fridaysJobObjects) =>{
       //Now build box      
       fridayJobBox.innerHTML = (
       fridayJobBox.innerHTML +
-      "<div class='JobObject'>" + currentRowObject.JOBNO + "</br>" +
+      "<div class='JobObject fridayItem'>" + currentRowObject.JOBNO + "</br>" +
       currentRowObject.DELIVERYNAME + 
       "<img src='" + glassImg + "'>" +
       "<img src='" + barOptImg + "'>" +
@@ -549,6 +577,27 @@ document.querySelectorAll(".JobObject").forEach(function(elem) {
       }
     });
 	});
+
+  //Now create buttons
+  const selectAllMondayButton = document.getElementById('selectAllMDay');
+  selectAllMondayButton.addEventListener("click", () => {
+    document.querySelectorAll(".mondayItem").forEach(function(elem) {
+      if(elem.classList.contains("selectedJob")){
+        //nothing
+      }
+      else{
+        elem.classList.add("selectedJob");
+      }
+    });
+  });
+  const deselectMondayButton = document.getElementById('deselectAllMDay');
+  deselectMondayButton.addEventListener("click", () => {
+    document.querySelectorAll(".mondayItem").forEach(function(elem) {
+      if(elem.classList.contains("selectedJob")){
+        elem.classList.remove("selectedJob");
+      }
+    });
+  });
 
   
 }
