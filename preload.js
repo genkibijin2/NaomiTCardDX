@@ -202,13 +202,25 @@ ipcRenderer.on("mondayObjectsReturned", (event, mondaysJobObjects) =>{
   let uniqueDeliveryNames = []; //list of customers
     for (var i = 0; i < mondaysJobObjects.length; i++){
       //var variable = ipcRenderer.Invoke("HasThisJobBeenBatchedAlready?");
-  
       var currentRowObject = mondaysJobObjects[i];
       var glassImg = "img/nothing.png";
       var barOptImg = "img/nothing.png";
       var signatureOKImg = "img/nothing.png";
       var waitSigImg = "img/nothing.png";
       var despatchOptimisedImg = "img/nothing.png";
+      var markAsInvalid = "";
+      var markAsDestroy = "";
+      if((i > 0) && (i < (mondaysJobObjects.length - 1))){
+        //Check Either Side for duplicate?
+        if(currentRowObject.GLASS == '0'){ 
+          //only target entries that have no glass, compare them
+          //to ones with glass...
+          if(mondaysJobObjects[i+1].JOBNO == currentRowObject.JOBNO){
+            markAsDestroy = "destroyMe";
+            //copy this to other days...
+          }
+        }
+      }
       //Add Icons to HTML for status
       if(currentRowObject.GLASS == '1'){
         glassImg = "img/SKIconMini.png";
@@ -218,20 +230,22 @@ ipcRenderer.on("mondayObjectsReturned", (event, mondaysJobObjects) =>{
       }
       if((currentRowObject.AWAITINGSIG == '1') && (currentRowObject.SIGNATURERECEIVED == '0')){
         waitSigImg = 'img/awaitIconMini.png';
+        markAsInvalid = "invalidJob";
       }
       if((currentRowObject.AWAITINGSIG == '0') && (currentRowObject.SIGNATURERECEIVED == '0')){
         waitSigImg = 'img/awaitIconMini.png';
         currentRowObject.AWAITINGSIG = 1;
+        markAsInvalid = "invalidJob";
       }
       if(currentRowObject.SIGNATURERECEIVED == '1'){
         waitSigImg = "img/nothing.png";
         signatureOKImg = "img/recIconMini.png";
       }
-        
       //Now build box      
       mondayJobBox.innerHTML = (
       mondayJobBox.innerHTML +
-      "<div class='JobObject mondayItem'>" + currentRowObject.JOBNO + "</br>" +
+      "<div class='JobObject mondayItem " + markAsInvalid + markAsDestroy +
+      "'>" + currentRowObject.JOBNO + "</br>" +
       currentRowObject.DELIVERYNAME + 
       "<img src='" + glassImg + "'>" +
       "<img src='" + barOptImg + "'>" +
@@ -245,12 +259,13 @@ ipcRenderer.on("mondayObjectsReturned", (event, mondaysJobObjects) =>{
       "</br>" + currentRowObject.SIGNATURERECEIVED +
       "</br>" + currentRowObject.GLASS +
       "</br>" + "Reserved for value that represents if this has been batched" +
+      "</br>" + currentRowObject.REQUIREDDATE +
       "</span>");
 
       //Check if delivery name unique, push to array if so.
       if(!(uniqueDeliveryNames.includes(currentRowObject.DELIVERYNAME))){
         uniqueDeliveryNames.push(currentRowObject.DELIVERYNAME);
-        console.log("Creating " + currentRowObject.DELIVERYNAME + " Button");
+        //console.log("Creating " + currentRowObject.DELIVERYNAME + " Button");
       }
       
   }
@@ -262,21 +277,41 @@ ipcRenderer.on("mondayObjectsReturned", (event, mondaysJobObjects) =>{
               ">SELECT ALL MONDAY JOBS</button>");
   mondayNamePanel.innerHTML = mondayNamePanel.innerHTML + ("<button id='deselectAllMDay' class='dayPanelButton'" + 
               ">DESELECT ALL MONDAY JOBS</button>");
-  console.log(mondayNamePanel.innerHTML);
   for (var XY = 0; XY < uniqueDeliveryNames.length; XY++){
         mondayNamePanel.innerHTML = (mondayNamePanel.innerHTML +
-        "<button class = 'dayPanelButton uniqueName'>" +
+        "<button class = 'dayPanelButton uniqueName namedMondays'>" +
         "" +
         uniqueDeliveryNames[XY] +
         "</button>" +
        "");
       }
-      
+  document.querySelectorAll(".namedMondays").forEach(function(elem) {
+    //Attach event listener to every button that selects jobs
+    //in current day for that company
+    elem.addEventListener("click", () => {
+      const name2searchfor = elem.innerHTML.trim();;
+      document.querySelectorAll(".mondayItem").forEach(function(elem2){
+        const fulljobText = elem2.innerHTML.split("<br>");
+        const deliveryNameInJob = fulljobText[1].trim();
+        //Trim Off Imgs
+        const deliveryNameSplit = deliveryNameInJob.split("<img");
+        const justDeliveryName = deliveryNameSplit[0].trim();
+        if (name2searchfor == justDeliveryName){
+          if(!(elem2.classList.contains("invalidJob"))){
+            elem2.classList.add("selectedJob");
+          }
+        }
+      });
+
+    });
+  });
+
   addADay2TheCounter();
 });
 ipcRenderer.on("tuesdayObjectsReturned", (event, tuesdaysJobObjects) =>{
   console.log("TUESDAY OBJECTS RETURNED!");
    tuesdayJobBox.innerHTML = "";
+   let uniqueDeliveryNames = []; //list of customers
     for (var i = 0; i < tuesdaysJobObjects.length; i++){
       //var variable = ipcRenderer.Invoke("HasThisJobBeenBatchedAlready?");
   
@@ -286,6 +321,19 @@ ipcRenderer.on("tuesdayObjectsReturned", (event, tuesdaysJobObjects) =>{
       var signatureOKImg = "img/nothing.png";
       var waitSigImg = "img/nothing.png";
       var despatchOptimisedImg = "img/nothing.png";
+      var markAsInvalid = "";
+      var markAsDestroy = "";
+      if((i > 0) && (i < (tuesdaysJobObjects.length - 1))){
+        //Check Either Side for duplicate?
+        if(currentRowObject.GLASS == '0'){ 
+          //only target entries that have no glass, compare them
+          //to ones with glass...
+          if(tuesdaysJobObjects[i+1].JOBNO == currentRowObject.JOBNO){
+            markAsDestroy = "destroyMe";
+            //copy this to other days...
+          }
+        }
+      }
       //Add Icons to HTML for status
       if(currentRowObject.GLASS == '1'){
         glassImg = "img/SKIconMini.png";
@@ -295,10 +343,12 @@ ipcRenderer.on("tuesdayObjectsReturned", (event, tuesdaysJobObjects) =>{
       }
       if((currentRowObject.AWAITINGSIG == '1') && (currentRowObject.SIGNATURERECEIVED == '0')){
         waitSigImg = 'img/awaitIconMini.png';
+        markAsInvalid = "invalidJob";
       }
       if((currentRowObject.AWAITINGSIG == '0') && (currentRowObject.SIGNATURERECEIVED == '0')){
         waitSigImg = 'img/awaitIconMini.png';
         currentRowObject.AWAITINGSIG = 1;
+        markAsInvalid = "invalidJob";
       }
       if(currentRowObject.SIGNATURERECEIVED == '1'){
         waitSigImg = "img/nothing.png";
@@ -308,7 +358,8 @@ ipcRenderer.on("tuesdayObjectsReturned", (event, tuesdaysJobObjects) =>{
       //Now build box      
       tuesdayJobBox.innerHTML = (
       tuesdayJobBox.innerHTML +
-      "<div class='JobObject tuesdayItem'>" + currentRowObject.JOBNO + "</br>" +
+      "<div class='JobObject tuesdayItem " + markAsInvalid + markAsDestroy +
+      "'>" + currentRowObject.JOBNO + "</br>" +
       currentRowObject.DELIVERYNAME + 
       "<img src='" + glassImg + "'>" +
       "<img src='" + barOptImg + "'>" +
@@ -322,13 +373,58 @@ ipcRenderer.on("tuesdayObjectsReturned", (event, tuesdaysJobObjects) =>{
       "</br>" + currentRowObject.SIGNATURERECEIVED +
       "</br>" + currentRowObject.GLASS +
       "</br>" + "Reserved for value that represents if this has been batched" +
+      "</br>" + currentRowObject.REQUIREDDATE +
       "</span>");
+   //Check if delivery name unique, push to array if so.
+      if(!(uniqueDeliveryNames.includes(currentRowObject.DELIVERYNAME))){
+        uniqueDeliveryNames.push(currentRowObject.DELIVERYNAME);
+        //console.log("Creating " + currentRowObject.DELIVERYNAME + " Button");
+      }
+      
   }
+  //==> CREATE BUTTONS LIST WITH UNIQUE NAMES!!
+  //Create Array of Buttons from unique DeliveryNames
+  const tuesdayNamePanel = document.getElementById('tuesdayNamePanel');
+  //reset Buttons
+  tuesdayNamePanel.innerHTML = ("<button id='selectAllTuDay' class='dayPanelButton'" + 
+              ">SELECT ALL TUESDAY JOBS</button>");
+  tuesdayNamePanel.innerHTML = tuesdayNamePanel.innerHTML + ("<button id='deselectAllTuDay' class='dayPanelButton'" + 
+              ">DESELECT ALL TUESDAY JOBS</button>");
+  for (var XY = 0; XY < uniqueDeliveryNames.length; XY++){
+        tuesdayNamePanel.innerHTML = (tuesdayNamePanel.innerHTML +
+        "<button class = 'dayPanelButton uniqueName namedTuesdays'>" +
+        "" +
+        uniqueDeliveryNames[XY] +
+        "</button>" +
+       "");
+      }
+  document.querySelectorAll(".namedTuesdays").forEach(function(elem) {
+    //Attach event listener to every button that selects jobs
+    //in current day for that company
+    elem.addEventListener("click", () => {
+      const name2searchfor = elem.innerHTML.trim();;
+      document.querySelectorAll(".tuesdayItem").forEach(function(elem2){
+        const fulljobText = elem2.innerHTML.split("<br>");
+        const deliveryNameInJob = fulljobText[1].trim();
+        //Trim Off Imgs
+        const deliveryNameSplit = deliveryNameInJob.split("<img");
+        const justDeliveryName = deliveryNameSplit[0].trim();
+        if (name2searchfor == justDeliveryName){
+          if(!(elem2.classList.contains("invalidJob"))){
+            elem2.classList.add("selectedJob");
+          }
+        }
+      });
+
+    });
+  });
+
   addADay2TheCounter();
 });
 ipcRenderer.on("wednesdaysObjectsReturned", (event, wednesdaysJobObjects) =>{
   console.log("WEDNESDAY OBJECTS RETURNED!");
    wednesdayJobBox.innerHTML = "";
+   let uniqueDeliveryNames = []; //list of customers
     for (var i = 0; i < wednesdaysJobObjects.length; i++){
       //var variable = ipcRenderer.Invoke("HasThisJobBeenBatchedAlready?");
   
@@ -338,6 +434,19 @@ ipcRenderer.on("wednesdaysObjectsReturned", (event, wednesdaysJobObjects) =>{
       var signatureOKImg = "img/nothing.png";
       var waitSigImg = "img/nothing.png";
       var despatchOptimisedImg = "img/nothing.png";
+      var markAsInvalid = "";
+      var markAsDestroy = "";
+      if((i > 0) && (i < (wednesdaysJobObjects.length - 1))){
+        //Check Either Side for duplicate?
+        if(currentRowObject.GLASS == '0'){ 
+          //only target entries that have no glass, compare them
+          //to ones with glass...
+          if(wednesdaysJobObjects[i+1].JOBNO == currentRowObject.JOBNO){
+            markAsDestroy = "destroyMe";
+            //copy this to other days...
+          }
+        }
+      }
       //Add Icons to HTML for status
       if(currentRowObject.GLASS == '1'){
         glassImg = "img/SKIconMini.png";
@@ -347,10 +456,12 @@ ipcRenderer.on("wednesdaysObjectsReturned", (event, wednesdaysJobObjects) =>{
       }
       if((currentRowObject.AWAITINGSIG == '1') && (currentRowObject.SIGNATURERECEIVED == '0')){
         waitSigImg = 'img/awaitIconMini.png';
+        markAsInvalid = "invalidJob";
       }
       if((currentRowObject.AWAITINGSIG == '0') && (currentRowObject.SIGNATURERECEIVED == '0')){
         waitSigImg = 'img/awaitIconMini.png';
         currentRowObject.AWAITINGSIG = 1;
+        markAsInvalid = "invalidJob";
       }
       if(currentRowObject.SIGNATURERECEIVED == '1'){
         waitSigImg = "img/nothing.png";
@@ -360,7 +471,8 @@ ipcRenderer.on("wednesdaysObjectsReturned", (event, wednesdaysJobObjects) =>{
       //Now build box      
       wednesdayJobBox.innerHTML = (
       wednesdayJobBox.innerHTML +
-      "<div class='JobObject wednesdayItem'>" + currentRowObject.JOBNO + "</br>" +
+      "<div class='JobObject wednesdayItem " + markAsInvalid + markAsDestroy +
+      "'>" + currentRowObject.JOBNO + "</br>" +
       currentRowObject.DELIVERYNAME + 
       "<img src='" + glassImg + "'>" +
       "<img src='" + barOptImg + "'>" +
@@ -374,13 +486,58 @@ ipcRenderer.on("wednesdaysObjectsReturned", (event, wednesdaysJobObjects) =>{
       "</br>" + currentRowObject.SIGNATURERECEIVED +
       "</br>" + currentRowObject.GLASS +
       "</br>" + "Reserved for value that represents if this has been batched" +
-      "</span>");
+      "</br>" + currentRowObject.REQUIREDDATE +
+     "</span>");
+   //Check if delivery name unique, push to array if so.
+      if(!(uniqueDeliveryNames.includes(currentRowObject.DELIVERYNAME))){
+        uniqueDeliveryNames.push(currentRowObject.DELIVERYNAME);
+        //console.log("Creating " + currentRowObject.DELIVERYNAME + " Button");
+      }
+      
   }
+  //==> CREATE BUTTONS LIST WITH UNIQUE NAMES!!
+  //Create Array of Buttons from unique DeliveryNames
+  const wednesdayNamePanel = document.getElementById('wednesdayNamePanel');
+  //reset Buttons
+  wednesdayNamePanel.innerHTML = ("<button id='selectAllWDay' class='dayPanelButton'" + 
+              ">SELECT ALL WEDNESDAY JOBS</button>");
+  wednesdayNamePanel.innerHTML = wednesdayNamePanel.innerHTML + ("<button id='deselectAllWDay' class='dayPanelButton'" + 
+              ">DESELECT ALL WEDNESDAY JOBS</button>");
+  for (var XY = 0; XY < uniqueDeliveryNames.length; XY++){
+        wednesdayNamePanel.innerHTML = (wednesdayNamePanel.innerHTML +
+        "<button class = 'dayPanelButton uniqueName namedWednesdays'>" +
+        "" +
+        uniqueDeliveryNames[XY] +
+        "</button>" +
+       "");
+      }
+  document.querySelectorAll(".namedWednesdays").forEach(function(elem) {
+    //Attach event listener to every button that selects jobs
+    //in current day for that company
+    elem.addEventListener("click", () => {
+      const name2searchfor = elem.innerHTML.trim();;
+      document.querySelectorAll(".wednesdayItem").forEach(function(elem2){
+        const fulljobText = elem2.innerHTML.split("<br>");
+        const deliveryNameInJob = fulljobText[1].trim();
+        //Trim Off Imgs
+        const deliveryNameSplit = deliveryNameInJob.split("<img");
+        const justDeliveryName = deliveryNameSplit[0].trim();
+        if (name2searchfor == justDeliveryName){
+          if(!(elem2.classList.contains("invalidJob"))){
+            elem2.classList.add("selectedJob");
+          }
+        }
+      });
+
+    });
+  });
+
   addADay2TheCounter();
 });
 ipcRenderer.on("thursdayObjectsReturned", (event, thursdaysJobObjects) =>{
   console.log("THURSDAY OBJECTS RETURNED!");
    thursdayJobBox.innerHTML = "";
+    let uniqueDeliveryNames = []; //list of customers
     for (var i = 0; i < thursdaysJobObjects.length; i++){
       //var variable = ipcRenderer.Invoke("HasThisJobBeenBatchedAlready?");
   
@@ -390,6 +547,19 @@ ipcRenderer.on("thursdayObjectsReturned", (event, thursdaysJobObjects) =>{
       var signatureOKImg = "img/nothing.png";
       var waitSigImg = "img/nothing.png";
       var despatchOptimisedImg = "img/nothing.png";
+      var markAsInvalid = "";
+      var markAsDestroy = "";
+      if((i > 0) && (i < (thursdaysJobObjects.length - 1))){
+        //Check Either Side for duplicate?
+        if(currentRowObject.GLASS == '0'){ 
+          //only target entries that have no glass, compare them
+          //to ones with glass...
+          if(thursdaysJobObjects[i+1].JOBNO == currentRowObject.JOBNO){
+            markAsDestroy = "destroyMe";
+            //copy this to other days...
+          }
+        }
+      }
       //Add Icons to HTML for status
       if(currentRowObject.GLASS == '1'){
         glassImg = "img/SKIconMini.png";
@@ -399,10 +569,12 @@ ipcRenderer.on("thursdayObjectsReturned", (event, thursdaysJobObjects) =>{
       }
       if((currentRowObject.AWAITINGSIG == '1') && (currentRowObject.SIGNATURERECEIVED == '0')){
         waitSigImg = 'img/awaitIconMini.png';
+        markAsInvalid = "invalidJob";
       }
       if((currentRowObject.AWAITINGSIG == '0') && (currentRowObject.SIGNATURERECEIVED == '0')){
         waitSigImg = 'img/awaitIconMini.png';
         currentRowObject.AWAITINGSIG = 1;
+        markAsInvalid = "invalidJob";
       }
       if(currentRowObject.SIGNATURERECEIVED == '1'){
         waitSigImg = "img/nothing.png";
@@ -412,7 +584,8 @@ ipcRenderer.on("thursdayObjectsReturned", (event, thursdaysJobObjects) =>{
       //Now build box      
       thursdayJobBox.innerHTML = (
       thursdayJobBox.innerHTML +
-      "<div class='JobObject thursdayItem'>" + currentRowObject.JOBNO + "</br>" +
+      "<div class='JobObject thursdayItem " + markAsInvalid + markAsDestroy +
+      "'>" + currentRowObject.JOBNO + "</br>" +
       currentRowObject.DELIVERYNAME + 
       "<img src='" + glassImg + "'>" +
       "<img src='" + barOptImg + "'>" +
@@ -426,13 +599,57 @@ ipcRenderer.on("thursdayObjectsReturned", (event, thursdaysJobObjects) =>{
       "</br>" + currentRowObject.SIGNATURERECEIVED +
       "</br>" + currentRowObject.GLASS +
       "</br>" + "Reserved for value that represents if this has been batched" +
-      "</span>");
+      "</br>" + currentRowObject.REQUIREDDATE +
+       "</span>");
+   //Check if delivery name unique, push to array if so.
+      if(!(uniqueDeliveryNames.includes(currentRowObject.DELIVERYNAME))){
+        uniqueDeliveryNames.push(currentRowObject.DELIVERYNAME);
+        //console.log("Creating " + currentRowObject.DELIVERYNAME + " Button");
+      }
+      
   }
+  //==> CREATE BUTTONS LIST WITH UNIQUE NAMES!!
+  //Create Array of Buttons from unique DeliveryNames
+  const thursdayNamePanel = document.getElementById('thursdayNamePanel');
+  //reset Buttons
+  thursdayNamePanel.innerHTML = ("<button id='selectAllTDay' class='dayPanelButton'" + 
+              ">SELECT ALL THURSDAY JOBS</button>");
+  thursdayNamePanel.innerHTML = thursdayNamePanel.innerHTML + ("<button id='deselectAllTDay' class='dayPanelButton'" + 
+              ">DESELECT ALL THURSDAY JOBS</button>");
+  for (var XY = 0; XY < uniqueDeliveryNames.length; XY++){
+        thursdayNamePanel.innerHTML = (thursdayNamePanel.innerHTML +
+        "<button class = 'dayPanelButton uniqueName namedThursdays'>" +
+        "" +
+        uniqueDeliveryNames[XY] +
+        "</button>" +
+       "");
+      }
+  document.querySelectorAll(".namedThursdays").forEach(function(elem) {
+    //Attach event listener to every button that selects jobs
+    //in current day for that company
+    elem.addEventListener("click", () => {
+      const name2searchfor = elem.innerHTML.trim();;
+      document.querySelectorAll(".thursdayItem").forEach(function(elem2){
+        const fulljobText = elem2.innerHTML.split("<br>");
+        const deliveryNameInJob = fulljobText[1].trim();
+        //Trim Off Imgs
+        const deliveryNameSplit = deliveryNameInJob.split("<img");
+        const justDeliveryName = deliveryNameSplit[0].trim();
+        if (name2searchfor == justDeliveryName){
+          if(!(elem2.classList.contains("invalidJob"))){
+            elem2.classList.add("selectedJob");
+          }
+        }
+      });
+
+    });
+  });
   addADay2TheCounter();
 });
 ipcRenderer.on("fridayObjectsReturned", (event, fridaysJobObjects) =>{
   console.log("FRIDAYS OBJECTS RETURNED!");
    fridayJobBox.innerHTML = "";
+   let uniqueDeliveryNames = []; //list of customers
     for (var i = 0; i < fridaysJobObjects.length; i++){
       //var variable = ipcRenderer.Invoke("HasThisJobBeenBatchedAlready?");
   
@@ -442,6 +659,19 @@ ipcRenderer.on("fridayObjectsReturned", (event, fridaysJobObjects) =>{
       var signatureOKImg = "img/nothing.png";
       var waitSigImg = "img/nothing.png";
       var despatchOptimisedImg = "img/nothing.png";
+      var markAsInvalid = "";
+      var markAsDestroy = "";
+      if((i > 0) && (i < (fridaysJobObjects.length - 1))){
+        //Check Either Side for duplicate?
+        if(currentRowObject.GLASS == '0'){ 
+          //only target entries that have no glass, compare them
+          //to ones with glass...
+          if(fridaysJobObjects[i+1].JOBNO == currentRowObject.JOBNO){
+            markAsDestroy = "destroyMe";
+            //copy this to other days...
+          }
+        }
+      }
       //Add Icons to HTML for status
       if(currentRowObject.GLASS == '1'){
         glassImg = "img/SKIconMini.png";
@@ -451,10 +681,12 @@ ipcRenderer.on("fridayObjectsReturned", (event, fridaysJobObjects) =>{
       }
       if((currentRowObject.AWAITINGSIG == '1') && (currentRowObject.SIGNATURERECEIVED == '0')){
         waitSigImg = 'img/awaitIconMini.png';
+        markAsInvalid = "invalidJob";
       }
       if((currentRowObject.AWAITINGSIG == '0') && (currentRowObject.SIGNATURERECEIVED == '0')){
         waitSigImg = 'img/awaitIconMini.png';
         currentRowObject.AWAITINGSIG = 1;
+        markAsInvalid = "invalidJob";
       }
       if(currentRowObject.SIGNATURERECEIVED == '1'){
         waitSigImg = "img/nothing.png";
@@ -464,7 +696,8 @@ ipcRenderer.on("fridayObjectsReturned", (event, fridaysJobObjects) =>{
       //Now build box      
       fridayJobBox.innerHTML = (
       fridayJobBox.innerHTML +
-      "<div class='JobObject fridayItem'>" + currentRowObject.JOBNO + "</br>" +
+      "<div class='JobObject fridayItem " + markAsInvalid + markAsDestroy +
+      "'>" + currentRowObject.JOBNO + "</br>" +
       currentRowObject.DELIVERYNAME + 
       "<img src='" + glassImg + "'>" +
       "<img src='" + barOptImg + "'>" +
@@ -478,8 +711,53 @@ ipcRenderer.on("fridayObjectsReturned", (event, fridaysJobObjects) =>{
       "</br>" + currentRowObject.SIGNATURERECEIVED +
       "</br>" + currentRowObject.GLASS +
       "</br>" + "Reserved for value that represents if this has been batched" +
-      "</span>");
+      "</br>" + currentRowObject.REQUIREDDATE +
+        "</span>");
+
+      //Check if delivery name unique, push to array if so.
+      if(!(uniqueDeliveryNames.includes(currentRowObject.DELIVERYNAME))){
+        uniqueDeliveryNames.push(currentRowObject.DELIVERYNAME);
+        //console.log("Creating " + currentRowObject.DELIVERYNAME + " Button");
+      }
+      
   }
+  //==> CREATE BUTTONS LIST WITH UNIQUE NAMES!!
+  //Create Array of Buttons from unique DeliveryNames
+  const fridayNamePanel = document.getElementById('fridayNamePanel');
+  //reset Buttons
+  fridayNamePanel.innerHTML = ("<button id='selectAllFDay' class='dayPanelButton'" + 
+              ">SELECT ALL FRIDAY JOBS</button>");
+  fridayNamePanel.innerHTML = fridayNamePanel.innerHTML + ("<button id='deselectAllFDay' class='dayPanelButton'" + 
+              ">DESELECT ALL FRIDAY JOBS</button>");
+  for (var XY = 0; XY < uniqueDeliveryNames.length; XY++){
+        fridayNamePanel.innerHTML = (fridayNamePanel.innerHTML +
+        "<button class = 'dayPanelButton uniqueName namedFridays'>" +
+        "" +
+        uniqueDeliveryNames[XY] +
+        "</button>" +
+       "");
+      }
+  document.querySelectorAll(".namedFridays").forEach(function(elem) {
+    //Attach event listener to every button that selects jobs
+    //in current day for that company
+    elem.addEventListener("click", () => {
+      const name2searchfor = elem.innerHTML.trim();;
+      document.querySelectorAll(".fridayItem").forEach(function(elem2){
+        const fulljobText = elem2.innerHTML.split("<br>");
+        const deliveryNameInJob = fulljobText[1].trim();
+        //Trim Off Imgs
+        const deliveryNameSplit = deliveryNameInJob.split("<img");
+        const justDeliveryName = deliveryNameSplit[0].trim();
+        if (name2searchfor == justDeliveryName){
+          if(!(elem2.classList.contains("invalidJob"))){
+            elem2.classList.add("selectedJob");
+          }
+        }
+      });
+
+    });
+  });
+
   addADay2TheCounter();
 });
 
@@ -536,6 +814,10 @@ document.querySelectorAll(".JobObject").forEach(function(elem) {
       var signatureReceived = JobStringSplit[8].trim();
       var hasGlass = JobStringSplit[9].trim();
       var hasJobBeenBatchedByNaomi = JobStringSplit[10].trim();
+      var dateRequiredFull = JobStringSplit[11].trim();
+      var dateRequiredSplit = dateRequiredFull.split("00:00:00");
+      var dateRequiredFormatted = dateRequiredSplit[0];
+      console.log(dateRequiredFormatted);
       
       
       detailedInformationAboutJob.innerHTML = (
@@ -575,6 +857,15 @@ document.querySelectorAll(".JobObject").forEach(function(elem) {
           "<span class='sigReceivedIcon'>Signed</span></br>"
         );
       }
+
+      //Required Date:
+      iconsOnRight.innerHTML = (
+          iconsOnRight.innerHTML + 
+          "<span class='requiredDate'>Required:</span> " +
+          "<span class='dateRequiredString'>" + 
+          dateRequiredFormatted +
+          "</span></br>"
+        );
     });
 	});
 
@@ -586,7 +877,9 @@ document.querySelectorAll(".JobObject").forEach(function(elem) {
         //nothing
       }
       else{
-        elem.classList.add("selectedJob");
+        if(!(elem.classList.contains("invalidJob"))){
+          elem.classList.add("selectedJob");
+        }
       }
     });
   });
@@ -598,7 +891,99 @@ document.querySelectorAll(".JobObject").forEach(function(elem) {
       }
     });
   });
+   const selectAllTuesdayButton = document.getElementById('selectAllTuDay');
+  selectAllTuesdayButton.addEventListener("click", () => {
+    document.querySelectorAll(".tuesdayItem").forEach(function(elem) {
+      if(elem.classList.contains("selectedJob")){
+        //nothing
+      }
+      else{
+        if(!(elem.classList.contains("invalidJob"))){
+          elem.classList.add("selectedJob");
+        }
+      }
+    });
+  });
+  const deselectTuesdayButton = document.getElementById('deselectAllTuDay');
+  deselectTuesdayButton.addEventListener("click", () => {
+    document.querySelectorAll(".tuesdayItem").forEach(function(elem) {
+      if(elem.classList.contains("selectedJob")){
+        elem.classList.remove("selectedJob");
+      }
+    });
+  });
+   const selectAllWednesdayButton = document.getElementById('selectAllWDay');
+  selectAllWednesdayButton.addEventListener("click", () => {
+    document.querySelectorAll(".wednesdayItem").forEach(function(elem) {
+      if(elem.classList.contains("selectedJob")){
+        //nothing
+      }
+      else{
+        if(!(elem.classList.contains("invalidJob"))){
+          elem.classList.add("selectedJob");
+        }
+      }
+    });
+  });
+  const deselectWednesdayButton = document.getElementById('deselectAllWDay');
+  deselectWednesdayButton.addEventListener("click", () => {
+    document.querySelectorAll(".wednesdayItem").forEach(function(elem) {
+      if(elem.classList.contains("selectedJob")){
+        elem.classList.remove("selectedJob");
+      }
+    });
+  });
+  const selectAllThursdayButton = document.getElementById('selectAllTDay');
+  selectAllThursdayButton.addEventListener("click", () => {
+    document.querySelectorAll(".thursdayItem").forEach(function(elem) {
+      if(elem.classList.contains("selectedJob")){
+        //nothing
+      }
+      else{
+        if(!(elem.classList.contains("invalidJob"))){
+          elem.classList.add("selectedJob");
+        }
+      }
+    });
+  });
+  const deselectThursdayButton = document.getElementById('deselectAllTDay');
+  deselectThursdayButton.addEventListener("click", () => {
+    document.querySelectorAll(".thursdayItem").forEach(function(elem) {
+      if(elem.classList.contains("selectedJob")){
+        elem.classList.remove("selectedJob");
+      }
+    });
+  });
+    const selectAllFridayButton = document.getElementById('selectAllFDay');
+  selectAllFridayButton.addEventListener("click", () => {
+    document.querySelectorAll(".fridayItem").forEach(function(elem) {
+      if(elem.classList.contains("fridayJob")){
+        //nothing
+      }
+      else{
+        if(!(elem.classList.contains("invalidJob"))){
+          elem.classList.add("selectedJob");
+        }
+      }
+    });
+  });
+  const deselectFridayButton = document.getElementById('deselectAllFDay');
+  deselectFridayButton.addEventListener("click", () => {
+    document.querySelectorAll(".fridayItem").forEach(function(elem) {
+      if(elem.classList.contains("selectedJob")){
+        elem.classList.remove("selectedJob");
+      }
+    });
+  });
 
+
+  //DESTROY LOADED IN DUPLICATES:
+  document.querySelectorAll(".destroyMe").forEach(function(elem){
+     setTimeout(function() {
+          elem.remove();
+          }, 10);
+      
+  });
   
 }
 ipcRenderer.on("thisJobMustBeDestroyed", (event, jobThatsAlreadyInDatabase) => {
@@ -608,14 +993,14 @@ ipcRenderer.on("thisJobMustBeDestroyed", (event, jobThatsAlreadyInDatabase) => {
     var foundedJob
     if(jobThatsAlreadyInDatabase.length > 0){
       foundedJob = jobThatsAlreadyInDatabase[0].JOB_NUMBER;
-      console.log("foundedJob is " + foundedJob);
     }
     else{
       foundedJob = '0';
     }
     if(objectJobNumber == foundedJob){
-      //==JQUERY
+      //==BLOW UP
           elem.classList.add("destroyMe");
+          //console.log(objectJobNumber + " in database, removing...");
           setTimeout(function() {
           elem.remove();
           }, 10);
@@ -674,7 +1059,7 @@ function createBarChart(){
       labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
       datasets: [{
         label: 'Despatch',
-        data: [3000, 2750, 2600, 2100, 1605, 1200],
+        data: [80000, 41000, 12546, 76000, 67000],
         borderWidth: 5,
         borderColor: 'rgba(186, 109, 238, 0.6)',
         backgroundColor: 'rgba(186, 109, 238, 0.6)',
@@ -694,7 +1079,7 @@ function createBarChart(){
       },
       {
         label: 'Stores',
-        data: [200, 800, 1234, 2350, 3400],
+        data: [45000, 48000, 12346, 66000, 77000],
         borderWidth: 5,
         borderColor:'#8DF2C8',
         backgroundColor: '#8DF2C8',
@@ -714,7 +1099,7 @@ function createBarChart(){
       },
       {
         label: 'Production',
-        data: [10, 25, 750, 700, 320],
+        data: [40000, 42000, 10346, 69000, 80000],
         borderWidth: 5,
         borderColor:'#F28DB7',
         backgroundColor: '#F28DB7',

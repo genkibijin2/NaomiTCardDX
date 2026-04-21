@@ -208,7 +208,13 @@ const sandbox = new GlslCanvas(canvas);
 
     <div id="TuesdaySlice" class="daySlice">
       <div id="TuesdayLogo" class="logos">
-        <img src="img/TuesdayTest.png" alt="Monday" width="80" height="80">
+        <img src="img/TuesdayTest.png" alt="Tuesday" width="80" height="80">
+         <div class="namePanelBox" id="tuesdayNamePanel" style="min-height: 100px;">
+          <button id="selectAllTuDay" class="dayPanelButton" style="font-size: 16px;">Select All</button>
+          <button id="deselectAllTuDay" class="dayPanelButton" style="font-size: 14px;">Deselect All</button>
+          <button class="dayPanelButton uniqueName"><img src="img/optIconMini.png"></button>
+        </br>
+        </div>
       </div>
       <div id="TuesdaysJobs" class="JobBoxWrapper">
         <!---Container window for job objects-->
@@ -221,6 +227,12 @@ const sandbox = new GlslCanvas(canvas);
     <div id="WednesdaySlice" class="daySlice">
       <div id="WednesdayLogo" class="logos">
         <img src="img/WednesdayTest.png" alt="Monday" width="80" height="80">
+        <div class="namePanelBox" id="wednesdayNamePanel" style="min-height: 100px;">
+          <button id="selectAllWDay" class="dayPanelButton" style="font-size: 16px;">Select All</button>
+          <button id="deselectAllWDay" class="dayPanelButton" style="font-size: 14px;">Deselect All</button>
+          <button class="dayPanelButton uniqueName"><img src="img/optIconMini.png"></button>
+        </br>
+        </div>
       </div>
       <div id="WednesdaysJobs" class="JobBoxWrapper">
         <!---Container window for job objects-->
@@ -234,6 +246,12 @@ const sandbox = new GlslCanvas(canvas);
     <div id="ThursdaySlice" class="daySlice">
       <div id="ThursdayLogo" class="logos">
         <img src="img/ThursdayTest.png" alt="Monday" width="80" height="80">
+        <div class="namePanelBox" id="thursdayNamePanel" style="min-height: 100px;">
+          <button id="selectAllTDay" class="dayPanelButton" style="font-size: 16px;">Select All</button>
+          <button id="deselectAllTDay" class="dayPanelButton" style="font-size: 14px;">Deselect All</button>
+          <button class="dayPanelButton uniqueName"><img src="img/optIconMini.png"></button>
+        </br>
+        </div>
       </div>
       <div id="ThursdaysJobs" class="JobBoxWrapper">
         <!---Container window for job objects-->
@@ -246,6 +264,12 @@ const sandbox = new GlslCanvas(canvas);
     <div id="FridaySlice" class="daySlice">
       <div id="FridayLogo" class="logos">
         <img src="img/FridayTest.png" alt="Monday" width="80" height="80">
+        <div class="namePanelBox" id="fridayNamePanel" style="min-height: 100px;">
+          <button id="selectAllFDay" class="dayPanelButton" style="font-size: 16px;">Select All</button>
+          <button id="deselectAllFDay" class="dayPanelButton" style="font-size: 14px;">Deselect All</button>
+          <button class="dayPanelButton uniqueName"><img src="img/optIconMini.png"></button>
+        </br>
+        </div>
       </div>
       <div id="FridaysJobs" class="JobBoxWrapper">
         <!---Container window for job objects-->
@@ -258,6 +282,18 @@ const sandbox = new GlslCanvas(canvas);
 
 <!---STYLING FOR HELPER, BLOCKS AND WRAPPERS ETC!-->
 <style>
+.dateRequiredString{
+  text-decoration: underline;
+  font-weight: bolder;
+  text-shadow: 1px 1px 2px white;
+}
+.requiredDate{
+  border: 1px solid black;
+  border-radius: 5px;
+  background: rgb(197, 255, 219);
+  color: rgb(0, 0, 0);
+  font-weight: bolder;
+}
 .dayPanelButton:hover{
   box-shadow: 2px 2px 5px #00000033;
   background-color:#acffd1;
