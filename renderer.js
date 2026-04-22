@@ -81,6 +81,10 @@ const datePickerBox = document.getElementById('date-input');
 datePickerBox.addEventListener("mouseenter", () => {
     helper.innerText = "Choose dates to look at";
 });
+const batchButtons = document.getElementById('batchButton');
+batchButtons.addEventListener("mouseenter", () => {
+    helper.innerText = "Batch Selected Jobs";
+});
 }
 
 //RollingStock Functions

@@ -817,7 +817,6 @@ document.querySelectorAll(".JobObject").forEach(function(elem) {
       var dateRequiredFull = JobStringSplit[11].trim();
       var dateRequiredSplit = dateRequiredFull.split("00:00:00");
       var dateRequiredFormatted = dateRequiredSplit[0];
-      console.log(dateRequiredFormatted);
       
       
       detailedInformationAboutJob.innerHTML = (

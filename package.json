@@ -38,15 +38,11 @@
     "air-datepicker": "^3.6.0",
     "chart.js": "^4.5.1",
     "csv-writer": "^1.6.0",
-    "drivelist": "^12.0.2",
     "electron-squirrel-startup": "^1.0.1",
     "mysql": "^2.18.1",
     "nanobar": "^0.4.2",
-    "node-drivelist": "^1.1.0",
     "node-firebird": "^2.0.2",
     "pixi.js": "^8.17.1",
-    "tailwindcss": "^4.2.2",
-    "thedatepicker": "^2.4.2",
-    "usb": "^2.16.0"
+    "thedatepicker": "^2.4.2"
   }
 }

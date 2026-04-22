@@ -32,15 +32,23 @@ catch(Error){
   console.log("Failed: " + Error);
   criticalError = true;
 }
+//Internet Check
+require('dns').resolve('www.google.com', function(err) {
+  if (err) {
+     criticalError = true;
+  } else {
+     console.log("Internet Connection Ok!!");
+  }
+});
 //=======================================================================//
 
 //const drivelist = require('drivelist');
-const { getDriveList} = require('node-drivelist');
+//const { getDriveList} = require('node-drivelist');
 const Nanobar = require('nanobar');
 
 const createWindow = () => {
   const win = new BrowserWindow({
-    titleBarStyle: 'hidden',
+    //titleBarStyle: 'hidden',
     width: 1024,
     height: 768, 
     resizable: true,
@@ -156,9 +164,9 @@ ipcMain.on("createCsvBatch", (event, jobRecords, jobsStringList) => {
         console.log(err);
       }
       const SQLQuery = ("INSERT INTO YUUBINJOB" +
-                "(JOB_NUMBER,WHEN_ADDED)" +
+                "(JOB_NUMBER,WHEN_ADDED, SAWBATCHED)" +
       "VALUES ('" + job2send + 
-      "','" + timeRightNow + "');");
+      "','" + timeRightNow + "', '0');");
       console.log(job2send + " Added to LIVE.YUUBINJOBS");
         db.query(SQLQuery, function(err, result){
         if(err){
