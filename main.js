@@ -103,9 +103,9 @@ app.on('window-all-closed', () => {
 });
 
 function checkUserHomeDirectory(){
-  const homePath = process.env.HOME.toString();
+  /*const homePath = "C:\\Users\\KendallP";
   console.log(homePath);
-  const programFiles = (homePath + "\\Documents\\DespatchBatches");
+  const programFiles = ("C:\\DespatchJobs\\Batched");
   if (!fs.existsSync(programFiles)){
     console.log(programFiles + " Not found, creating...");
     try{
@@ -118,20 +118,20 @@ function checkUserHomeDirectory(){
   }
   else{
     console.log(programFiles + " Found");
-  }
+  }*/
 }
 ipcMain.on("createCsvBatch", (event, jobRecords, jobsStringList) => {
   
-  const nameOfFile = 'DespatchJobs.csv';
+  const nameOfFile = 'KPDespatchJobs.csv';
   const homePath = 
-  (process.env.HOME.toString() + "\\Documents\\DespatchBatches\\" 
+  ("C:\\DespatchJobs\\Batched" 
   + nameOfFile);
   const defaultPath = ('\\\\euro-dc01\\WDesign2022\\BarOpt\\' + nameOfFile);
   const testingPath = (homePath);
   //Set Location
   //===>
-    const pathToWriteTo = testingPath;
-  console.log("Writing " + homePath) + "...";
+    const pathToWriteTo = defaultPath;
+  console.log("Writing " + defaultPath) + "...";
   const csvWriter = createCsvWriter({
   path: pathToWriteTo,
   header: [
@@ -153,7 +153,7 @@ ipcMain.on("createCsvBatch", (event, jobRecords, jobsStringList) => {
       console.log("Current Date: " + timeRightNow);
       firebird.attach(firebirdOptions, function(err, db){
       if(err){
-        throw err;
+        console.log(err);
       }
       const SQLQuery = ("INSERT INTO YUUBINJOB" +
                 "(JOB_NUMBER,WHEN_ADDED)" +
