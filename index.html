@@ -4,7 +4,7 @@
         <script type="text/javascript" src="js/jquery-3.7.1.min.js"></script>
         <script type="text/javascript" src="js/GlslCanvas.js"></script>
         <script type="text/javascript" src="js/nanobar.js"></script>
-        <title>NaomiTCard</title>
+        <title>Despatch Job Viewer</title>
 	      <link rel="icon" type"image/x-icon" href="/Favicon.ico">
         <script src="js/datePicker/dist/the-datepicker.js"></script>
         <link rel="stylesheet" href="js/datePicker/dist/the-datepicker.css">
@@ -162,6 +162,7 @@ const sandbox = new GlslCanvas(canvas);
     </script>
     <a href="rollingStock.html"><button id="page2button">Rolling Stock Charts</button></a>
     <button id="refreshFull">Refresh!</button>
+    <button id="helpButton">Help!</button>
     <button id="batchButton">Batch Selected Jobs</button>
     
 
@@ -435,7 +436,7 @@ animation-name: iconFlash;
  
   100% {
     background-color: #92e992;
-    min-width: 30vw;
+    min-width: 20vw;
   }
 }
 .invalidJob:hover{
@@ -511,6 +512,21 @@ animation-name: iconFlash;
   box-shadow: 0 0 10px #5b9b5b;
   background-color: #bdf1bd;
   translate: -1px -1px;
+}
+#helpButton{
+  border: 1px solid black;
+  border-radius: 10px;
+  background-color: rgb(255, 255, 255);
+  box-shadow: 0 0 3px #00000033;
+  transition: 0.4s;
+}
+#helpButton:hover{
+  translate: -1px -1px;
+  animation-name: refreshHover;
+  animation-duration: 0.4s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  animation-direction: normal;
 }
 #refreshFull{
   border: 1px solid black;

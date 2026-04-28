@@ -85,6 +85,14 @@ const batchButtons = document.getElementById('batchButton');
 batchButtons.addEventListener("mouseenter", () => {
     helper.innerText = "Batch Selected Jobs";
 });
+const refreshButton = document.getElementById('refreshFull');
+refreshButton.addEventListener("mouseenter", () => {
+    helper.innerText = "Refresh the screen";
+});
+const rollingStockButton = document.getElementById('page2button');
+page2button.addEventListener("mouseenter", () => {
+    helper.innerText = "View rolling stock charts";
+});
 }
 
 //RollingStock Functions

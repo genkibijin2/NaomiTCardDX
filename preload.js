@@ -62,6 +62,10 @@ if(nameOfPage == 'index.html'){
     this.location.reload();
   });
 
+  const helpButton = document.getElementById('helpButton');
+  helpButton.addEventListener("click", () => {
+    ipcRenderer.send("openHelpDoc");
+  });
 
   var numberOfDaysLoaded = 0;
   function resetDayCounter(){
@@ -1067,7 +1071,7 @@ function createBarChart(){
     data: {
       labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
       datasets: [{
-        label: 'Despatch',
+        label: 'Items in Area 1',
         data: [80000, 41000, 12546, 76000, 67000],
         borderWidth: 5,
         borderColor: 'rgba(186, 109, 238, 0.6)',
@@ -1087,7 +1091,7 @@ function createBarChart(){
         pointHoverRadius: '10',
       },
       {
-        label: 'Stores',
+        label: 'Items in Area 2',
         data: [45000, 48000, 12346, 66000, 77000],
         borderWidth: 5,
         borderColor:'#8DF2C8',
@@ -1107,7 +1111,7 @@ function createBarChart(){
         pointHoverRadius: '5',
       },
       {
-        label: 'Production',
+        label: 'Items in Area 3',
         data: [40000, 42000, 10346, 69000, 80000],
         borderWidth: 5,
         borderColor:'#F28DB7',
@@ -1150,7 +1154,7 @@ function createLineChart(){
     data: {
       labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
       datasets: [{
-        label: 'Despatch',
+        label: 'Items in Area 1',
         data: [80000, 41000, 12546, 76000, 67000],
         borderWidth: 5,
         borderColor: 'rgba(186, 109, 238, 0.6)',
@@ -1170,7 +1174,7 @@ function createLineChart(){
         pointHoverRadius: '10',
       },
       {
-        label: 'Stores',
+        label: 'Items in Area 2',
         data: [45000, 48000, 12346, 66000, 77000],
         borderWidth: 5,
         borderColor:'#8DF2C8',
@@ -1190,7 +1194,7 @@ function createLineChart(){
         pointHoverRadius: '5',
       },
       {
-        label: 'Production',
+        label: 'Items In Area 3',
         data: [40000, 42000, 10346, 69000, 80000],
         borderWidth: 5,
         borderColor:'#F28DB7',

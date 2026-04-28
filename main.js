@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain } = require('electron/main');
 const path = require('node:path');
 const fs = require("fs");
+const shell = require('electron').shell;
 //DATABASE OPTIONS======================================================//
 const mysql = require("mysql");
 const firebird = require("node-firebird");
@@ -377,4 +378,8 @@ ipcMain.on("amIAlreadyBatched", (event, jobNumber2Check) => {
 
 ipcMain.on("getChartData", (event, variable) => {
  
+});
+
+ipcMain.on("openHelpDoc", (event) => {
+  shell.openExternal('\\\\EURO-DC01\\ServerFolders\\PC Client Installs\\Kendalls Programs\\Despatch Job Viewer (NAOMITCARDDX)\\HelpDocs\\help.pdf');
 });
