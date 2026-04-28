@@ -56,6 +56,13 @@ function doneLoading(){
 //==================================================EVENTS FOR MAIN SCREEN, INDEX.HTML=====================================================================//
 //==============================DATE PICKER==================================//
 if(nameOfPage == 'index.html'){
+  const refreshButton = document.getElementById('refreshFull');
+  refreshButton.addEventListener("click", () => {
+    resetDayCounter();
+    this.location.reload();
+  });
+
+
   var numberOfDaysLoaded = 0;
   function resetDayCounter(){
     numberOfDaysLoaded = 0;
@@ -1051,7 +1058,10 @@ document.querySelectorAll(".chartDisplayButton").forEach(function(elem) {
 chartZone = document.getElementById('theCharts');
 createBarChart();
 function createBarChart(){
-  const amazingChart = new Chart(chartZone, {
+ if(window.currentChart){
+    window.currentChart.destroy();
+  }
+  window.currentChart = new Chart(chartZone, {
     type: 'bar',
     barPercentage: 1,
     data: {
@@ -1130,16 +1140,18 @@ function createBarChart(){
   });
 }
 
-helper.addEventListener("click", () =>{
-  amazingChart.destroy();
-  const chart2 = new Chart(chartZone, {
+function createLineChart(){
+ if(window.currentChart){
+    window.currentChart.destroy();
+  }
+  window.currentChart = new Chart(chartZone, {
     type: 'line',
     maintainAspectRatio: false,
     data: {
       labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
       datasets: [{
         label: 'Despatch',
-        data: [3000, 2750, 2600, 2100, 1605, 1200],
+        data: [80000, 41000, 12546, 76000, 67000],
         borderWidth: 5,
         borderColor: 'rgba(186, 109, 238, 0.6)',
         backgroundColor: 'rgba(186, 109, 238, 0.6)',
@@ -1159,7 +1171,7 @@ helper.addEventListener("click", () =>{
       },
       {
         label: 'Stores',
-        data: [200, 800, 1234, 2350, 3400],
+        data: [45000, 48000, 12346, 66000, 77000],
         borderWidth: 5,
         borderColor:'#8DF2C8',
         backgroundColor: '#8DF2C8',
@@ -1179,7 +1191,7 @@ helper.addEventListener("click", () =>{
       },
       {
         label: 'Production',
-        data: [10, 25, 750, 700, 320],
+        data: [40000, 42000, 10346, 69000, 80000],
         borderWidth: 5,
         borderColor:'#F28DB7',
         backgroundColor: '#F28DB7',
@@ -1214,6 +1226,16 @@ helper.addEventListener("click", () =>{
   amazingChart.reset();
   amazingChart.update();
   amazingChart.resize();*/
+}
+
+const lineChartButton = document.getElementById('lineChart');
+lineChartButton.addEventListener("click", () =>{
+  createLineChart();
+});
+
+const barChartButton = document.getElementById('barChart');
+barChartButton.addEventListener("click", () => {
+  createBarChart();
 });
     
   

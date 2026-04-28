@@ -161,6 +161,7 @@ const sandbox = new GlslCanvas(canvas);
       
     </script>
     <a href="rollingStock.html"><button id="page2button">Rolling Stock Charts</button></a>
+    <button id="refreshFull">Refresh!</button>
     <button id="batchButton">Batch Selected Jobs</button>
     
 
@@ -498,6 +499,7 @@ animation-name: iconFlash;
   background: #e4e4e4;
   overflow-y:scroll;
 }
+
 #page2button{
   border: 1px solid black;
   border-radius: 10px;
@@ -509,6 +511,39 @@ animation-name: iconFlash;
   box-shadow: 0 0 10px #5b9b5b;
   background-color: #bdf1bd;
   translate: -1px -1px;
+}
+#refreshFull{
+  border: 1px solid black;
+  border-radius: 10px;
+  background-color: rgb(255, 255, 255);
+  box-shadow: 0 0 3px #00000033;
+  transition: 0.4s;
+}
+#refreshFull:hover{
+  
+  translate: -1px -1px;
+  animation-name: refreshHover;
+  animation-duration: 0.4s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  animation-direction: normal;
+}
+@keyframes refreshHover{
+  0%{
+    border-radius: 10px;
+    background-color: #bdf1bd;
+    box-shadow: 0 0 2px #dadada;
+  }
+  50%{
+    border-radius: 5px;
+    background-color: hsl(150, 100%, 68%);
+    box-shadow: 0 0 10px #5b9b5b;
+  }
+  100%{
+    border-radius: 10px;
+    background-color: #bdf1bd;
+    box-shadow: 0 0 2px #dadada;
+  }
 }
 #searchButton{
   border: 1px solid black;
