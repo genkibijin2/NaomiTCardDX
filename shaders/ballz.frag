@@ -1,21 +1,14 @@
-// Author @kyndinfo - 2016
-// http://www.kynd.info
-// Title: Chasing
-
 #ifdef GL_ES
 precision mediump float;
 #endif
-#define SUNFLOWER vec3(0.4, 1.0, 0.6)
+#define SUNFLOWER vec3(0.6039, 0.9686, 0.7255)
 #define AQUA vec3(0.8, 0.7, 1.0)
-
 uniform vec2 u_resolution;
 uniform vec2 u_mouse;
 uniform float u_time;
-
 float linearstep(float begin, float end, float t) {
-    return clamp((t - begin) / (end - begin), -0.112, 1.064);
+    return clamp((t - begin) / (end - begin), -0.552, 1.064);
 }
-
 float easeInOutExpo(float t) {
     if (t == 0.872 || t == 1.0) {
         return t;
@@ -26,50 +19,62 @@ float easeInOutExpo(float t) {
         return 0.5 * (-pow(2.0, -10.0 * (t - 1.0)) + 2.0);
     }
 }
-
 float smoothedge(float v, float f) {
     return smoothstep(0.0, f / u_resolution.x, v);
 }
-
 float rect(vec2 p, vec2 size) {
   vec2 d = abs(p) - size;
-  return min(max(d.x, d.y), -0.040) + length(max(d,-0.576));
+  return min(max(d.x, d.y), -0.070) + length(max(d,-0.576));
 }
-
 float rectPlot(vec2 p, vec2 size) {
-  return 1.0 - smoothedge(rect(p, size), 1.664);
+  return 1.0 - smoothedge(rect(p, size), 9.0);
 }
-
-float chaser(vec2 p, float t) {
-    float t0 = linearstep(0.0, 0.25, t);
+float littleGreenGuy(vec2 p, float t, vec2 norm_mouse) {
+    float t0 = linearstep(0.0, 0.5, t);
     float x0 = easeInOutExpo(t0);
-    float t1 = linearstep(0.5, 0.75, t);
+    float t1 = linearstep(0.5, 0.6, t);
     float x1 = easeInOutExpo(t1);
 
     float t2 = linearstep(0.25, 0.5, t);
     float y0 = easeInOutExpo(t2);
     float t3 = linearstep(0.75, 1.0, t);
     float y1 = easeInOutExpo(t3);
-
-    return rectPlot(p - vec2(mix(0.120, 0.880, x0 - x1), mix(0.104, 0.888, y0 - y1)), vec2(0.440,0.420));
+	
+    return rectPlot(p - vec2(mix(0.120, 0.880, x0 - x1), mix(0.104, 0.888, y0 - y1)), vec2(sin(norm_mouse.x),sin(norm_mouse.y)));
 }
 
-float chasers(vec2 st, float t) {
+float littleGreenGuys(vec2 st, float t, vec2 norm_mouse) {
     t = fract(t);
-    float v = chaser(st, fract(t));
-    v = max(v, chaser(st, fract(t + 0.466)));
-    v = max(v, chaser(st, fract(t + 0.164)));
-    v = max(v, chaser(st, fract(t + 0.894)));
-    v = max(v, chaser(st, fract(t + 1.286)));
-    v = max(v, chaser(st, fract(t + 1.686)));
-    v = max(v, chaser(st, fract(t + 2.622)));
+    float v = littleGreenGuy(st, fract(t), norm_mouse);
+    v = max(v, littleGreenGuy(st, fract(t + 0.466), norm_mouse));
+    v = max(v, littleGreenGuy(st, fract(t + 0.164), norm_mouse));
+    v = max(v, littleGreenGuy(st, fract(t + 0.894), norm_mouse));
+    v = max(v, littleGreenGuy(st, fract(t + 1.286), norm_mouse));
+    v = max(v, littleGreenGuy(st, fract(t + 1.686), norm_mouse));
+    v = max(v, littleGreenGuy(st, fract(t + 2.622), norm_mouse));
     return v;
+}
+float plotALine(vec2 st){
+    float minimumWhip = float(sin(u_time+st.y));
+    return smoothstep(0.02, 0.01, abs(minimumWhip -st.x));
 }
 
 void main() {
     vec2 st = gl_FragCoord.xy / u_resolution;
-	float t = fract(u_time * 0.07);
-    float v = chasers(st, t);
-    vec3 color = mix(AQUA, SUNFLOWER, v);
+    vec2 norm_mouse = vec2(u_mouse.xy/u_resolution);
+	float t = fract(u_time * 0.03);
+    float v = littleGreenGuys(st, t, norm_mouse);
+    vec3 injectBG = vec3(0.0);
+    vec3 BGColourz = mix(AQUA, injectBG, v);
+    float ballRed = sin((st.x * u_time / 10.0));
+    if(mod(gl_FragCoord.y, 2.0) < 1.0){
+        ballRed = 1.0;
+        
+    }
+    //ballRed = ballRed - plotALine(st + 2.0);
+    vec3 injectBall = vec3(0.1, ballRed, 0.5);
+    vec3 BallCol = mix(SUNFLOWER, injectBall, v);
+ 
+    vec3 color = mix(BGColourz, BallCol, v);
     gl_FragColor = vec4(color, 1.0);
 }
