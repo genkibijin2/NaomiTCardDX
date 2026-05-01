@@ -93,6 +93,10 @@ const rollingStockButton = document.getElementById('page2button');
 page2button.addEventListener("mouseenter", () => {
     helper.innerText = "View rolling stock charts";
 });
+const helpButton = document.getElementById('helpButton');
+helpButton.addEventListener("mouseenter", () => {
+    helper.innerText = "Open Help Document";
+});
 }
 
 //RollingStock Functions

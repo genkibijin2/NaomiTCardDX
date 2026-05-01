@@ -138,8 +138,7 @@ if(nameOfPage == 'index.html'){
     var datePickerValue = datePickerVar.value.toString();
     try{
       var datePickerDate = new Date(datePickerValue);
-    
-    
+
     setToLastSunday(datePickerDate);
     
     //DATEPICKERDATE is NOW SUNDAY OF THAT WEEK!!!
@@ -147,37 +146,52 @@ if(nameOfPage == 'index.html'){
     //NOW=>Generate Dates of this current week as dates
     var sundayOfWeek = datePickerDate; 
 
+    //var theMondayOfWeek = new Date(datePickerDate);
     var mondayOfWeek = new Date(datePickerDate);
     var tuesdayOfWeek = new Date(datePickerDate);
     var wednesdayOfWeek = new Date(datePickerDate);
     var thursdayOfWeek = new Date(datePickerDate);
     var fridayOfWeek = new Date(datePickerDate);
 
-    mondayOfWeek.setDate(mondayOfWeek.getDate() + 1); 
+    //Get date, change to locale, then replace with - and reverse format for SQL
+    //This makes it timezone neutral, and will always match the database's GMT Timezone 00:000:00 requirement
+    mondayOfWeek.setDate(mondayOfWeek.getDate() + 1);
+    var mondaySQLlocal = mondayOfWeek.toLocaleDateString().replaceAll('/', '-');
+    var mondayAsSQL = (mondaySQLlocal.substring(6, 10) + "-" + 
+                mondaySQLlocal.substring(3, 5) + "-" + 
+                mondaySQLlocal.substring(0, 2));
+
     tuesdayOfWeek.setDate(tuesdayOfWeek.getDate() + 2);
+    var tuesdaySQLlocal = tuesdayOfWeek.toLocaleDateString().replaceAll('/', '-');
+    var tuesdayAsSQL = (tuesdaySQLlocal.substring(6, 10) + "-" + 
+                tuesdaySQLlocal.substring(3, 5) + "-" + 
+                tuesdaySQLlocal.substring(0, 2));
+
     wednesdayOfWeek.setDate(wednesdayOfWeek.getDate() + 3);
+    var wednesdaySQLlocal = wednesdayOfWeek.toLocaleDateString().replaceAll('/', '-');
+    var wednesdayAsSQL = (wednesdaySQLlocal.substring(6, 10) + "-" + 
+                wednesdaySQLlocal.substring(3, 5) + "-" + 
+                wednesdaySQLlocal.substring(0, 2));
+
     thursdayOfWeek.setDate(thursdayOfWeek.getDate() + 4);
-    fridayOfWeek.setDate(fridayOfWeek.getDate() + 5);
-    //=====>Print Help
-    //console.log("Sunday: " + sundayOfWeek);
-    //console.log("Monday: " + mondayOfWeek);
-    //console.log("Tuesday: " + tuesdayOfWeek);
-    //console.log("Wednesday: " + wednesdayOfWeek);
-    //console.log("Thursday: " + thursdayOfWeek);
-    //console.log("Friday: " + fridayOfWeek);
-    //STERILIZE=> TO SQL SAFE
-    var mondayAsSQL = (new Date(mondayOfWeek).toISOString().slice(0, -5).replace('T', ' '));
-    var tuesdayAsSQL = (new Date(tuesdayOfWeek).toISOString().slice(0, -5).replace('T', ' '));
-    var wednesdayAsSQL = (new Date(wednesdayOfWeek).toISOString().slice(0, -5).replace('T', ' '));
-    var thursdayAsSQL = (new Date(thursdayOfWeek).toISOString().slice(0, -5).replace('T', ' '));
-    var fridayAsSQL = (new Date(fridayOfWeek).toISOString().slice(0, -5).replace('T', ' '));
-    //Trim and remove H/M/S to disable any timezone potential issues
-    mondayAsSQL = mondayAsSQL.substring(0, mondayAsSQL.length - 8);
-    tuesdayAsSQL = tuesdayAsSQL.substring(0, tuesdayAsSQL.length - 8);
-    wednesdayAsSQL = wednesdayAsSQL.substring(0, wednesdayAsSQL.length - 8);
-    thursdayAsSQL = thursdayAsSQL.substring(0, thursdayAsSQL.length - 8);
-    fridayAsSQL = fridayAsSQL.substring(0, fridayAsSQL.length - 8);
+    var thursdaySQLlocal = thursdayOfWeek.toLocaleDateString().replaceAll('/', '-');
+    var thursdayAsSQL = (thursdaySQLlocal.substring(6, 10) + "-" + 
+                thursdaySQLlocal.substring(3, 5) + "-" + 
+                thursdaySQLlocal.substring(0, 2));
     
+    fridayOfWeek.setDate(fridayOfWeek.getDate() + 5);
+    var fridaySQLlocal = fridayOfWeek.toLocaleDateString().replaceAll('/', '-');
+    var fridayAsSQL = (fridaySQLlocal.substring(6, 10) + "-" + 
+                fridaySQLlocal.substring(3, 5) + "-" + 
+                fridaySQLlocal.substring(0, 2));
+    //=====>Print Help
+    console.log("Sunday: " + sundayOfWeek);
+    console.log("Monday: " + mondayOfWeek);
+    console.log("Tuesday: " + tuesdayOfWeek);
+    console.log("Wednesday: " + wednesdayOfWeek);
+    console.log("Thursday: " + thursdayOfWeek);
+    console.log("Friday: " + fridayOfWeek);
+    console.log("Monday as SQL = " + mondayAsSQL);
     
     //FINALLY=> pass all these dates into date search SQL in main.js
     ipcRenderer.send("SendDatesToDatabase", mondayAsSQL, tuesdayAsSQL,
