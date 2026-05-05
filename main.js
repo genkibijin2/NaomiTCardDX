@@ -213,7 +213,7 @@ ipcMain.on("SendDatesToDatabase", (event, monday, tuesday, wednesday,
     //console.log("Sending query...:\n" + SQLQuery);
     db.query(SQLQuery, function(err, result){
     if(err){
-
+      throw err;
       console.log("ERROR");
       console.log(err);
     }

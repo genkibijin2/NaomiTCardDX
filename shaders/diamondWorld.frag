@@ -5,13 +5,11 @@ uniform vec2 u_resolution;
 uniform float u_time;
 void main()
 {
-    vec2 iResolution = u_resolution;
-    float iTime = u_time;
-    float aspect = iResolution.y/iResolution.x;
+    float aspect = u_resolution.y/u_resolution.x;
     float value;
-	vec2 uv = gl_FragCoord.xy / iResolution.x;
+	vec2 uv = gl_FragCoord.xy / u_resolution.x;
     uv -= vec2(0.5, 0.5*aspect);
-    float rot = radians(45.0); // radians(45.0*sin(iTime));
+    float rot = radians(45.0); // radians(45.0*sin(u_time));
     mat2 m = mat2(cos(rot), -sin(rot), sin(rot), cos(rot));
    	uv  = m * uv;
     uv += vec2(0.5, 0.5*aspect);
@@ -20,10 +18,8 @@ void main()
     vec2 rep = fract(pos);
     float dist = 1.0*min(min(rep.x, 1.0-rep.x), min(rep.y, 1.0-rep.y));
     float squareDist = length((floor(pos)+vec2(0.5)) - vec2(5.0) );
-    
-    float edge = sin(iTime-squareDist*0.5)*0.5+0.5;
-    
-    edge = (iTime-squareDist*0.5)*0.5;
+    float edge = sin(u_time-squareDist*0.5)*0.5+0.5;
+    edge = (u_time-squareDist*0.5)*0.5;
     edge = 2.0*fract(edge*0.5);
     value = 2.0*abs(dist-0.9);
     //value = pow(dist, 2.0);
@@ -31,7 +27,6 @@ void main()
     value = mix(value, 1.0-value, step(1.0, edge));
     value *= 1.0-0.5*edge;
     edge = pow(abs(1.0-edge), 2.0);
-    
     //edge = abs(-edge);
     value = smoothstep( edge-.05, edge, 0.95*value);
     value += squareDist*.1;
