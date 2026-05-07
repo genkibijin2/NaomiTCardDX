@@ -381,5 +381,5 @@ ipcMain.on("getChartData", (event, variable) => {
 });
 
 ipcMain.on("openHelpDoc", (event) => {
-  shell.openExternal('\\\\EURO-DC01\\ServerFolders\\PC Client Installs\\Kendalls Programs\\Despatch Job Viewer (NAOMITCARDDX)\\HelpDocs\\help.pdf');
+  shell.openExternal('http://kendallwiki.system:777/dokuwiki/doku.php?id=public:dpj');
 });

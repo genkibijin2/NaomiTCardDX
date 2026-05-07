@@ -156,34 +156,24 @@ if(nameOfPage == 'index.html'){
     //Get date, change to locale, then replace with - and reverse format for SQL
     //This makes it timezone neutral, and will always match the database's GMT Timezone 00:000:00 requirement
     mondayOfWeek.setDate(mondayOfWeek.getDate() + 1);
-    var mondaySQLlocal = mondayOfWeek.toLocaleDateString().replaceAll('/', '-');
-    var mondayAsSQL = (mondaySQLlocal.substring(6, 10) + "-" + 
-                mondaySQLlocal.substring(3, 5) + "-" + 
-                mondaySQLlocal.substring(0, 2));
+    console.log(mondayOfWeek.toLocaleDateString());
+    var mondayAsSQL = (mondayOfWeek.getFullYear() + "-" + (mondayOfWeek.getMonth() + 1) + "-" + mondayOfWeek.getDate());
+    console.log("Monday as SQL: " + mondayAsSQL);
 
     tuesdayOfWeek.setDate(tuesdayOfWeek.getDate() + 2);
-    var tuesdaySQLlocal = tuesdayOfWeek.toLocaleDateString().replaceAll('/', '-');
-    var tuesdayAsSQL = (tuesdaySQLlocal.substring(6, 10) + "-" + 
-                tuesdaySQLlocal.substring(3, 5) + "-" + 
-                tuesdaySQLlocal.substring(0, 2));
+    var tuesdayAsSQL = (tuesdayOfWeek.getFullYear() + "-" + (tuesdayOfWeek.getMonth() + 1) + "-" + tuesdayOfWeek.getDate());
+
 
     wednesdayOfWeek.setDate(wednesdayOfWeek.getDate() + 3);
-    var wednesdaySQLlocal = wednesdayOfWeek.toLocaleDateString().replaceAll('/', '-');
-    var wednesdayAsSQL = (wednesdaySQLlocal.substring(6, 10) + "-" + 
-                wednesdaySQLlocal.substring(3, 5) + "-" + 
-                wednesdaySQLlocal.substring(0, 2));
+    var wednesdayAsSQL = (wednesdayOfWeek.getFullYear() + "-" + (wednesdayOfWeek.getMonth() + 1) + "-" + wednesdayOfWeek.getDate());
+
 
     thursdayOfWeek.setDate(thursdayOfWeek.getDate() + 4);
-    var thursdaySQLlocal = thursdayOfWeek.toLocaleDateString().replaceAll('/', '-');
-    var thursdayAsSQL = (thursdaySQLlocal.substring(6, 10) + "-" + 
-                thursdaySQLlocal.substring(3, 5) + "-" + 
-                thursdaySQLlocal.substring(0, 2));
+    var thursdayAsSQL = (thursdayOfWeek.getFullYear() + "-" + (thursdayOfWeek.getMonth() + 1) + "-" + thursdayOfWeek.getDate());
     
     fridayOfWeek.setDate(fridayOfWeek.getDate() + 5);
-    var fridaySQLlocal = fridayOfWeek.toLocaleDateString().replaceAll('/', '-');
-    var fridayAsSQL = (fridaySQLlocal.substring(6, 10) + "-" + 
-                fridaySQLlocal.substring(3, 5) + "-" + 
-                fridaySQLlocal.substring(0, 2));
+    var fridayAsSQL = (fridayOfWeek.getFullYear() + "-" + (fridayOfWeek.getMonth() + 1) + "-" + fridayOfWeek.getDate());
+
     //=====>Print Help
     console.log("Sunday: " + sundayOfWeek);
     console.log("Monday: " + mondayOfWeek);
