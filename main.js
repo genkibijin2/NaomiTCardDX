@@ -5,6 +5,52 @@ const shell = require('electron').shell;
 //DATABASE OPTIONS======================================================//
 const mysql = require("mysql");
 const firebird = require("node-firebird");
+const os = require('os');
+var loggingFailed = false; //flag for if logging has reached an error
+try{var logDirectory=os.homedir()+"\\Documents\\DJVLogs";}catch(err){loggingFailed=true;} //set log directory
+
+function electronLog(message2Write){
+  const RIGHTNOW = new Date();
+  //Write to log file function
+  if(!fs.existsSync(logDirectory)){
+    loggingFailed = true;
+  }
+  else{
+    var loggingFile = (logDirectory + "\\DJVlog.txt");
+    if(!fs.existsSync(loggingFile)){
+      try{
+        console.log("No logging file found, creating...")
+        console.log("Creating logging file: " + loggingFile);
+        fs.writeFileSync(loggingFile, "---DJV Log File---");
+      }
+      catch(err){
+        loggingFailed = true;
+        console.log(err);
+      }
+    }
+  }
+
+  if(!loggingFailed || fs.existsSync(loggingFile)){
+    try{
+      fs.appendFile(loggingFile, ("\n[" + 
+        RIGHTNOW.getHours() + ":" +
+        RIGHTNOW.getMinutes() + ":" +
+        RIGHTNOW.getSeconds() + "" +
+        "] " + message2Write), err =>{
+        if(err){
+          console.log(err);
+        }
+        else{
+          console.log(message2Write);
+        }
+      });
+    }
+    catch(err){
+      console.log(err);
+    }
+  }
+}
+
 //csv template
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 var criticalError = false;
@@ -14,7 +60,7 @@ var connection = mysql.createConnection({
 });
 var firebirdOptions ={};
 var firebirdTracker ={};
-console.log("Reading Database Connection Details...");
+electronLog("Reading Database Connection Details...");
 try{
   let dbconnexion = require('./dbconnexion.json');
   firebirdOptions.host = dbconnexion.firebirdOption.host;
@@ -27,10 +73,10 @@ try{
   firebirdTracker.password = dbconnexion.firebirdTracker.password;
   firebirdTracker.database = dbconnexion.firebirdTracker.database;
   firebirdTracker.port = dbconnexion.firebirdTracker.port;
-  console.log("dbconnexion loaded!");
+  electronLog("dbconnexion loaded!");
 }
 catch(Error){
-  console.log("Failed: " + Error);
+  electronLog("Failed: " + Error);
   criticalError = true;
 }
 //Internet Check
@@ -38,7 +84,7 @@ require('dns').resolve('www.google.com', function(err) {
   if (err) {
      criticalError = true;
   } else {
-     console.log("Internet Connection Ok!!");
+     electronLog("Internet Connection Ok!!");
   }
 });
 //=======================================================================//
@@ -46,6 +92,7 @@ require('dns').resolve('www.google.com', function(err) {
 //const drivelist = require('drivelist');
 //const { getDriveList} = require('node-drivelist');
 const Nanobar = require('nanobar');
+const { electron } = require('node:process');
 
 const createWindow = () => {
   const win = new BrowserWindow({
@@ -75,8 +122,8 @@ ipcMain.on("maximizeWindow", (event) => {
 });
 ipcMain.on("helpButtonClicked", (event) => {
   //Custom Functions for testing
-  console.log(win.getBounds());
-  console.log(win.getBounds());
+  electronLog(win.getBounds());
+  electronLog(win.getBounds());
 });
 var progressAmount = 0.0;
 ipcMain.on("dayAdded2Counter", (event, numberOfDaysLoaded) =>{
@@ -90,7 +137,7 @@ ipcMain.on("dayAdded2Counter", (event, numberOfDaysLoaded) =>{
 });
 //LAUNCH
 if(criticalError){
-    console.log("No database file! Place 'dbconnexion.json' in the root folder!");
+    electronLog("No database file! Place 'dbconnexion.json' in the root folder!");
     win.loadFile('criticalError.html'); 
     win.setMaximumSize(600, 638);
     win.setMinimumSize(600, 638);
@@ -124,22 +171,25 @@ app.on('window-all-closed', () => {
 });
 
 function checkUserHomeDirectory(){
-  /*const homePath = "C:\\Users\\KendallP";
-  console.log(homePath);
-  const programFiles = ("C:\\DespatchJobs\\Batched");
-  if (!fs.existsSync(programFiles)){
-    console.log(programFiles + " Not found, creating...");
-    try{
-      fs.mkdirSync(programFiles);
+  if(os.homedir()){
+    if (!fs.existsSync(logDirectory)){
+      try{
+        fs.mkdirSync(logDirectory);
+
+      }
+      catch(err){
+        console.log(err);
+        loggingFailed = true;
+      }
     }
-    catch{
-      console.log("failed");
-    }
-    console.log("Created " + programFiles);
+  if(!os.homedir()){
+      console.log(os.homedir() + " not accessible...");
+      loggingFailed = true;
   }
-  else{
-    console.log(programFiles + " Found");
-  }*/
+    if(!loggingFailed){
+    electronLog("homedir found: " + os.homedir());
+    }
+  }
 }
 ipcMain.on("createCsvBatch", (event, jobRecords, jobsStringList) => {
   
@@ -152,7 +202,7 @@ ipcMain.on("createCsvBatch", (event, jobRecords, jobsStringList) => {
   //Set Location
   //===>
     const pathToWriteTo = defaultPath;
-  console.log("Writing " + defaultPath) + "...";
+  electronLog("Writing " + defaultPath) + "...";
   const csvWriter = createCsvWriter({
   path: pathToWriteTo,
   header: [
@@ -166,37 +216,18 @@ ipcMain.on("createCsvBatch", (event, jobRecords, jobsStringList) => {
   try{
   csvWriter.writeRecords(records)       // returns a promise    
   .then(() => {
-    console.log('...Done');
+    electronLog('...Done');
     //Now write to Table
     var timeRightNow = (new Date().toISOString().slice(0, -5).replace('T', ' '));
     for (var i = 0; i < jobsStringList.length; i++){
       const job2send = jobsStringList[i];
-      console.log(job2send + " Added to CSV");
-      /*firebird.attach(firebirdOptions, function(err, db){
-      if(err){
-        console.log(err);
-      }
-      const SQLQuery = ("INSERT INTO YUUBINJOB" +
-                "(JOB_NUMBER,WHEN_ADDED, SAWBATCHED)" +
-      "VALUES ('" + job2send + 
-      "','" + timeRightNow + "', '0');");
-      
-        db.query(SQLQuery, function(err, result){
-        if(err){
-          console.log("ERROR");
-          console.log(err);
-        }
-        db.detach();
-        });
-        
-      });*/
-      
+      electronLog(job2send + " Added to CSV");     
     }
     event.reply("generatedCSV", pathToWriteTo);
   });
   }
   catch (error){
-    console.log(error);
+    electronLog(error);
   }
 });
 
@@ -226,8 +257,8 @@ ipcMain.on("SendDatesToDatabase", (event, monday, tuesday, wednesday,
     db.query(SQLQuery, function(err, result){
     if(err){
       throw err;
-      console.log("ERROR");
-      console.log(err);
+      electronLog("ERROR");
+      electronLog(err);
     }
     db.detach();
     event.reply("mondayObjectsReturned", result);
@@ -257,8 +288,8 @@ ipcMain.on("SendDatesToDatabase", (event, monday, tuesday, wednesday,
     //console.log("Sending query...:\n" + SQLQuery);
     db.query(SQLQuery, function(err, result){
     if(err){
-      console.log("ERROR");
-      console.log(err);
+      electronLog("ERROR");
+      electronLog(err);
     }
     db.detach();
     event.reply("tuesdayObjectsReturned", result);
@@ -288,8 +319,8 @@ ipcMain.on("SendDatesToDatabase", (event, monday, tuesday, wednesday,
     //console.log("Sending query...:\n" + SQLQuery);
     db.query(SQLQuery, function(err, result){
     if(err){
-      console.log("ERROR");
-      console.log(err);
+      electronLog("ERROR");
+      electronLogg(err);
     }
     db.detach();
     event.reply("wednesdaysObjectsReturned", result);
@@ -319,8 +350,8 @@ ipcMain.on("SendDatesToDatabase", (event, monday, tuesday, wednesday,
     //console.log("Sending query...:\n" + SQLQuery);
     db.query(SQLQuery, function(err, result){
     if(err){
-      console.log("ERROR");
-      console.log(err);
+      electronLog("ERROR");
+      electronLog(err);
     }
     db.detach();
     event.reply("thursdayObjectsReturned", result);
@@ -350,8 +381,8 @@ ipcMain.on("SendDatesToDatabase", (event, monday, tuesday, wednesday,
     //console.log("Sending query...:\n" + SQLQuery);
     db.query(SQLQuery, function(err, result){
     if(err){
-      console.log("ERROR");
-      console.log(err);
+      electronLog("ERROR");
+      electronLog(err);
     }
     db.detach();
     event.reply("fridayObjectsReturned", result);
@@ -363,8 +394,8 @@ ipcMain.on("SendDatesToDatabase", (event, monday, tuesday, wednesday,
 });
 
 ipcMain.on("allDaysFinishedLoadingFlag", (event, numberOfDaysLoaded) => {
-  console.log(numberOfDaysLoaded + " days loaded: main pinged =>");
-  console.log("Returning pong =>");
+  electronLog(numberOfDaysLoaded + " days loaded: main pinged =>");
+  electronLog("Returning pong =>");
   event.reply("iUnderstandAllDays");
 });
 
@@ -379,8 +410,8 @@ ipcMain.on("amIAlreadyBatched", (event, jobNumber2Check) => {
     //console.log("Sending query...:\n" + SQLQuery);
     db.query(SQLQuery, function(err, result){
     if(err){
-      console.log("ERROR");
-      console.log(err);
+      electronLog("ERROR");
+      electronLog(err);
     }
     event.reply("thisJobMustBeDestroyed", result);
     db.detach();
@@ -390,6 +421,10 @@ ipcMain.on("amIAlreadyBatched", (event, jobNumber2Check) => {
 
 ipcMain.on("getChartData", (event, variable) => {
  
+});
+
+ipcMain.on("writeIt2TheElectronLog", (event, message2Write) => {
+  electronLog(message2Write);
 });
 
 ipcMain.on("openHelpDoc", (event) => {

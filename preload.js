@@ -14,9 +14,12 @@ contextBridge.exposeInMainWorld('versions', {
 
 
 document.addEventListener('DOMContentLoaded', function () {
+function writeMePlenty(message2Write){
+  ipcRenderer.send("writeIt2TheElectronLog", message2Write);
+}
 var currentFile = location.href.split("/").slice(-1); 
 var nameOfPage = currentFile[0];
-console.log(currentFile[0]);
+writeMePlenty("Loading " + currentFile[0]);
 /*PUT EVERYTHING INSIDE THIS FUNCTION, AS IT RUNS WHEN EVERYTHING
 ON THE PAGE HAS FULLY LOADED, OTHERWISE ELEMENTS MIGHT BE NULL!
 */
@@ -125,7 +128,7 @@ if(nameOfPage == 'index.html'){
   }
 
   ipcRenderer.on("iUnderstandAllDays", (event) => {
-    console.log("Pong received back in preload...");
+    writeMePlenty("Pong received back in preload...");
     addListeners2AllJobs();
     doneLoading();
   });
@@ -157,7 +160,7 @@ if(nameOfPage == 'index.html'){
     //Get date, change to locale, then replace with - and reverse format for SQL
     //This makes it timezone neutral, and will always match the database's GMT Timezone 00:000:00 requirement
     mondayOfWeek.setDate(mondayOfWeek.getDate() + 1);
-    console.log(mondayOfWeek.toLocaleDateString());
+    writeMePlenty("Today's date: " + mondayOfWeek.toLocaleDateString());
     var mondayAsSQL = (mondayOfWeek.getFullYear() + "-" + (mondayOfWeek.getMonth() + 1) + "-" + mondayOfWeek.getDate());
     console.log("Monday as SQL: " + mondayAsSQL);
 
@@ -190,8 +193,8 @@ if(nameOfPage == 'index.html'){
     );
     }
     catch(error){
-      console.log("Likely no input in date picker... So error: ");
-      console.log(error);
+      writeMePlenty("Likely no input in date picker... So error: ");
+      writeMePlenty(error);
       datePickerVar.value = "Pick a date!";
       
     }
@@ -779,7 +782,7 @@ ipcRenderer.on("fridayObjectsReturned", (event, fridaysJobObjects) =>{
 
 
 ipcRenderer.on("allDoneLoadingSQL", (event, returnCode) => {
-    console.log("all done SQL");
+    writeMePlenty("SQL Results Finished");
 });
 //=============================================================================//
 
