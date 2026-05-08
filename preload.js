@@ -117,6 +117,7 @@ if(nameOfPage == 'index.html'){
   
   function addADay2TheCounter (){
     numberOfDaysLoaded++;
+    ipcRenderer.send("dayAdded2Counter", numberOfDaysLoaded);
     console.log(numberOfDaysLoaded + " days loaded");
     if(numberOfDaysLoaded >= 5){
       ipcRenderer.send("allDaysFinishedLoadingFlag", numberOfDaysLoaded);

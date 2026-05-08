@@ -50,6 +50,7 @@ const Nanobar = require('nanobar');
 const createWindow = () => {
   const win = new BrowserWindow({
     titleBarStyle: 'hidden',
+    //frame: false,
     width: 1024,
     height: 768, 
     resizable: true,
@@ -77,6 +78,16 @@ ipcMain.on("helpButtonClicked", (event) => {
   console.log(win.getBounds());
   console.log(win.getBounds());
 });
+var progressAmount = 0.0;
+ipcMain.on("dayAdded2Counter", (event, numberOfDaysLoaded) =>{
+  //console.log(numberOfDaysLoaded + " days added to progress bar");
+  progressAmount = progressAmount + 0.20;
+  win.setProgressBar(progressAmount);
+  if(progressAmount >= 1.0){
+    progressAmount = 0.0;
+    win.setProgressBar(progressAmount);
+  }
+});
 //LAUNCH
 if(criticalError){
     console.log("No database file! Place 'dbconnexion.json' in the root folder!");
@@ -90,6 +101,7 @@ else{
   win.setMinimumSize(600, 638);
   win.setMaximumSize(2222, 1440);
   win.setFullScreen(false);
+  win.setProgressBar(0.0);
 }
 checkUserHomeDirectory();
 }
