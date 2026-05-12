@@ -7,6 +7,7 @@ const mysql = require("mysql");
 const firebird = require("node-firebird");
 const os = require('os');
 var loggingFailed = false; //flag for if logging has reached an error
+var maximumLoggingFileSizeAllowed = 1.0; //MB
 try{var logDirectory=os.homedir()+"\\Documents\\DJVLogs";}catch(err){loggingFailed=true;} //set log directory
 
 function electronLog(message2Write){
@@ -44,13 +45,21 @@ function electronLog(message2Write){
           console.log(message2Write);
         }
       });
+
+      var logFileStats = fs.statSync(loggingFile);
+      var currentLogSize = logFileStats.size;
+      var logFileInMB = currentLogSize / (1024*1024);
+      if(logFileInMB > maximumLoggingFileSizeAllowed){
+        fs.writeFileSync(loggingFile, 
+          "---DJV Log File---\n==Maximum Log Filesize " 
+          + "Reached, Clearing...==");
+      }
     }
     catch(err){
       console.log(err);
     }
   }
 }
-
 //csv template
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 var criticalError = false;
@@ -429,4 +438,50 @@ ipcMain.on("writeIt2TheElectronLog", (event, message2Write) => {
 
 ipcMain.on("openHelpDoc", (event) => {
   shell.openExternal('http://kendallwiki.system:777/dokuwiki/doku.php?id=public:dpj');
+});
+
+//Logging Send and Receive
+ipcMain.on("sendMeTheLog", (event) => {
+  var logDirectoryFinal = "No Log File Found";
+  var contentsOfLog = "Nothing In Logs...";
+  var logFileSize = "?MB";
+  var MAX = maximumLoggingFileSizeAllowed;
+  electronLog("Debug Log Requested");
+  if(logDirectory){
+    logDirectoryFinal = logDirectory;
+    var loggingFile = (logDirectory + "\\DJVlog.txt");
+    if(!fs.existsSync(loggingFile)){
+      contentsOfLog = "Could not find " + loggingFile;
+    }
+    else if(fs.existsSync(loggingFile)){
+      //Logging file found, begin reading...
+      electronLog("Reading " + loggingFile);
+      try{
+        contentsOfLog = fs.readFileSync(loggingFile, 'utf8'); 
+        electronLog("Logging Data Read");
+        var logFileStats = fs.statSync(loggingFile);
+        var currentLogSize = logFileStats.size;
+        var logFileInMB = currentLogSize / (1024*1024);
+        logFileSize = logFileInMB;
+      }
+      catch(err){
+        electronLog(err);
+      }
+    event.reply("iReadTheLog", contentsOfLog, logDirectoryFinal, logFileSize, MAX);
+    }
+  }
+});
+
+ipcMain.on("deleteMyLogPlease", (event) => {
+  if(logDirectory){
+    logDirectoryFinal = logDirectory;
+    var loggingFile = (logDirectory + "\\DJVlog.txt");
+    if(fs.existsSync(loggingFile)){
+      fs.writeFileSync(loggingFile, "---DJV Log File---");
+    }
+    else if(!fs.exists(loggingFile)){
+      electronLog("Couldn't access logging file to delete");
+    }
+  }
+  event.reply("deletedTheLog");
 });

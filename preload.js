@@ -1255,6 +1255,32 @@ barChartButton.addEventListener("click", () => {
 
 
 }
+if(nameOfPage == 'debugLog.html'){
+const logzone = document.getElementById('logwrapper');
+const readBox = document.getElementById('leftDetailsBox');
+const deleteButtonBox = document.getElementById('rightContainsBox');
+const deleteButton = document.getElementById('deleteLogButton');
+ipcRenderer.send("sendMeTheLog");
+ipcRenderer.on("iReadTheLog", (event, contentsOfLog, logDirectoryFinal, logFileSize, MAX) => {
+  writeMePlenty("Log contents Loaded");
+  var roundedSize = logFileSize.toFixed(3);
+  //writeMePlenty(contentsOfLog); //BLOAT TEST
+  logzone.innerText = contentsOfLog;
+  readBox.innerHTML = ("Reading From File: " + logDirectoryFinal +
+            "<hr class='gradientLine2'>"
+            + "<span style='font-size: 18px'>" +
+             roundedSize + "MB / " + MAX + "MB" +  
+            "</span>"  
+  );
+});
+
+deleteButton.addEventListener("click", () => {
+  ipcRenderer.send("deleteMyLogPlease");
+});
+ipcRenderer.on("deletedTheLog", (event) => {
+  this.location.reload();
+});
+}
 //=============================================================================//
 
 

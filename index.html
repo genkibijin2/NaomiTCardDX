@@ -163,6 +163,7 @@ const sandbox = new GlslCanvas(canvas);
     <a href="rollingStock.html"><button id="page2button">Rolling Stock Charts</button></a>
     <button id="helpButton">Help!</button>
     <button id="refreshFull">Refresh!</button>
+    <a href="debugLog.html"><button id="logsButton">Debug Log</button></a>
     
     <button id="batchButton">Batch Selected Jobs</button>
     
@@ -285,6 +286,38 @@ const sandbox = new GlslCanvas(canvas);
 
 <!---STYLING FOR HELPER, BLOCKS AND WRAPPERS ETC!-->
 <style>
+#logsButton{
+  border: 1px solid black;
+  border-radius: 10px;
+  background-color: rgb(255, 255, 255);
+  box-shadow: 0 0 3px #00000033;
+  transition: 0.4s;
+}
+#logsButton:hover{
+  translate: -1px -1px;
+  animation-name: debugHover;
+  animation-duration: 0.9s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  animation-direction: normal;
+}
+@keyframes debugHover{
+  0%{
+    border-radius: 12px;
+    background-color: #fcf2f5;
+    box-shadow: 0 0 2px #dadada;
+  }
+  50%{
+    border-radius: 7px;
+    background-color: hsl(295, 77%, 62%);
+    box-shadow: 0 0 10px #dbf2ff;
+  }
+  100%{
+    border-radius: 12px;
+    background-color: #fcf2f5;
+    box-shadow: 0 0 2px #dadada;
+  }
+}
 .dateRequiredString{
   text-decoration: underline;
   font-weight: bolder;
