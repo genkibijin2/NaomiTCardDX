@@ -103,7 +103,7 @@ const { electron } = require('node:process');
 
 const createWindow = () => {
   const win = new BrowserWindow({
-    titleBarStyle: 'hidden',
+    //titleBarStyle: 'hidden',
     //frame: false,
     width: 1024,
     height: 768, 
@@ -446,9 +446,7 @@ ipcMain.on("amIPainted", (event, number2Check4Paint) => {
       electronLog("ERROR");
       electronLog(err);
     }
-    if(paintResult.length > 0){
     event.reply("paintMePlease", paintResult);
-    }
     db.detach();
     });
   });

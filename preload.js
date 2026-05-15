@@ -1059,7 +1059,7 @@ ipcRenderer.on("paintMePlease", (event, paintedJobReturn) => {
       //PAINT ME PLENTY!!
       elem.classList.add("paintedJob");
     }
-    if(paintedCounter == (jobs.length-1)){
+    if(paintedCounter == (jobs.length)){
       ipcRenderer.send("PaintedJobsFound");
     }
   });
@@ -1068,7 +1068,7 @@ ipcRenderer.on("paintMePlease", (event, paintedJobReturn) => {
 ipcRenderer.on("doneLoading", (event) => {
   doneLoading();
   const swapBackTheLoading = document.getElementById('loadingIcon');
-  swapBackTheLoading.src = "img/loading30text.gif";
+  swapBackTheLoading.src = "img/loading30.gif";
 });
 //Search through objects find the one that matches the returned job,
 //then destroy it...
