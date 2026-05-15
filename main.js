@@ -9,7 +9,6 @@ const os = require('os');
 var loggingFailed = false; //flag for if logging has reached an error
 var maximumLoggingFileSizeAllowed = 1.0; //MB
 try{var logDirectory=os.homedir()+"\\Documents\\DJVLogs";}catch(err){loggingFailed=true;} //set log directory
-
 function electronLog(message2Write){
   const RIGHTNOW = new Date();
   //Write to log file function
@@ -97,7 +96,6 @@ require('dns').resolve('www.google.com', function(err) {
   }
 });
 //=======================================================================//
-
 //const drivelist = require('drivelist');
 //const { getDriveList} = require('node-drivelist');
 const Nanobar = require('nanobar');
@@ -253,7 +251,7 @@ ipcMain.on("SendDatesToDatabase", (event, monday, tuesday, wednesday,
               "IIF(ja.STAGE_NAME='Awaiting Signature',1,0) AS AWAITINGSIG, " +
               "IIF(js.STAGE_NAME='Signature Received',1,0) AS SIGNATURERECEIVED, " +
               "IIF (f.GLASSCOSTPRICE>0,1,0) AS GLASS, " +
-              "j.REQUIREDDATE " +
+              "j.REQUIREDDATE, j.HEADER_ID " +
               "FROM JOBQUOTEHEADER j " +
               "LEFT JOIN FRAMES f  ON (j.HEADER_ID=f.HEADER_ID) AND WINDOWBAD <>1 AND WINDOWSTYLEPRESENT <>0 " +
               "LEFT JOIN JOBSTAGES js ON (j.HEADER_ID=js.HEADER_ID  AND js.STAGE_NAME = 'Signature Received') " +
@@ -285,7 +283,7 @@ ipcMain.on("SendDatesToDatabase", (event, monday, tuesday, wednesday,
               "IIF(ja.STAGE_NAME='Awaiting Signature',1,0) AS AWAITINGSIG, " +
               "IIF(js.STAGE_NAME='Signature Received',1,0) AS SIGNATURERECEIVED, " +
               "IIF (f.GLASSCOSTPRICE>0,1,0) AS GLASS, " +
-              "j.REQUIREDDATE " +
+              "j.REQUIREDDATE, j.HEADER_ID " +
               "FROM JOBQUOTEHEADER j " +
               "LEFT JOIN FRAMES f  ON (j.HEADER_ID=f.HEADER_ID) AND WINDOWBAD <>1 AND WINDOWSTYLEPRESENT <>0 " +
               "LEFT JOIN JOBSTAGES js ON (j.HEADER_ID=js.HEADER_ID  AND js.STAGE_NAME = 'Signature Received') " +
@@ -316,7 +314,7 @@ ipcMain.on("SendDatesToDatabase", (event, monday, tuesday, wednesday,
               "IIF(ja.STAGE_NAME='Awaiting Signature',1,0) AS AWAITINGSIG, " +
               "IIF(js.STAGE_NAME='Signature Received',1,0) AS SIGNATURERECEIVED, " +
               "IIF (f.GLASSCOSTPRICE>0,1,0) AS GLASS, " +
-              "j.REQUIREDDATE " +
+              "j.REQUIREDDATE, j.HEADER_ID " +
               "FROM JOBQUOTEHEADER j " +
               "LEFT JOIN FRAMES f  ON (j.HEADER_ID=f.HEADER_ID) AND WINDOWBAD <>1 AND WINDOWSTYLEPRESENT <>0 " +
               "LEFT JOIN JOBSTAGES js ON (j.HEADER_ID=js.HEADER_ID  AND js.STAGE_NAME = 'Signature Received') " +
@@ -347,7 +345,7 @@ ipcMain.on("SendDatesToDatabase", (event, monday, tuesday, wednesday,
               "IIF(ja.STAGE_NAME='Awaiting Signature',1,0) AS AWAITINGSIG, " +
               "IIF(js.STAGE_NAME='Signature Received',1,0) AS SIGNATURERECEIVED, " +
               "IIF (f.GLASSCOSTPRICE>0,1,0) AS GLASS, " +
-              "j.REQUIREDDATE " +
+              "j.REQUIREDDATE, j.HEADER_ID " +
               "FROM JOBQUOTEHEADER j " +
               "LEFT JOIN FRAMES f  ON (j.HEADER_ID=f.HEADER_ID) AND WINDOWBAD <>1 AND WINDOWSTYLEPRESENT <>0 " +
               "LEFT JOIN JOBSTAGES js ON (j.HEADER_ID=js.HEADER_ID  AND js.STAGE_NAME = 'Signature Received') " +
@@ -378,7 +376,7 @@ ipcMain.on("SendDatesToDatabase", (event, monday, tuesday, wednesday,
               "IIF(ja.STAGE_NAME='Awaiting Signature',1,0) AS AWAITINGSIG, " +
               "IIF(js.STAGE_NAME='Signature Received',1,0) AS SIGNATURERECEIVED, " +
               "IIF (f.GLASSCOSTPRICE>0,1,0) AS GLASS, " +
-              "j.REQUIREDDATE " +
+              "j.REQUIREDDATE, j.HEADER_ID " +
               "FROM JOBQUOTEHEADER j " +
               "LEFT JOIN FRAMES f  ON (j.HEADER_ID=f.HEADER_ID) AND WINDOWBAD <>1 AND WINDOWSTYLEPRESENT <>0 " +
               "LEFT JOIN JOBSTAGES js ON (j.HEADER_ID=js.HEADER_ID  AND js.STAGE_NAME = 'Signature Received') " +
@@ -422,7 +420,35 @@ ipcMain.on("amIAlreadyBatched", (event, jobNumber2Check) => {
       electronLog("ERROR");
       electronLog(err);
     }
+    if(result.length > 0){
     event.reply("thisJobMustBeDestroyed", result);
+    }
+    db.detach();
+    });
+  });
+});
+
+ipcMain.on("amIPainted", (event, number2Check4Paint) => {
+  firebird.attach(firebirdOptions, function(err, db){
+    if(err){
+      throw err;
+    }
+    const SQLQuery = ("WITH ORIGINALRESULT AS " +
+      "(SELECT jq.HEADER_ID, jq.JOBNO FROM JOBQUOTEHEADER jq " +
+      "WHERE JOBNO = '" + number2Check4Paint + "') " +
+      "SELECT ORIGINALRESULT.HEADER_ID, p.SETCODE, p.DESCRIPTION, " +
+      "p.PCODE, ORIGINALRESULT.JOBNO FROM ORIGINALRESULT " +
+      "LEFT JOIN PARTS p ON (ORIGINALRESULT.HEADER_ID = p.HEADER_ID) " +
+      "WHERE p.SETCODE = 'PNT'"
+    );
+    db.query(SQLQuery, function(err, paintResult){
+    if(err){
+      electronLog("ERROR");
+      electronLog(err);
+    }
+    if(paintResult.length > 0){
+    event.reply("paintMePlease", paintResult);
+    }
     db.detach();
     });
   });
@@ -484,4 +510,8 @@ ipcMain.on("deleteMyLogPlease", (event) => {
     }
   }
   event.reply("deletedTheLog");
+});
+
+ipcMain.on("PaintedJobsFound", (event) => {
+  event.reply("doneLoading");
 });

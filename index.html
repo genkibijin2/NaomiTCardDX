@@ -168,7 +168,7 @@ const sandbox = new GlslCanvas(canvas);
     <button id="batchButton">Batch Selected Jobs</button>
     
 
-    <img id="loadingIcon" src="img/smallr.gif" alt="loading" style="float:right;">
+    <img id="loadingIcon" src="img/loading30text.gif" alt="loading"  style="float:right;">
   </span>
   <hr class="gradientLine"><!----------------------->
   <div id="detailedJobInformationBox">
@@ -286,6 +286,35 @@ const sandbox = new GlslCanvas(canvas);
 
 <!---STYLING FOR HELPER, BLOCKS AND WRAPPERS ETC!-->
 <style>
+  .paintedSpan{
+    max-height: 26px;
+  }
+.paintedSpan::before{
+  content: url(img/paintbrush20.gif);
+}
+#loadingIcon{
+  image-rendering: pixelated;
+}
+.paintedIconDiv{
+  visibility: hidden;
+  z-index: 1;
+  left: 0px;
+  top: 0px;
+  position: relative;
+  background: linear-gradient(102deg,rgba(34, 195, 123, 1) 0%, rgba(255, 255, 255, 1) 100%);
+  min-width: 100%;
+  height: 2px;
+}
+.paintedJob .paintedIconDiv{
+  visibility: visible !important;
+  border: 0px solid #000000;
+  border-radius: 10px;
+  height: 10px;
+}
+.paintedJob{
+  box-shadow: 2px 2px 3px #85f1b6 !important;
+  text-shadow: #85f1b6 1px 0 10px;
+}
 #logsButton{
   border: 1px solid black;
   border-radius: 10px;
@@ -652,8 +681,8 @@ animation-name: iconFlash;
   border-radius: 10px;
   max-width: 80px;
   min-width: 80px;
-  min-height: 70px;
-  max-height: 70px;
+  min-height: 80px;
+  max-height: 80px;
   background-color: #EEEEEE;
   box-shadow: 0 0 2px #00000033;
   transition: all 0.2s;

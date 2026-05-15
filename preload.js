@@ -130,7 +130,6 @@ if(nameOfPage == 'index.html'){
   ipcRenderer.on("iUnderstandAllDays", (event) => {
     writeMePlenty("Pong received back in preload...");
     addListeners2AllJobs();
-    doneLoading();
   });
 
   nowLoading();
@@ -263,13 +262,15 @@ ipcRenderer.on("mondayObjectsReturned", (event, mondaysJobObjects) =>{
       //Now build box      
       mondayJobBox.innerHTML = (
       mondayJobBox.innerHTML +
-      "<div class='JobObject mondayItem " + markAsInvalid + markAsDestroy +
+      "<div class='JobObject mondayItem" + markAsInvalid + markAsDestroy +
       "'>" + currentRowObject.JOBNO + "</br>" +
       currentRowObject.DELIVERYNAME + 
+      
       "<img src='" + glassImg + "'>" +
       "<img src='" + barOptImg + "'>" +
       "<img src='" + waitSigImg + "'>" +
       "<img src='" + signatureOKImg + "'>" +
+      "<div class='paintedIconDiv'></div>" +
       "</br></br>" +
       "<span style='font-size: 0px;'>Extra: </br>" + currentRowObject.TOTALFRAMES + 
       "</br>" + currentRowObject.DESPATCHOPTIMIZED +
@@ -279,7 +280,8 @@ ipcRenderer.on("mondayObjectsReturned", (event, mondaysJobObjects) =>{
       "</br>" + currentRowObject.GLASS +
       "</br>" + "Reserved for value that represents if this has been batched" +
       "</br>" + currentRowObject.REQUIREDDATE +
-      "</span>");
+      "</span>" +
+      "");
 
       //Check if delivery name unique, push to array if so.
       if(!(uniqueDeliveryNames.includes(currentRowObject.DELIVERYNAME))){
@@ -380,10 +382,12 @@ ipcRenderer.on("tuesdayObjectsReturned", (event, tuesdaysJobObjects) =>{
       "<div class='JobObject tuesdayItem " + markAsInvalid + markAsDestroy +
       "'>" + currentRowObject.JOBNO + "</br>" +
       currentRowObject.DELIVERYNAME + 
+      
       "<img src='" + glassImg + "'>" +
       "<img src='" + barOptImg + "'>" +
       "<img src='" + waitSigImg + "'>" +
       "<img src='" + signatureOKImg + "'>" +
+      "<div class='paintedIconDiv'></div>" +
       "</br></br>" +
       "<span style='font-size: 0px;'>Extra: </br>" + currentRowObject.TOTALFRAMES + 
       "</br>" + currentRowObject.DESPATCHOPTIMIZED +
@@ -493,10 +497,12 @@ ipcRenderer.on("wednesdaysObjectsReturned", (event, wednesdaysJobObjects) =>{
       "<div class='JobObject wednesdayItem " + markAsInvalid + markAsDestroy +
       "'>" + currentRowObject.JOBNO + "</br>" +
       currentRowObject.DELIVERYNAME + 
+      
       "<img src='" + glassImg + "'>" +
       "<img src='" + barOptImg + "'>" +
       "<img src='" + waitSigImg + "'>" +
       "<img src='" + signatureOKImg + "'>" +
+      "<div class='paintedIconDiv'></div>" +
       "</br></br>" +
       "<span style='font-size: 0px;'>Extra: </br>" + currentRowObject.TOTALFRAMES + 
       "</br>" + currentRowObject.DESPATCHOPTIMIZED +
@@ -610,6 +616,7 @@ ipcRenderer.on("thursdayObjectsReturned", (event, thursdaysJobObjects) =>{
       "<img src='" + barOptImg + "'>" +
       "<img src='" + waitSigImg + "'>" +
       "<img src='" + signatureOKImg + "'>" +
+      "<div class='paintedIconDiv'></div>" +
       "</br></br>" +
       "<span style='font-size: 0px;'>Extra: </br>" + currentRowObject.TOTALFRAMES + 
       "</br>" + currentRowObject.DESPATCHOPTIMIZED +
@@ -722,6 +729,7 @@ ipcRenderer.on("fridayObjectsReturned", (event, fridaysJobObjects) =>{
       "<img src='" + barOptImg + "'>" +
       "<img src='" + waitSigImg + "'>" +
       "<img src='" + signatureOKImg + "'>" +
+      "<div class='paintedIconDiv'></div>" +
       "</br></br>" +
       "<span style='font-size: 0px;'>Extra: </br>" + currentRowObject.TOTALFRAMES + 
       "</br>" + currentRowObject.DESPATCHOPTIMIZED +
@@ -798,12 +806,15 @@ nowLoading();
 const detailedInformationAboutJob = document.getElementById('leftDetailsBox');
 const iconsOnRight = document.getElementById('rightContainsBox');
 document.querySelectorAll(".JobObject").forEach(function(elem) {
-    
+    const loadingIconForPaint = document.getElementById('loadingIcon');
+    loadingIconForPaint.src = "img/looking4painted30.gif";
     //Send off to compare against database for destruction
     var objectHTML = elem.innerHTML.split("<br>");
     var objectJobNumber = objectHTML[0].trim();
     ipcRenderer.send("amIAlreadyBatched", objectJobNumber);
-
+    ipcRenderer.send("amIPainted", objectJobNumber);
+    //Change loading icon to "searching for painted job"
+    //Then find where it emits loading off and make sure it switches back
     
     //When you click a job object...
 		elem.addEventListener("click", function() {
@@ -836,12 +847,16 @@ document.querySelectorAll(".JobObject").forEach(function(elem) {
       var dateRequiredFull = JobStringSplit[11].trim();
       var dateRequiredSplit = dateRequiredFull.split("00:00:00");
       var dateRequiredFormatted = dateRequiredSplit[0];
-      
-      
+      var paintedJobbage = "";
+      if(elem.classList.contains("paintedJob")){
+        //paintedJobbage = "PAINTED";
+        paintedJobbage = "<span class='paintedSpan'>Painted Items</span>";
+      }
+
       detailedInformationAboutJob.innerHTML = (
         "<span style='font-weight:2000;color:#FF006A;text-shadow: 1px 1px 1px black;'>"
          + jobNumber + "</span></br>" +
-        "<span style='color:#C40BF7;'>" + deliveryName + "</span></br>" +
+        "<span style='color:#C40BF7;'>" + deliveryName + paintedJobbage + "</span></br>" +
         "<span style='color:#EF458C;'>Frame Total: " + jobFrames + " </span>" +
         "</br><hr class='gradientLine2'>" +
         "");
@@ -849,7 +864,6 @@ document.querySelectorAll(".JobObject").forEach(function(elem) {
       //ICONS
       iconsOnRight.innerHTML = '';
       if (hasGlass == '1'){
-        
         iconsOnRight.innerHTML = (
           iconsOnRight.innerHTML + 
           "<span class='glassIcon'>Glass</span></br>"
@@ -1026,15 +1040,43 @@ ipcRenderer.on("thisJobMustBeDestroyed", (event, jobThatsAlreadyInDatabase) => {
       //========
   });
 });
+
+ipcRenderer.on("paintMePlease", (event, paintedJobReturn) => {
+  var paintedCounter = 0;
+  const jobs = document.querySelectorAll(".JobObject");
+  jobs.forEach(function(elem) {
+    paintedCounter++
+    const objectHTML = elem.innerHTML.split("<br>");
+    const objectJobNumber = objectHTML[0].trim();
+    let paintedJob;
+    if(paintedJobReturn.length > 0){
+      paintedJob = paintedJobReturn[0].JOBNO;
+    }
+    else{
+      paintedJob = '0';
+    }
+    if (objectJobNumber == paintedJob){
+      //PAINT ME PLENTY!!
+      elem.classList.add("paintedJob");
+    }
+    if(paintedCounter == (jobs.length-1)){
+      ipcRenderer.send("PaintedJobsFound");
+    }
+  });
+});
+
+ipcRenderer.on("doneLoading", (event) => {
+  doneLoading();
+  const swapBackTheLoading = document.getElementById('loadingIcon');
+  swapBackTheLoading.src = "img/loading30text.gif";
+});
 //Search through objects find the one that matches the returned job,
 //then destroy it...
-
 
 getThisWeeksJobs();
 }// If Index.html handler
 //=============================================================================//
 //======================================================================MAIN PAGE FUNCTIONS AKA INDEX.HTML==================================================//
-
 
 //==========================APP PAGE 2 FUNCTIONS============================//
 if(nameOfPage == 'rollingStock.html'){

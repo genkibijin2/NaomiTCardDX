@@ -97,6 +97,10 @@ const helpButton = document.getElementById('helpButton');
 helpButton.addEventListener("mouseenter", () => {
     helper.innerText = "Open Help Document";
 });
+const debugLogButton = document.getElementById('logsButton');
+debugLogButton.addEventListener("click", () => {
+    helper.innerText = "View debug logs";
+});
 }
 
 //RollingStock Functions
