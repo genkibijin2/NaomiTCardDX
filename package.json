@@ -38,6 +38,7 @@
     "chart.js": "^4.5.1",
     "csv-writer": "^1.6.0",
     "electron-squirrel-startup": "^1.0.1",
+    "gsap": "^3.15.0",
     "mysql": "^2.18.1",
     "nanobar": "^0.4.2",
     "node-firebird": "^2.0.2",

@@ -1,6 +1,12 @@
 const { contextBridge } = require('electron');
 const { ipcRenderer } = require("electron");
-
+const { Draggable } = require("gsap/dist/Draggable");
+const { Physics2DPlugin } = require("gsap/dist/Physics2DPlugin");
+const { ScrollTrigger } = require("gsap/dist/ScrollTrigger");
+const { ScrollToPlugin } = require("gsap/dist/ScrollToPlugin");
+const { TextPlugin } = require("gsap/dist/TextPlugin");
+const { SplitText } = require("gsap/dist/SplitText");
+const { gsap } = require("gsap/dist/gsap");
 
 
 contextBridge.exposeInMainWorld('versions', {
@@ -14,6 +20,7 @@ contextBridge.exposeInMainWorld('versions', {
 
 
 document.addEventListener('DOMContentLoaded', function () {
+gsap.registerPlugin(Draggable,Physics2DPlugin,ScrollTrigger,ScrollToPlugin,TextPlugin,SplitText);
 function writeMePlenty(message2Write){
   ipcRenderer.send("writeIt2TheElectronLog", message2Write);
 }
@@ -59,6 +66,69 @@ function doneLoading(){
 //==================================================EVENTS FOR MAIN SCREEN, INDEX.HTML=====================================================================//
 //==============================DATE PICKER==================================//
 if(nameOfPage == 'index.html'){
+//GSAP Text World:
+function slideInAllTheGuyz(){
+ let split = SplitText.create("#searchButton", { type: "words, chars" });
+  gsap.from(split.chars, {
+    duration: 1, 
+    y: 5000,         // animate from 100px below
+    autoAlpha: 0,   // fade in from opacity: 0 and visibility: hidden
+    stagger: 0.05,  // 0.05 seconds between each
+    onComplete: slideRollingStock()
+  });
+};
+function slideRollingStock(){
+let split = SplitText.create("#page2button", { type: "words, chars" });
+  gsap.from(split.chars, {
+    duration: 1, 
+    y: 4000,         // animate from 100px below
+    autoAlpha: 0,   // fade in from opacity: 0 and visibility: hidden
+    stagger: 0.05,  // 0.05 seconds between each
+    onComplete: slidehelp()
+  });
+};
+function slidehelp(){
+let split = SplitText.create("#helpButton", { type: "words, chars" });
+  gsap.from(split.chars, {
+    duration: 1, 
+    y: 3000,         // animate from 100px below
+    autoAlpha: 0,   // fade in from opacity: 0 and visibility: hidden
+    stagger: 0.1,  // 0.05 seconds between each
+    onComplete: slideRefresh()
+  });
+};
+function slideRefresh(){
+let split = SplitText.create("#refreshFull", { type: "words, chars" });
+  gsap.from(split.chars, {
+    duration: 1, 
+    y: 2000,         // animate from 100px below
+    autoAlpha: 0,   // fade in from opacity: 0 and visibility: hidden
+    stagger: 0.15,  // 0.05 seconds between each
+    onComplete: slideDebug()
+  });
+};
+function slideDebug(){
+let split = SplitText.create("#logsButton", { type: "words, chars" });
+  gsap.from(split.chars, {
+    duration: 1, 
+    y: 1000,         // animate from 100px below
+    autoAlpha: 0,   // fade in from opacity: 0 and visibility: hidden
+    stagger: 0.2,  // 0.05 seconds between each
+    onComplete: slideBatcher()
+  });
+};
+function slideBatcher(){
+let split = SplitText.create("#batchButton", { type: "words, chars" });
+  gsap.from(split.chars, {
+    duration: 1, 
+    y: 600,         // animate from 100px below
+    autoAlpha: 0,   // fade in from opacity: 0 and visibility: hidden
+    stagger: 0.25,  // 0.05 seconds between each
+  });
+};
+//-------------Yeah...
+slideInAllTheGuyz();
+
   const refreshButton = document.getElementById('refreshFull');
   refreshButton.addEventListener("click", () => {
     resetDayCounter();
@@ -75,8 +145,6 @@ if(nameOfPage == 'index.html'){
     numberOfDaysLoaded = 0;
   }
   //Functions as the global counter for aysnc IPC functions.
-  //Will bounce between main to signal finished loading...
-
   const batchButton = document.getElementById('batchButton');
   batchButton.addEventListener("click", () => {
     var listOfJobNumbers = [];
@@ -741,6 +809,7 @@ ipcRenderer.on("fridayObjectsReturned", (event, fridaysJobObjects) =>{
       "</br>" + currentRowObject.REQUIREDDATE +
         "</span>");
 
+      
       //Check if delivery name unique, push to array if so.
       if(!(uniqueDeliveryNames.includes(currentRowObject.DELIVERYNAME))){
         uniqueDeliveryNames.push(currentRowObject.DELIVERYNAME);
@@ -803,6 +872,11 @@ function clearTheJobBox(){
 //================================JOBOBJECT HANDLING==========================//
 function addListeners2AllJobs(){
 nowLoading();
+gsap.to("#programTitle", {
+duration: 1,
+text: "Looking for painted jobs...",
+ease: "power1.in",
+});
 const detailedInformationAboutJob = document.getElementById('leftDetailsBox');
 const iconsOnRight = document.getElementById('rightContainsBox');
 document.querySelectorAll(".JobObject").forEach(function(elem) {
@@ -1069,7 +1143,13 @@ ipcRenderer.on("doneLoading", (event) => {
   doneLoading();
   const swapBackTheLoading = document.getElementById('loadingIcon');
   swapBackTheLoading.src = "img/loading30.gif";
-});
+  gsap.to("#programTitle", {
+    duration: 1,
+    text: "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Despatch Job Viewer" +
+        "</span> <span style='font-size: 12px;'>V3.0 - 15/05/2026</span>",  
+        ease: "power1.in",
+    });
+  });
 //Search through objects find the one that matches the returned job,
 //then destroy it...
 
